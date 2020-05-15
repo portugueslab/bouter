@@ -1,8 +1,8 @@
 .. image:: https://img.shields.io/pypi/v/bouter.svg
         :target: https://pypi.python.org/pypi/bouter
-
-.. image:: https://img.shields.io/travis/portugueslab/bouter.svg
-        :target: https://travis-ci.com/portugueslab/bouter
+        
+.. image:: https://travis-ci.com/portugueslab/bouter.svg?branch=master
+    :target: https://travis-ci.com/portugueslab/bouter
 
 .. image:: https://codecov.io/gh/portugueslab/bouter/branch/master/graph/badge.svg
         :target: https://codecov.io/gh/portugueslab/bouter
