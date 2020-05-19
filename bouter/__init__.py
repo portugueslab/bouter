@@ -206,11 +206,21 @@ class MultiSessionExperiment(Experiment):
     """
     def __init__(self, path):
         self.session_list = sorted(list(path.glob("*_metadata.json")))
+
         super().__init__(self.session_list[0])
 
-        self.session_id_list = []
+        session_id_list = []
+        session_start = []
         for i_meta in range(len(self.session_list)):
-            self.session_id_list += [str(self.session_list[i_meta].name).split("_")[0]]
+            session_id_list += [str(self.session_list[i_meta].name).split("_")[0]]
+            metadata_file = self.session_list[i_meta]
+            with open(str(metadata_file), "r") as f:
+                source_metadata = json.load(f)
+            session_start += [source_metadata['general']['t_protocol_start']]
+
+        # sorting the session_id list
+        self.sorted_session_id = [x for _, x in sorted(zip(session_start, session_id_list))]
+        self.session_list = [x for _, x in sorted(zip(session_start,  self.session_list))]
 
         for log_name in ['behavior_log', 'stimulus_param_log', 'estimator_log']:
             for possible_name in self.log_mapping[log_name]:
