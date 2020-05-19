@@ -219,7 +219,7 @@ class MultiSessionExperiment(Experiment):
             session_start += [source_metadata['general']['t_protocol_start']]
 
         # sorting the session_id list
-        self.sorted_session_id = [x for _, x in sorted(zip(session_start, session_id_list))]
+        self.session_id_list = [x for _, x in sorted(zip(session_start, session_id_list))]
         self.session_list = [x for _, x in sorted(zip(session_start,  self.session_list))]
 
         for log_name in ['behavior_log', 'stimulus_param_log', 'estimator_log']:
