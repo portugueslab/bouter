@@ -37,6 +37,6 @@ def test_calculate_vigor():
 
     #Load expected vigor
     with h5py.File(dataset_path.parent / 'test_data.h5', 'r') as hf:
-        expected_vigor = hf.get('vigor').value
+        expected_vigor = hf['vigor'][:]
 
     assert_array_almost_equal(calculated_vigor, expected_vigor, 5)
