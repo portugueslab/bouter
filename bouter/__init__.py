@@ -204,6 +204,7 @@ class MultiSessionExperiment(Experiment):
     """ Class to handle the scenario of multiple stytra sessions within the
     same experiment - typically, for plane-wise repetitions in 2p imaging.
     """
+
     def __init__(self, path):
         self.session_list = sorted(list(path.glob("*_metadata.json")))
 
@@ -216,13 +217,17 @@ class MultiSessionExperiment(Experiment):
             metadata_file = self.session_list[i_meta]
             with open(str(metadata_file), "r") as f:
                 source_metadata = json.load(f)
-            session_start += [source_metadata['general']['t_protocol_start']]
+            session_start += [source_metadata["general"]["t_protocol_start"]]
 
         # sorting the session_id list
-        self.session_id_list = [x for _, x in sorted(zip(session_start, session_id_list))]
-        self.session_list = [x for _, x in sorted(zip(session_start,  self.session_list))]
+        self.session_id_list = [
+            x for _, x in sorted(zip(session_start, session_id_list))
+        ]
+        self.session_list = [
+            x for _, x in sorted(zip(session_start, self.session_list))
+        ]
 
-        for log_name in ['behavior_log', 'stimulus_param_log', 'estimator_log']:
+        for log_name in ["behavior_log", "stimulus_param_log", "estimator_log"]:
             for possible_name in self.log_mapping[log_name]:
                 logfnames = list(self.root.glob("*_" + possible_name + ".*"))
                 if len(logfnames) > 0:
@@ -259,8 +264,7 @@ class MultiSessionExperiment(Experiment):
                 # else:
                 try:
                     # Load all dataframes:
-                    logfnames = list(
-                        self.root.glob("*_" + possible_name + ".*"))
+                    logfnames = list(self.root.glob("*_" + possible_name + ".*"))
                     all_logs = []
                     k_idx = 0
                     for logfname, dt in zip(logfnames, timedeltas):
@@ -299,7 +303,9 @@ class MultiSessionExperiment(Experiment):
         :return:
         """
         log_name = self.log_mapping[log_name]
-        session_log = self.root / str(self.session_id_list[session_idx] + "_" + log_name)
+        session_log = self.root / str(
+            self.session_id_list[session_idx] + "_" + log_name
+        )
         return self._load_log(session_log)
 
 
