@@ -4,6 +4,7 @@ from pathlib import Path
 from shutil import copyfile
 import json
 from datetime import datetime
+from bouter import utilities
 
 
 class Experiment(dict):
@@ -154,7 +155,7 @@ class Experiment(dict):
             )
 
     def stimulus_starts_ends(self):
-        """ Get start and end time of all stimuli in the log
+        """ Get start and end time of all stimuli in the log.
         :return: arrays with start and end times for all stimuli
         """
         starts = np.array([stim["t_start"] for stim in self["stimulus"]["log"]])
@@ -181,19 +182,19 @@ class Experiment(dict):
 class EmbeddedExperiment(Experiment):
     def vigor(self, vigor_duration=0.05):
         """ Get vigor, the proxy of embedded fish forward velocity,
-        a standard deviation calculated on a rolling window of tail curvature
+        a standard deviation calculated on a rolling window of tail curvature.
 
-        :param vigor_duration: standar deviation window length in seconds
+        :param vigor_duration: standard deviation window length in seconds
         :return:
         """
-        if vigor in self.behavior_log.columns:
+        if "vigor" in self.behavior_log.columns:
             return self.behavior_log["vigor"]
 
-        dt = log_dt(self.behavior_log)
+        dt = utilities.log_dt(self.behavior_log)
         vigor_win = int(vigor_duration / dt)
         self.behavior_log["vigor"] = (
             self.behavior_log["tail_sum"]
-            .iterpolate()
+            .interpolate()
             .rolling(vigor_win, center=True)
             .std()
         )
