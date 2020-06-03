@@ -44,3 +44,6 @@ class EmbeddedExperiment(Experiment):
             vigor, vigor_threshold
         )
         fl.save(bout_path, np.array(bout_starts_ends))
+
+    def bout_summary(self):
+        pass
