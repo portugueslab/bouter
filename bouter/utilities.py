@@ -5,7 +5,11 @@ from typing import Tuple, List
 
 @jit(nopython=True)
 def extract_segments_above_threshold(
-    trace, threshold=0.1, min_length=20, min_between=25, break_segment_on_nan=True,
+    trace,
+    threshold=0.1,
+    min_length=20,
+    min_between=25,
+    break_segment_on_nan=True,
 ) -> Tuple[np.ndarray, np.ndarray]:
 
     """
