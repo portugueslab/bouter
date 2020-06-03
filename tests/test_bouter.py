@@ -2,7 +2,7 @@ import pytest
 
 from pathlib import Path
 
-import h5py
+import flammkuchen as fl
 import numpy as np
 
 import bouter as bt
@@ -107,7 +107,6 @@ def test_calculate_vigor(exp_path):
     calculated_vigor = embedded_exp.vigor()
 
     # Load expected vigor:
-    with h5py.File(exp_path / "vigor_outcome.h5", "r") as hf:
-        expected_vigor = hf["vigor"][:]
+    vigor = fl.load(exp_path / "vigor_outcome.h5")["vigor"]
 
-    np.testing.assert_array_almost_equal(calculated_vigor, expected_vigor, 5)
+    np.testing.assert_array_almost_equal(calculated_vigor, vigor, 5)
