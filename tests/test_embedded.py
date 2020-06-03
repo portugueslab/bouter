@@ -3,6 +3,8 @@ from numpy.testing import assert_array_almost_equal
 from pathlib import Path
 import flammkuchen as fl
 
+import embedded
+
 
 def test_class_instantiation():
     # Define Path
@@ -17,7 +19,7 @@ def test_class_instantiation():
 def test_calculate_vigor():
     # Create EmbeddedExperiment class and calculate vigor
     dataset_path = Path(__file__).parent / "embedded_dataset"
-    embedded_exp = bouter.EmbeddedExperiment(dataset_path)
+    embedded_exp = embedded.EmbeddedExperiment(dataset_path)
     calculated_vigor = embedded_exp.vigor()
 
     expected_vigor = fl.load(dataset_path.parent / "expected_vigor.h5", "/vigor")
