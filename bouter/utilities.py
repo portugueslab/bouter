@@ -89,6 +89,8 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0):
         if np.isnan(tail_angle_mat[i_t, -1]):
             for i_seg in range(n_segments):
                 if np.isnan(tail_angle_mat[i_t, i_seg]):
+                    if n_segments_missing[i_t] == 0:
+                        n_segments_missing[i_t] = n_segments - i_seg
                     if (
                         continue_curvature > 0
                         and i_seg > continue_curvature + 1
@@ -104,5 +106,4 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0):
                     tail_angle_mat[i_t, i_seg] = (
                         tail_angle_mat[i_t, i_seg - 1] + deviation
                     )
-                n_segments_missing[i_t] = n_segments - i_seg
     return tail_angle_mat, n_segments_missing

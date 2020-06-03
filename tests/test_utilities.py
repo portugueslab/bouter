@@ -48,3 +48,4 @@ def test_continue_curvature():
     )
 
     np.testing.assert_equal(continued[0, :], np.arange(n_segments))
+    np.testing.assert_equal(n_segments_missing, [2, 3])
