@@ -1,6 +1,6 @@
 import numpy as np
 from numba import jit
-from typing import Tuple, List
+from typing import Tuple
 
 
 @jit(nopython=True)
@@ -13,7 +13,8 @@ def extract_segments_above_threshold(
 ) -> Tuple[np.ndarray, np.ndarray]:
 
     """
-    Extract periods from a trace where it's value is above threshold. The segments also can have a minimal length.
+    Extract periods from a trace where it's value is above threshold.
+    The segments also can have a minimal length.
     Used for extracting bouts from vigor or velocity
 
     :param trace: vigor or velocity
@@ -23,8 +24,9 @@ def extract_segments_above_threshold(
     :param break_segment_on_nan: if a NaN is encountered, it breaks the segment
     :return:
         segments: start and end indices of the segments above threshold
-        connected: for each segment, whether it is connected to the previous. Segments are considered connected
-            if there were no NaN values in the trace
+        connected: for each segment, whether it is connected to the previous.
+        Segments are considered connected if there were no NaN values
+        in the trace.
     """
 
     segments = []
@@ -45,7 +47,7 @@ def extract_segments_above_threshold(
             continuity = False
             if in_segment and break_segment_on_nan:
                 in_segment = False
-        # the segment has ended and a positive threshold crossing has been found
+        # segment has ended and a positive threshold crossing has been found
         elif (
             i > i_last_segment_ended
             and trace[i - 1] < threshold < trace[i]
@@ -53,7 +55,8 @@ def extract_segments_above_threshold(
         ):
             in_segment = True
             start = i
-        # a negative threshold crossing has been found while we are inside a sgement
+        # a negative threshold crossing has been found while
+        # we are inside a segement:
         elif trace[i - 1] > threshold > trace[i] and in_segment:
             in_segment = False
             if i - start > min_length:
@@ -80,21 +83,34 @@ def log_dt(log_df, i_start=10, i_end=110):
 def fill_out_segments(tail_angle_mat, continue_curvature=0):
     """ Fills out segments of tail trace
 
-    :param tail_angle_mat:
+    :param tail_angle_mat
+    :param continue_curvature
     :return:
     """
     n_t, n_segments = tail_angle_mat.shape
+
+    # To keep track of segments missing for every time point:
     n_segments_missing = np.zeros(n_t, dtype=np.uint8)
+
     for i_t in range(tail_angle_mat.shape[0]):
+        # If last value is nan...
         if np.isnan(tail_angle_mat[i_t, -1]):
+            # ...loop over segments from the beginning...
             for i_seg in range(n_segments):
+                # ...the first nan value marks where tail was interrupted, so
                 if np.isnan(tail_angle_mat[i_t, i_seg]):
+                    # 1) write how many we miss in n_segments_missing:
                     if n_segments_missing[i_t] == 0:
                         n_segments_missing[i_t] = n_segments - i_seg
+
+                    # 2) Interpolate:
                     if (
                         continue_curvature > 0
                         and i_seg > continue_curvature + 1
                     ):
+                        # a) if we have at least continue_curvature+1 points
+                        # and we want to interpolate from continue_curvature
+                        # samples:
                         previous_tail_curvature = np.diff(
                             tail_angle_mat[
                                 i_t, i_seg - continue_curvature : i_seg,
@@ -102,7 +118,10 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0):
                         )
                         deviation = np.mean(previous_tail_curvature)
                     else:
+                        # b) if we don't want to interpolate, we propagate the
+                        # last value without additions:
                         deviation = 0
+                    # write new values to array inplace:
                     tail_angle_mat[i_t, i_seg] = (
                         tail_angle_mat[i_t, i_seg - 1] + deviation
                     )

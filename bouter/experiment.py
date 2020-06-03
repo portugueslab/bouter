@@ -3,8 +3,8 @@ import pandas as pd
 from pathlib import Path
 from shutil import copyfile
 import json
-
-from bouter import deprecated
+import flammkuchen as fl
+from bouter import decorators
 
 
 class Experiment(dict):
@@ -73,6 +73,12 @@ class Experiment(dict):
         self._stimulus_param_log = None
         self._behavior_log = None
         self._estimator_log = None
+
+        self._processing_params = dict()
+        for file in self.root.glob(decorators.CACHE_FILE_TEMPLATE.format("*")):
+            name = file.stem[6:]  # TODO clean better the "cache_" str
+            self._processing_params[name] = fl.load(file, "/arguments")
+
         super().__init__(**source_metadata)
 
     def _get_log(self, log_name):
@@ -145,7 +151,7 @@ class Experiment(dict):
         """
         return np.array([stim["t_stop"] for stim in self["stimulus"]["log"]])
 
-    @deprecated.deprecated(
+    @decorators.deprecated(
         "Use Experiment.stim_start_times and stim_end_times instead."
     )
     def stimulus_starts_ends(self):
