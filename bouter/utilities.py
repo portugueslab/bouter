@@ -5,13 +5,8 @@ from typing import Tuple, List
 
 @jit(nopython=True)
 def extract_segments_above_threshold(
-    trace,
-    threshold=0.1,
-    min_length=20,
-    pad_before=12,
-    pad_after=25,
-    break_segment_on_nan=True,
-) -> Tuple[List[Tuple[int, int]], List[bool]]:
+    trace, threshold=0.1, min_length=20, min_between=25, break_segment_on_nan=True,
+) -> Tuple[np.ndarray, np.ndarray]:
 
     """
     Extract periods from a trace where it's value is above threshold. The segments also can have a minimal length.
@@ -20,8 +15,7 @@ def extract_segments_above_threshold(
     :param trace: vigor or velocity
     :param threshold: minimal value to be considered moving
     :param min_length: minimal number of samples of continuous movement
-    :param pad_before: number of samples to add before positive threshold crossing
-    :param pad_after: number of samples to add after negative threshold crossing
+    :param min_between: minimal number of samples between two crossings
     :param break_segment_on_nan: if a NaN is encountered, it breaks the segment
     :return:
         segments: start and end indices of the segments above threshold
@@ -37,9 +31,9 @@ def extract_segments_above_threshold(
 
     # we start at the first possible time to detect the threshold crossing
     # (because the pad_before perido has to be always included)
-    i = pad_before + 1
-    i_last_segment_ended = pad_before
-    while i < trace.shape[0] - pad_after:
+    i = 1
+    i_last_segment_ended = 0
+    while i < trace.shape[0] - min_between:
 
         # 3 cases where the state can change
         # we encountered a NaN (breaks continuity)
@@ -54,13 +48,13 @@ def extract_segments_above_threshold(
             and not in_segment
         ):
             in_segment = True
-            start = i - pad_before
+            start = i
         # a negative threshold crossing has been found while we are inside a sgement
         elif trace[i - 1] > threshold > trace[i] and in_segment:
             in_segment = False
             if i - start > min_length:
-                segments.append((start, i + pad_after))
-                i_last_segment_ended = i + pad_after
+                segments.append((start, i))
+                i_last_segment_ended = i + min_between
                 if continuity:
                     connected.append(True)
                 else:
@@ -71,7 +65,7 @@ def extract_segments_above_threshold(
 
         i += 1
 
-    return segments, connected
+    return np.array(segments), np.array(connected)
 
 
 def log_dt(log_df, i_start=10, i_end=110):

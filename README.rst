@@ -1,6 +1,6 @@
 .. image:: https://img.shields.io/pypi/v/bouter.svg
         :target: https://pypi.python.org/pypi/bouter
-        
+
 .. image:: https://travis-ci.com/portugueslab/bouter.svg?branch=master
     :target: https://travis-ci.com/portugueslab/bouter
 
@@ -16,8 +16,8 @@ This package has been developed in the `Portugues lab`_. Documentation can be fo
 
 Features
 --------
-
-* TODO
+ * Analysis of head-embedded and freely-swimming experiment
+ * Bout statistics
 
 Credits
 -------
