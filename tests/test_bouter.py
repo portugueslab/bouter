@@ -1,42 +1,113 @@
-import bouter
-import numpy as np
-from numpy.testing import assert_array_almost_equal
 import pytest
+
 from pathlib import Path
+
 import h5py
+import numpy as np
+
+import bouter as bt
+
+ASSETS_PATH = Path(__file__).parent / "assets"
+
 
 @pytest.fixture
-def response():
-    """Sample pytest fixture.
-
-    See more at: http://doc.pytest.org/en/latest/fixture.html
-    """
-    # import requests
-    # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
+def exp_path():
+    return ASSETS_PATH / "test_dataset"
 
 
-def test_content(response):
-    """Sample pytest test function with the pytest fixture as an argument."""
-    # from bs4 import BeautifulSoup
-    # assert 'GitHub' in BeautifulSoup(response.content).title.string
+def test_class_instantiation(exp_path):
+    # Test instantiation modalities:
+    assert (
+        bt.Experiment(exp_path)
+        == bt.Experiment(str(exp_path))
+        == bt.Experiment(exp_path / "192316_metadata.json")
+    )
 
-def test_class_instantiation():
-    #Define Path
-    dataset_path = Path(__file__).parent / "test_dataset"
 
-    #Create Experiment class
-    experiment = bouter.Experiment(dataset_path)
+# TODO if we test multiple dataset this will have to be improved
+@pytest.mark.parametrize(
+    "prop_name, outcome",
+    [
+        ("protocol_name", "closed_open_loop"),
+        ("protocol_version", None),
+        (
+            "protocol_parameters",
+            {
+                "grating_cycle": 10,
+                "grating_duration": 4.0,
+                "inter_stim_pause": 0,
+                "n_repeats": 1,
+                "post_pause": 0.0,
+                "pre_pause": 0.0,
+            },
+        ),
+        ("stim_start_times", [0.002]),
+        ("stim_end_times", [600.004995]),
+    ],
+)
+def test_class_properties(exp_path, prop_name, outcome):
+    exp = bt.Experiment(exp_path)
 
-    assert type(experiment) == bouter.Experiment
+    val = getattr(exp, prop_name)
+    if isinstance(val, np.ndarray):
+        assert np.isclose(val, outcome)
+    else:
+        assert val == outcome
 
-def test_calculate_vigor():
-    #Create EmbeddedExperiment class and calculate vigor
-    dataset_path = Path(__file__).parent / "test_dataset"
-    embedded_exp = bouter.EmbeddedExperiment(dataset_path)
+
+@pytest.mark.parametrize(
+    "logname, log_props",
+    [
+        (
+            "stimulus_param_log",
+            dict(
+                nrows=100,
+                columns=[
+                    "closed loop 1D_vel",
+                    "closed loop 1D_base_vel",
+                    "closed loop 1D_gain",
+                    "closed loop 1D_lag",
+                    "closed loop 1D_fish_swimming",
+                    "t",
+                ],
+            ),
+        ),
+        ("estimator_log", dict(nrows=100, columns=["vigour", "t"])),
+        (
+            "behavior_log",
+            dict(
+                nrows=1200,
+                columns=["tail_sum"]
+                + [f"theta_{i:02}" for i in range(25)]
+                + ["t"],
+            ),
+        ),
+    ],
+)
+def test_logs_loading(exp_path, logname, log_props):
+    exp = bt.EmbeddedExperiment(exp_path)
+    df = getattr(exp, logname)
+
+    assert len(df) == log_props["nrows"]
+    assert all(df.columns == log_props["columns"])
+
+
+def test_warning_raise(exp_path):
+    exp = bt.EmbeddedExperiment(exp_path)
+    starts, ends = exp.stimulus_starts_ends()
+    for s, t in zip(
+        [starts, ends], [np.array([0.002]), np.array([600.004995])]
+    ):
+        assert all(s == t)
+
+
+def test_calculate_vigor(exp_path):
+    # Create EmbeddedExperiment class and calculate vigor
+    embedded_exp = bt.EmbeddedExperiment(exp_path)
     calculated_vigor = embedded_exp.vigor()
 
-    #Load expected vigor
-    with h5py.File(dataset_path.parent / 'test_data.h5', 'r') as hf:
-        expected_vigor = hf['vigor'][:]
+    # Load expected vigor:
+    with h5py.File(exp_path / "vigor_outcome.h5", "r") as hf:
+        expected_vigor = hf["vigor"][:]
 
-    assert_array_almost_equal(calculated_vigor, expected_vigor, 5)
+    np.testing.assert_array_almost_equal(calculated_vigor, expected_vigor, 5)

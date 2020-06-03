@@ -14,19 +14,22 @@ def extract_segments_above_threshold(
 ) -> Tuple[List[Tuple[int, int]], List[bool]]:
 
     """
-    Extract periods from a trace where it's value is above threshold. The segments also can have a minimal length.
-    Used for extracting bouts from vigor or velocity
+    Extract periods from a trace where it's value is above threshold.
+    The segments also can have a minimal length.
+    Used for extracting bouts from vigor or velocity.
 
     :param trace: vigor or velocity
     :param threshold: minimal value to be considered moving
     :param min_length: minimal number of samples of continuous movement
-    :param pad_before: number of samples to add before positive threshold crossing
-    :param pad_after: number of samples to add after negative threshold crossing
+    :param pad_before: number of samples to add before positive threshold
+        crossing
+    :param pad_after: n of samples to add after negative threshold crossing
     :param break_segment_on_nan: if a NaN is encountered, it breaks the segment
     :return:
         segments: start and end indices of the segments above threshold
-        connected: for each segment, whether it is connected to the previous. Segments are considered connected
-            if there were no NaN values in the trace
+        connected: for each segment, whether it is connected to the previous.
+        Segments are considered connected if there were no NaN values in
+        the trace.
     """
 
     segments = []
@@ -47,7 +50,7 @@ def extract_segments_above_threshold(
             continuity = False
             if in_segment and break_segment_on_nan:
                 in_segment = False
-        # the segment has ended and a positive threshold crossing has been found
+        # segment has ended and a positive threshold crossing has been found
         elif (
             i > i_last_segment_ended
             and trace[i - 1] < threshold < trace[i]
@@ -55,7 +58,9 @@ def extract_segments_above_threshold(
         ):
             in_segment = True
             start = i - pad_before
-        # a negative threshold crossing has been found while we are inside a sgement
+
+        # A negative threshold crossing has been found while
+        # we are inside a sgement
         elif trace[i - 1] > threshold > trace[i] and in_segment:
             in_segment = False
             if i - start > min_length:
