@@ -3,7 +3,7 @@ from numpy.testing import assert_array_almost_equal
 from pathlib import Path
 import flammkuchen as fl
 
-import embedded
+from bouter import embedded
 
 ASSETS_PATH = Path(__file__).parent / "assets"
 

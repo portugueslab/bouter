@@ -1,7 +1,7 @@
 import flammkuchen as fl
 import numpy as np
 
-import bouter.embedded.utilities
+from bouter import utilities
 from bouter import Experiment
 
 
