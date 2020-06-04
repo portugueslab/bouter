@@ -106,3 +106,5 @@ ENV/
 
 # Idea
 .idea/
+
+cache_*.h5
