@@ -2,7 +2,6 @@ import pytest
 
 from pathlib import Path
 
-import flammkuchen as fl
 import numpy as np
 
 import bouter as bt
@@ -11,16 +10,16 @@ ASSETS_PATH = Path(__file__).parent / "assets"
 
 
 @pytest.fixture
-def exp_path():
+def embedded_exp_path():
     return ASSETS_PATH / "embedded_dataset"
 
 
-def test_class_instantiation(exp_path):
+def test_class_instantiation(embedded_exp_path):
     # Test instantiation modalities:
     assert (
-        bt.Experiment(exp_path)
-        == bt.Experiment(str(exp_path))
-        == bt.Experiment(exp_path / "192316_metadata.json")
+        bt.Experiment(embedded_exp_path)
+        == bt.Experiment(str(embedded_exp_path))
+        == bt.Experiment(embedded_exp_path / "192316_metadata.json")
     )
 
 
@@ -45,8 +44,8 @@ def test_class_instantiation(exp_path):
         ("stim_end_times", [600.004995]),
     ],
 )
-def test_class_properties(exp_path, prop_name, outcome):
-    exp = bt.Experiment(exp_path)
+def test_class_properties(embedded_exp_path, prop_name, outcome):
+    exp = bt.Experiment(embedded_exp_path)
 
     val = getattr(exp, prop_name)
     if isinstance(val, np.ndarray):
@@ -84,16 +83,16 @@ def test_class_properties(exp_path, prop_name, outcome):
         ),
     ],
 )
-def test_logs_loading(exp_path, logname, log_props):
-    exp = bt.EmbeddedExperiment(exp_path)
+def test_logs_loading(embedded_exp_path, logname, log_props):
+    exp = bt.EmbeddedExperiment(embedded_exp_path)
     df = getattr(exp, logname)
 
     assert len(df) == log_props["nrows"]
     assert all(df.columns == log_props["columns"])
 
 
-def test_warning_raise(exp_path):
-    exp = bt.EmbeddedExperiment(exp_path)
+def test_warning_raise(embedded_exp_path):
+    exp = bt.EmbeddedExperiment(embedded_exp_path)
     starts, ends = exp.stimulus_starts_ends()
     for s, t in zip(
         [starts, ends], [np.array([0.002]), np.array([600.004995])]

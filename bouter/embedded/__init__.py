@@ -10,8 +10,9 @@ class EmbeddedExperiment(Experiment):
         super().__init__(*args, **kwargs)
 
         if continue_curvature is not None:
-            utilities.fill_out_segments(
-                self.tail_points_matrix, continue_curvature=continue_curvature
+            self.tail_points_matrix, _ = utilities.fill_out_segments(
+                self.tail_points_matrix.copy(),
+                continue_curvature=continue_curvature,
             )
 
     @property
@@ -25,6 +26,13 @@ class EmbeddedExperiment(Experiment):
         """
         columns = [f"theta_{i:02}" for i in range(self.n_tail_segments)]
         return self.behavior_log.loc[:, columns].values
+
+    @tail_points_matrix.setter
+    def tail_points_matrix(self, matrix):
+        """Rewrite tail points in the tail dataframe
+        """
+        columns = [f"theta_{i:02}" for i in range(self.n_tail_segments)]
+        self.behavior_log.loc[:, columns] = matrix
 
     @decorators.cache_results
     def vigor(self, vigor_duration_s=0.05):
