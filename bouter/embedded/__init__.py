@@ -6,7 +6,7 @@ from bouter import Experiment
 
 
 class EmbeddedExperiment(Experiment):
-    def __init__(self, *args, continue_curvature=5, **kwargs):
+    def __init__(self, *args, continue_curvature=None, **kwargs):
         super().__init__(*args, **kwargs)
 
         if continue_curvature is not None:
