@@ -10,10 +10,12 @@ class EmbeddedExperiment(Experiment):
         super().__init__(*args, **kwargs)
 
         if continue_curvature is not None:
-            self.tail_points_matrix, _ = utilities.fill_out_segments(
+            self.tail_points_matrix, missing_n = utilities.fill_out_segments(
                 self.tail_points_matrix.copy(),
                 continue_curvature=continue_curvature,
             )
+
+            self.behavior_log["missing_n"] = missing_n
 
     @property
     def n_tail_segments(self):
