@@ -1,10 +1,11 @@
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from shutil import copyfile
+import shutil
 import json
-import flammkuchen as fl
+
 from bouter import decorators
+from bouter import utilities
 
 
 class Experiment(dict):
@@ -26,7 +27,14 @@ class Experiment(dict):
         behavior_log=["behavior_log"],
     )
 
-    def __init__(self, path, session_id=None):
+    def __init__(
+        self, path, session_id=None, cache_active=True, default_cached=True
+    ):
+
+        # If true forces to use cached with whatever params it was computed:
+        self.default_cached = default_cached
+        self.cache_active = cache_active
+
         # Prepare path:
         inpath = Path(path)
 
@@ -68,46 +76,23 @@ class Experiment(dict):
         except KeyError:
             pass
 
+        super().__init__(self, **source_metadata)
+
         # Make list with all the files referring to this experiment:
         self.file_list = list(self.root.glob(f"{self.session_id}*"))
+
+        # Private attributes for properties:
+        self._behavior_dt = None
         self._stimulus_param_log = None
         self._behavior_log = None
         self._estimator_log = None
 
-        self._processing_params = dict()
-        for file in self.root.glob(decorators.CACHE_FILE_TEMPLATE.format("*")):
-            name = file.stem[6:]  # TODO clean better the "cache_" str
-            self._processing_params[name] = fl.load(file, "/arguments")
+    @property
+    def behavior_dt(self):
+        if self._behavior_dt is None:
+            self._behavior_dt = utilities.log_dt(self.behavior_log)
 
-        super().__init__(**source_metadata)
-
-    def _get_log(self, log_name):
-        """ Given name of the log get it from attributes or load it ex novo
-        :param log_name:  string with the type ot the log to load
-        :return:  loaded log DataFrame
-        """
-        uname = "_" + log_name
-
-        # Check whether this was already set:
-        if getattr(self, uname) is None:
-
-            # If not, loop over different possibilities for that filename
-            for possible_name in self.log_mapping[log_name]:
-                try:
-                    # Load and set attribute
-                    logname = next(
-                        self.root.glob(
-                            self.session_id + "_" + possible_name + ".*"
-                        )
-                    ).name
-                    setattr(self, uname, self._load_log(logname))
-                    break
-                except StopIteration:
-                    pass
-            else:
-                raise ValueError(log_name + " does not exist")
-
-        return getattr(self, uname)
+        return self._behavior_dt
 
     @property
     def protocol_parameters(self):
@@ -172,6 +157,34 @@ class Experiment(dict):
     def behavior_log(self):
         return self._get_log("behavior_log")
 
+    def _get_log(self, log_name):
+        """ Given name of the log get it from attributes or load it ex novo
+        :param log_name:  string with the type ot the log to load
+        :return:  loaded log DataFrame
+        """
+        uname = "_" + log_name
+
+        # Check whether this was already set:
+        if getattr(self, uname) is None:
+
+            # If not, loop over different possibilities for that filename
+            for possible_name in self.log_mapping[log_name]:
+                try:
+                    # Load and set attribute
+                    logname = next(
+                        self.root.glob(
+                            self.session_id + "_" + possible_name + ".*"
+                        )
+                    ).name
+                    setattr(self, uname, self._load_log(logname))
+                    break
+                except StopIteration:
+                    pass
+            else:
+                raise ValueError(log_name + " does not exist")
+
+        return getattr(self, uname)
+
     def _load_log(self, data_name):
         """
 
@@ -215,7 +228,11 @@ class Experiment(dict):
                 target_dir.mkdir()
 
             for f in self.file_list:
-                copyfile(f, target_dir / f.name)
+                shutil.copyfile(f, target_dir / f.name)
+
+    def clear_cache(self):
+        for file in self.root.glob(decorators.CACHE_FILE_TEMPLATE.format("*")):
+            shutil.rmtree(file)
 
     def bouts(self):
         raise

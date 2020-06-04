@@ -8,20 +8,32 @@ from numpy import VisibleDeprecationWarning
 CACHE_FILE_TEMPLATE = "cache_{}.h5"
 
 
-def method_caching(method):
+def cache_results(method):
+    """ Method decorator that caches an .h5 file with the results of the
+    decorated function. This behavior can be disabled with the exp.cache_active
+    flag.
+    Function results are loaded if the new call arguments match the old call,
+    or if the exp.default_cached flag is set.
+    :param method:
+    :return:
+    """
+
     def decorated_method(exp, **kwargs):
-        # Create cache file if none exists:
-        filename = exp.root / CACHE_FILE_TEMPLATE.format(method.__name__)
+        if exp.cache_active:
+            # Create cache file if none exists:
+            filename = exp.root / CACHE_FILE_TEMPLATE.format(method.__name__)
 
-        if filename.exists():
-            old_arguments = fl.load(filename, "/arguments")
+            if filename.exists():
+                old_arguments = fl.load(filename, "/arguments")
 
-            if kwargs == old_arguments:
-                print("loading ", method.__name__)
-                return fl.load(filename, "/results")
+                if kwargs == old_arguments or exp.default_cached:
+                    print("Using cached ", method.__name__)
+                    return fl.load(filename, "/results")
 
         results = method(exp, **kwargs)
-        fl.save(filename, dict(results=results, arguments=kwargs))
+
+        if exp.cache_active:
+            fl.save(filename, dict(results=results, arguments=kwargs))
 
         return results
 

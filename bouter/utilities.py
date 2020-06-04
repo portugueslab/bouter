@@ -56,7 +56,7 @@ def extract_segments_above_threshold(
             in_segment = True
             start = i
         # a negative threshold crossing has been found while
-        # we are inside a segement:
+        # we are inside a segment:
         elif trace[i - 1] > threshold > trace[i] and in_segment:
             in_segment = False
             if i - start > min_length:
