@@ -9,7 +9,7 @@ class EmbeddedExperiment(Experiment):
     def __init__(self, *args, continue_curvature=5, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if continue_curvature:
+        if continue_curvature is not None:
             utilities.fill_out_segments(
                 self.tail_points_matrix, continue_curvature=continue_curvature
             )
@@ -59,18 +59,19 @@ class EmbeddedExperiment(Experiment):
 
     @decorators.cache_results
     def bouts(self, vigor_threshold=0.1):
-        # TODO add padding
         """Extract bouts above threshold.
         :param vigor_threshold:
         :return:
         """
         vigor = self.vigor()
-        return utilities.extract_segments_above_threshold(
+        bouts, _ = utilities.extract_segments_above_threshold(
             vigor.values, vigor_threshold
         )
 
+        return bouts
+
     @decorators.cache_results
-    def bout_summary(self, bout_init_window_s=0.07):
+    def bout_properties(self, bout_init_window_s=0.07):
         """Create dataframe with summary of bouts properties.
         :param bout_init_window_s: Window defining initial part of
             the bout for the turning angle calculation, in seconds.
@@ -79,7 +80,7 @@ class EmbeddedExperiment(Experiment):
         bout_init_window_pts = int(bout_init_window_s / self.behavior_dt)
         tail_sum = self.behavior_log["tail_sum"].values
         vigor = self.vigor().values
-        bouts, _ = self.bouts()
+        bouts = self.bouts()
         peak_vig, med_vig, ang_turn, ang_turn_tot = bout_stats.bout_stats(
             vigor, tail_sum, bouts, bout_init_window_pts
         )

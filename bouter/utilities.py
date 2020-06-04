@@ -103,7 +103,7 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0):
                     if n_segments_missing[i_t] == 0:
                         n_segments_missing[i_t] = n_segments - i_seg
 
-                    # 2) Interpolate:
+                    # 2) Extrapolate:
                     if (
                         continue_curvature > 0
                         and i_seg > continue_curvature + 1

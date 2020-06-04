@@ -1,11 +1,12 @@
 import warnings
 import functools
 import flammkuchen as fl
+from functools import wraps
 
 from numpy import VisibleDeprecationWarning
 
 
-CACHE_FILE_TEMPLATE = "cache_{}.h5"
+CACHE_FILE_TEMPLATE = "{}_cache_{}.h5"
 
 
 def cache_results(method):
@@ -18,16 +19,21 @@ def cache_results(method):
     :return:
     """
 
+    @wraps(method)
     def decorated_method(exp, **kwargs):
         if exp.cache_active:
             # Create cache file if none exists:
-            filename = exp.root / CACHE_FILE_TEMPLATE.format(method.__name__)
+            filename = exp.root / CACHE_FILE_TEMPLATE.format(
+                exp.session_id, method.__name__
+            )
 
             if filename.exists():
                 old_arguments = fl.load(filename, "/arguments")
 
                 if kwargs == old_arguments or exp.default_cached:
-                    print("Using cached ", method.__name__)
+                    print(
+                        f"Using cached {method.__name__} (this print will be removed)"
+                    )
                     return fl.load(filename, "/results")
 
         results = method(exp, **kwargs)
