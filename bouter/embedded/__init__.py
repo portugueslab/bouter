@@ -11,7 +11,7 @@ class EmbeddedExperiment(Experiment):
 
         if continue_curvature is not None:
             self.tail_points_matrix, missing_n = utilities.fill_out_segments(
-                self.tail_points_matrix.copy(),
+                self.tail_angles_df.copy(),
                 continue_curvature=continue_curvature,
             )
 
@@ -22,32 +22,34 @@ class EmbeddedExperiment(Experiment):
         return self["behavior"]["tail"]["n_segments"]
 
     @property
-    def tail_points_matrix(self):
+    def tail_columns(self):
         """Return matrix with the tail points.
         Careful, the array is not copied!
         """
-        columns = [f"theta_{i:02}" for i in range(self.n_tail_segments)]
-        return self.behavior_log.loc[:, columns].values
+        return [f"theta_{i:02}" for i in range(self.n_tail_segments)]
 
-    @tail_points_matrix.setter
-    def tail_points_matrix(self, matrix):
-        """Rewrite tail points in the tail dataframe
-        """
+    @decorators.cache_results(target_logfile="behavior_log")
+    def reconstruct_missing_segments(self, continue_curvature=None):
+        # TODO support reverting if continue_curvature is None
         columns = [f"theta_{i:02}" for i in range(self.n_tail_segments)]
-        self.behavior_log.loc[:, columns] = matrix
 
-    @decorators.cache_results
-    def get_vigor(self, vigor_duration_s=0.05):
+        angles = self.behavior_log.loc[:, self.tail_columns].values.copy()
+        fixed_segments, missing_n = utilities.fill_out_segments(
+            angles, continue_curvature=continue_curvature,
+        )
+        self.behavior_log.loc[:, columns] = fixed_segments
+        self.behavior_log["missing_n"] = missing_n
+
+        return self.behavior_log
+
+    @decorators.cache_results(target_logfile="behavior_log")
+    def compute_vigor(self, vigor_duration_s=0.05):
         """ Get vigor, the proxy of embedded fish forward velocity,
         a standard deviation calculated on a rolling window of tail curvature.
 
         :param vigor_duration: standard deviation window length in seconds
         :return:
         """
-        # TODO split in two methods so that it is set in the log df when
-        # loaded from cache (alternatively never write there)
-        if "vigor" in self.behavior_log.columns:
-            return self.behavior_log["vigor"]
 
         vigor_win = int(vigor_duration_s / self.behavior_dt)
         self.behavior_log["vigor"] = (
@@ -58,38 +60,29 @@ class EmbeddedExperiment(Experiment):
         )
         return self.behavior_log["vigor"]
 
-    def reconstruct_missing_segments(self, continue_curvature=0):
-        """ If the tail tip is not tracked throught the whole experiment
-        reconstruct the tail sum from the segments that are
-
-        """
-        utilities.fill_out_segments(
-            self.tail_points_matrix, continue_curvature=continue_curvature
-        )
-
-    @decorators.cache_results
+    @decorators.cache_results()
     def get_bouts(self, vigor_threshold=0.1):
         """Extract bouts above threshold.
         :param vigor_threshold:
         :return:
         """
-        vigor = self.get_vigor()
+        vigor = self.compute_vigor()
         bouts, _ = utilities.extract_segments_above_threshold(
             vigor.values, vigor_threshold
         )
 
         return bouts
 
-    @decorators.cache_results
-    def get_bout_properties(self, bout_init_window_s=0.07):
+    @decorators.cache_results()
+    def get_bout_properties(self, directionality_duration=0.07):
         """Create dataframe with summary of bouts properties.
-        :param bout_init_window_s: Window defining initial part of
+        :param directionality_duration: Window defining initial part of
             the bout for the turning angle calculation, in seconds.
         :return:
         """
-        bout_init_window_pts = int(bout_init_window_s / self.behavior_dt)
+        bout_init_window_pts = int(directionality_duration / self.behavior_dt)
         tail_sum = self.behavior_log["tail_sum"].values
-        vigor = self.get_vigor().values
+        vigor = self.compute_vigor().values
         bouts = self.get_bouts()
         peak_vig, med_vig, ang_turn, ang_turn_tot = bout_stats.bout_stats(
             vigor, tail_sum, bouts, bout_init_window_pts

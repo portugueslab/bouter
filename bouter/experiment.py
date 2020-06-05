@@ -215,6 +215,25 @@ class Experiment(dict):
     def behavior_log(self):
         return self._get_log("behavior_log")
 
+    def _log_filename(self, log_name):
+        # TODO cleanup
+
+        for possible_name in self.log_mapping[log_name]:
+            try:
+                # Load and set attribute
+                logname = next(
+                    self.root.glob(
+                        self.session_id + "_" + possible_name + ".*"
+                    )
+                ).name
+                break
+            except StopIteration:
+                pass
+        else:
+            raise ValueError(log_name + " does not exist")
+
+        return logname
+
     def _get_log(self, log_name):
         """ Given name of the log get it from attributes or load it ex novo
         :param log_name:  string with the type ot the log to load

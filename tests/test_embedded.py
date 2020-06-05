@@ -23,7 +23,7 @@ def test_calculate_vigor():
     # Create EmbeddedExperiment class and calculate vigor
     dataset_path = ASSETS_PATH / "embedded_dataset"
     embedded_exp = embedded.EmbeddedExperiment(dataset_path)
-    calculated_vigor = embedded_exp.get_vigor()
+    calculated_vigor = embedded_exp.compute_vigor()
 
     expected_vigor = fl.load(ASSETS_PATH / "expected_vigor.h5", "/vigor")
 
