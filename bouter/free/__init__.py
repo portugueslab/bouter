@@ -5,12 +5,12 @@ import numpy as np
 
 class FreelySwimmingExperiment(Experiment):
 
-
-    def get_n_segments(self, prefix=True):
+    @property
+    def n_tail_segments(self):
         return self["tracking+fish_tracking"]["n_segments"] - 1
 
-
-    def get_n_fish(self):
+    @property
+    def n_fish(self):
         return self["tracking+fish_tracking"]["n_fish_max"]
 
 
@@ -58,8 +58,8 @@ class FreelySwimmingExperiment(Experiment):
 
         dt = np.mean(np.diff(df.t[100:200]))
 
-        n_fish = self.get_n_fish()
-        n_segments = self.get_n_segments()
+        n_fish = self.n_fish
+        n_segments = self.n_tail_segments
         dfint = df.interpolate("linear", limit=max_interpolate, limit_area="inside")
         bouts = []
         continuous = []

@@ -15,12 +15,12 @@ dataset_path = ASSETS_PATH / "freely_swimming_dataset"
 
 def test_n_fish_extraction():
     experiment = free.FreelySwimmingExperiment(dataset_path)
-    assert experiment.get_n_fish() == 3
+    assert experiment.n_fish == 3
 
 
 def test_n_segment_extraction():
     experiment = free.FreelySwimmingExperiment(dataset_path)
-    assert experiment.get_n_segments() == 9
+    assert experiment.n_tail_segments == 9
 
 
 def test_bout_extraction():
