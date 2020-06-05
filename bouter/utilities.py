@@ -36,7 +36,7 @@ def extract_segments_above_threshold(
     continuity = False
 
     # we start at the first possible time to detect the threshold crossing
-    # (because the pad_before perido has to be always included)
+    # (because the pad_before period has to be always included)
     i = 1
     i_last_segment_ended = 0
     while i < trace.shape[0] - min_between:

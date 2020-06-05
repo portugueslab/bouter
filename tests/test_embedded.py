@@ -26,6 +26,6 @@ def test_calculate_vigor():
     embedded_exp = embedded.EmbeddedExperiment(dataset_path)
     calculated_vigor = embedded_exp.vigor()
 
-    expected_vigor = fl.load(ASSETS_PATH / "expected_vigor.h5", "/vigor")
+    expected_vigor = fl.load(ASSETS_PATH / "embedded_dataset" / "expected_vigor.h5", "/vigor")
 
     assert_array_almost_equal(calculated_vigor, expected_vigor, 5)
