@@ -1,17 +1,9 @@
 import pytest
 
-from pathlib import Path
 
 import numpy as np
 
 import bouter as bt
-
-ASSETS_PATH = Path(__file__).parent / "assets"
-
-
-@pytest.fixture
-def embedded_exp_path():
-    return ASSETS_PATH / "embedded_dataset"
 
 
 def test_class_instantiation(embedded_exp_path):

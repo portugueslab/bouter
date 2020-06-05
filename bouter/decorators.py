@@ -31,7 +31,6 @@ def cache_results(cache_filename=None):
             # Combine default parameters and keyword specified arguments:
             full_params_dict = get_method_default_kwargs(wrapped)
             full_params_dict.update(kwargs)
-            print("a", force_recompute)
 
             # If we are in caching mode:
             if exp.cache_active:

@@ -64,12 +64,9 @@ class Experiment(dict):
         behavior_log=["behavior_log"],
     )
 
-    def __init__(
-        self, path, session_id=None, cache_active=True, default_cached=True
-    ):
+    def __init__(self, path, session_id=None, cache_active=True):
 
         # If true forces to use cached with whatever params it was computed:
-        self.default_cached = default_cached
         self.cache_active = cache_active
 
         self.root, self.session_id = root_sid_from_path(

@@ -32,9 +32,7 @@ class EmbeddedExperiment(Experiment):
         if continue_curvature is None:
             if revert_pts is not None:
                 fixed_segments = utilities.revert_segment_filling(
-                    segments,
-                    continue_curvature=continue_curvature,
-                    pts=revert_pts,
+                    segments, revert_pts=revert_pts,
                 )
                 self.behavior_log.loc[:, columns] = fixed_segments
 
@@ -52,8 +50,9 @@ class EmbeddedExperiment(Experiment):
 
     @decorators.cache_results(cache_filename="behavior_log")
     def compute_vigor(self, vigor_duration_s=0.05):
-        """ Get vigor, the proxy of embedded fish forward velocity,
+        """Compute vigor, the proxy of embedded fish forward velocity,
         a standard deviation calculated on a rolling window of tail curvature.
+        Add it as a column to the dataframe log and return the full dataframe
 
         :param vigor_duration: standard deviation window length in seconds
         :return:
