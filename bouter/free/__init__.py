@@ -5,39 +5,13 @@ import numpy as np
 
 class FreelySwimmingExperiment(Experiment):
 
+
     def get_n_segments(self, prefix=True):
-        if prefix:
-
-            def _tail_part(s):
-                ps = s.split("_")
-                if len(ps) == 3:
-                    return ps[2]
-                else:
-                    return 0
-
-        else:
-
-            def _tail_part(s):
-                ps = s.split("_")
-                if len(ps) == 2:
-                    return ps[1]
-                else:
-                    return 0
-
-        tpfn = np.vectorize(_tail_part, otypes=[int])
-        return np.max(tpfn(self.behavior_log.columns.values)) + 1
+        return self["tracking+fish_tracking"]["n_segments"] - 1
 
 
     def get_n_fish(self):
-        def _fish_part(s):
-            ps = s.split("_")
-            if len(ps) == 3:
-                return ps[0][1:]
-            else:
-                return 0
-
-        tpfn = np.vectorize(_fish_part, otypes=[int])
-        return np.max(tpfn(self.behavior_log.columns.values)) + 1
+        return self["tracking+fish_tracking"]["n_fish_max"]
 
 
     def _extract_bout(self, s, e, n_segments, i_fish=0, scale=1.0, dt=None):
