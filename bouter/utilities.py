@@ -80,14 +80,36 @@ def log_dt(log_df, i_start=10, i_end=110):
 
 
 @jit(nopython=True)
-def fill_out_segments(tail_angle_mat, continue_curvature=0):
-    """ Fills out segments of tail trace
+def revert_segment_filling(fixed_mat, revert_pts):
+    """Revert filling of a tail segments matrix.
+    :param fixed_mat:
+    :param revert_pts:
+    :return:
+    """
+    # As they can be saved as uint8:
+    int_pts = revert_pts.astype(np.int8)
+
+    for i in range(len(int_pts)):
+        if int_pts[i] > 0:
+            fixed_mat[i, -int_pts[i] :] = np.nan
+
+    return fixed_mat
+
+
+@jit(nopython=True)
+def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
+    """Fills out segments of tail trace.
 
     :param tail_angle_mat
     :param continue_curvature
     :return:
     """
     n_t, n_segments = tail_angle_mat.shape
+
+    # If needed, revert previous filling (this could be done more efficiently
+    # modifying later loop instead)
+    if revert_pts is not None:
+        tail_angle_mat = revert_segment_filling(tail_angle_mat, revert_pts)
 
     # To keep track of segments missing for every time point:
     n_segments_missing = np.zeros(n_t, dtype=np.uint8)

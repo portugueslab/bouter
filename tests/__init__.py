@@ -1,1 +1,3 @@
-"""Unit test package for bouter."""
+from pathlib import Path
+
+ASSETS_PATH = Path(__file__).parent / "assets"

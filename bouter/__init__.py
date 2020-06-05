@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from bouter.experiment import Experiment
 from bouter.embedded import EmbeddedExperiment
 from bouter.multisession_exp import MultiSessionExperiment
