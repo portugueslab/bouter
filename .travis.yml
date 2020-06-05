@@ -14,15 +14,16 @@ script:
 - tox
 
 after_success:
+- python3 --version
 - pip install codecov
 - codecov
-
 - pip install Sphinx==3.0.3
 - pip install sphinx_rtd_theme==0.4.3
 - pip install .  # Seems to be required for the apidocs
 - pip install nbsphinx
 - pip install pandoc
 - pip install jupyter_client
+- pip install ipykernel
 - cd docs
 - sphinx-apidoc ../bouter -o ./
 - make html
