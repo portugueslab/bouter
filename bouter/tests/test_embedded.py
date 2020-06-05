@@ -5,7 +5,7 @@ import flammkuchen as fl
 from bouter import embedded
 from bouter import utilities
 
-from tests import ASSETS_PATH
+from bouter.tests import ASSETS_PATH
 
 
 def corrupt_tail_matrix(tail_matrix, prop_missing=0.2, std=3):
