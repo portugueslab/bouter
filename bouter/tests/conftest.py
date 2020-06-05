@@ -3,7 +3,7 @@ import pytest
 from distutils.dir_util import copy_tree
 from pathlib import Path
 
-from tests import ASSETS_PATH
+from bouter.tests import ASSETS_PATH
 
 
 @pytest.fixture()

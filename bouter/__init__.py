@@ -7,7 +7,7 @@ from bouter.embedded import EmbeddedExperiment
 from bouter.multisession_exp import MultiSessionExperiment
 
 # Locate assets
-ASSETS_PATH = Path(__file__).parent.parent / "tests" / "assets"
+ASSETS_PATH = Path(__file__).parent / "tests" / "assets"
 print(ASSETS_PATH)
 
 
