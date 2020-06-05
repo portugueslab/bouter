@@ -22,7 +22,7 @@ after_success:
 - pip install .  # Seems to be required for the apidocs
 - pip install nbsphinx
 - pip install pandoc
-
+- pip install jupyter_client
 - cd docs
 - sphinx-apidoc ../bouter -o ./
 - make html
