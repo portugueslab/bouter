@@ -2,5 +2,5 @@ from bouter import Experiment
 
 
 class FreelySwimmingExperiment(Experiment):
-    def bouts(self):
+    def get_bouts(self):
         pass

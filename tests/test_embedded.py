@@ -2,7 +2,6 @@ import bouter
 from numpy.testing import assert_array_almost_equal
 from pathlib import Path
 import flammkuchen as fl
-import numpy as np
 
 from bouter import embedded
 
@@ -24,7 +23,7 @@ def test_calculate_vigor():
     # Create EmbeddedExperiment class and calculate vigor
     dataset_path = ASSETS_PATH / "embedded_dataset"
     embedded_exp = embedded.EmbeddedExperiment(dataset_path)
-    calculated_vigor = embedded_exp.vigor()
+    calculated_vigor = embedded_exp.get_vigor()
 
     expected_vigor = fl.load(ASSETS_PATH / "expected_vigor.h5", "/vigor")
 

@@ -8,6 +8,12 @@ from numpy import VisibleDeprecationWarning
 from bouter import descriptors
 
 
+def get_method_default_kwargs(method):
+    argnames, _, _, defaults = inspect.getargspec(method)
+    argnames.pop(argnames.index("self"))
+    return {n: v for n, v in zip(argnames, defaults)}
+
+
 def cache_results(method):
     """ Method decorator that caches an .h5 file with the results of the
     decorated function. This behavior can be disabled with the exp.cache_active
@@ -20,7 +26,10 @@ def cache_results(method):
 
     @functools.wraps(method)
     def decorated_method(exp, **kwargs):
-        _, _, keywords, defaults = inspect.getargspec(method)
+        # Combine default parameters and keyword specified arguments
+        full_params_dict = get_method_default_kwargs(method)
+        full_params_dict.update(kwargs)
+
         if exp.cache_active:
             method_nm = method.__name__
 
@@ -29,22 +38,18 @@ def cache_results(method):
             )
 
             if method_nm in exp.processing_params.keys():
-                if (
-                    kwargs == exp.processing_params[method_nm]
-                    or exp.default_cached
-                ):
+                if full_params_dict == exp.processing_params[method_nm]:
                     print(
                         f"Using cached {method_nm} (this print will be removed)"
                     )
                     return fl.load(filename)
 
         # Apply method:
-        print(method_nm, kwargs)
-        results = method(exp, **kwargs)
+        results = method(exp, **full_params_dict)
 
         if exp.cache_active:
             fl.save(filename, results)
-            exp.update_processing_params({method_nm: kwargs})
+            exp.update_processing_params({method_nm: full_params_dict})
 
         return results
 

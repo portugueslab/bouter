@@ -292,7 +292,7 @@ class Experiment(dict):
         for file in self.root.glob(decorators.CACHE_FILE_TEMPLATE.format("*")):
             shutil.rmtree(file)
 
-    def bouts(self):
+    def get_bouts(self):
         raise
 
     @decorators.deprecated(

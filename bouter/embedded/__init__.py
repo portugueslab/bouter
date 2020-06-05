@@ -37,7 +37,7 @@ class EmbeddedExperiment(Experiment):
         self.behavior_log.loc[:, columns] = matrix
 
     @decorators.cache_results
-    def vigor(self, vigor_duration_s=0.05):
+    def get_vigor(self, vigor_duration_s=0.05):
         """ Get vigor, the proxy of embedded fish forward velocity,
         a standard deviation calculated on a rolling window of tail curvature.
 
@@ -68,12 +68,12 @@ class EmbeddedExperiment(Experiment):
         )
 
     @decorators.cache_results
-    def bouts(self, vigor_threshold=0.1):
+    def get_bouts(self, vigor_threshold=0.1):
         """Extract bouts above threshold.
         :param vigor_threshold:
         :return:
         """
-        vigor = self.vigor()
+        vigor = self.get_vigor()
         bouts, _ = utilities.extract_segments_above_threshold(
             vigor.values, vigor_threshold
         )
@@ -81,7 +81,7 @@ class EmbeddedExperiment(Experiment):
         return bouts
 
     @decorators.cache_results
-    def bout_properties(self, bout_init_window_s=0.07):
+    def get_bout_properties(self, bout_init_window_s=0.07):
         """Create dataframe with summary of bouts properties.
         :param bout_init_window_s: Window defining initial part of
             the bout for the turning angle calculation, in seconds.
@@ -89,8 +89,8 @@ class EmbeddedExperiment(Experiment):
         """
         bout_init_window_pts = int(bout_init_window_s / self.behavior_dt)
         tail_sum = self.behavior_log["tail_sum"].values
-        vigor = self.vigor().values
-        bouts = self.bouts()
+        vigor = self.get_vigor().values
+        bouts = self.get_bouts()
         peak_vig, med_vig, ang_turn, ang_turn_tot = bout_stats.bout_stats(
             vigor, tail_sum, bouts, bout_init_window_pts
         )
