@@ -64,7 +64,7 @@ class Experiment(dict):
         behavior_log=["behavior_log"],
     )
 
-    def __init__(self, path, session_id=None, cache_active=True):
+    def __init__(self, path, session_id=None, cache_active=False):
 
         # If true forces to use cached with whatever params it was computed:
         self.cache_active = cache_active
@@ -99,27 +99,24 @@ class Experiment(dict):
 
     @property
     def params_filename(self):
-        return self.root / (self.session_id + descriptors.PARAMS_LOG_SFX)
+        if self.cache_active:
+            return self.root / (self.session_id + descriptors.PARAMS_LOG_SFX)
+        else:
+            raise ValueError("cache_active must be True to log parameters!")
 
     @property
     def processing_params(self):
         """As a property it automatically keeps the log in synch.
         """
-        if self.cache_active:
-
-            if self.params_filename.exists():
-                with open(self.params_filename, "r") as f:
-                    processing_params = json.load(f)
-            else:
-                processing_params = {}
-                with open(self.params_filename, "w") as f:
-                    json.dump({}, f)
-
-            return processing_params
+        if self.params_filename.exists():
+            with open(self.params_filename, "r") as f:
+                processing_params = json.load(f)
         else:
-            raise ValueError(
-                "You want to use cached params but the cache_active flag attribute is false!"
-            )
+            processing_params = {}
+            with open(self.params_filename, "w") as f:
+                json.dump({}, f)
+
+        return processing_params
 
     @processing_params.setter
     def processing_params(self, vals):
