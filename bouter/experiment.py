@@ -75,7 +75,6 @@ class Experiment(dict):
         self.root, self.session_id = root_sid_from_path(
             path, session_id=session_id
         )
-        print(self.root, self.session_id)
 
         metadata_file = self.root / (
             self.session_id + descriptors.METADATA_SFX
@@ -216,7 +215,7 @@ class Experiment(dict):
         return self._get_log("behavior_log")
 
     def _log_filename(self, log_name):
-        # TODO cleanup
+        # TODO cleanup with get_log
 
         for possible_name in self.log_mapping[log_name]:
             try:

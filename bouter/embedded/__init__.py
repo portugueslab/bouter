@@ -6,17 +6,6 @@ from bouter import Experiment
 
 
 class EmbeddedExperiment(Experiment):
-    def __init__(self, *args, continue_curvature=None, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        if continue_curvature is not None:
-            self.tail_points_matrix, missing_n = utilities.fill_out_segments(
-                self.tail_angles_df.copy(),
-                continue_curvature=continue_curvature,
-            )
-
-            self.behavior_log["missing_n"] = missing_n
-
     @property
     def n_tail_segments(self):
         return self["behavior"]["tail"]["n_segments"]
@@ -28,21 +17,40 @@ class EmbeddedExperiment(Experiment):
         """
         return [f"theta_{i:02}" for i in range(self.n_tail_segments)]
 
-    @decorators.cache_results(target_logfile="behavior_log")
+    @decorators.cache_results(cache_filename="behavior_log")
     def reconstruct_missing_segments(self, continue_curvature=None):
-        # TODO support reverting if continue_curvature is None
-        columns = [f"theta_{i:02}" for i in range(self.n_tail_segments)]
 
-        angles = self.behavior_log.loc[:, self.tail_columns].values.copy()
-        fixed_segments, missing_n = utilities.fill_out_segments(
-            angles, continue_curvature=continue_curvature,
-        )
-        self.behavior_log.loc[:, columns] = fixed_segments
-        self.behavior_log["missing_n"] = missing_n
+        columns = [f"theta_{i:02}" for i in range(self.n_tail_segments)]
+        segments = self.behavior_log.loc[:, self.tail_columns].values.copy()
+
+        if "missing_n" in self.behavior_log.columns:
+            revert_pts = self.behavior_log["missing_n"].values
+        else:
+            revert_pts = None
+
+        # Revert if possible if continue_curvature is None:
+        if continue_curvature is None:
+            if revert_pts is not None:
+                fixed_segments = utilities.revert_segment_filling(
+                    segments,
+                    continue_curvature=continue_curvature,
+                    pts=revert_pts,
+                )
+                self.behavior_log.loc[:, columns] = fixed_segments
+
+        # Otherwise, use the parameter to do the filling:
+        else:
+            fixed_segments, missing_n = utilities.fill_out_segments(
+                segments,
+                continue_curvature=continue_curvature,
+                revert_pts=revert_pts,
+            )
+            self.behavior_log.loc[:, columns] = fixed_segments
+            self.behavior_log["missing_n"] = missing_n
 
         return self.behavior_log
 
-    @decorators.cache_results(target_logfile="behavior_log")
+    @decorators.cache_results(cache_filename="behavior_log")
     def compute_vigor(self, vigor_duration_s=0.05):
         """ Get vigor, the proxy of embedded fish forward velocity,
         a standard deviation calculated on a rolling window of tail curvature.
@@ -50,7 +58,6 @@ class EmbeddedExperiment(Experiment):
         :param vigor_duration: standard deviation window length in seconds
         :return:
         """
-
         vigor_win = int(vigor_duration_s / self.behavior_dt)
         self.behavior_log["vigor"] = (
             self.behavior_log["tail_sum"]
@@ -58,7 +65,7 @@ class EmbeddedExperiment(Experiment):
             .rolling(vigor_win, center=True)
             .std()
         )
-        return self.behavior_log["vigor"]
+        return self.behavior_log
 
     @decorators.cache_results()
     def get_bouts(self, vigor_threshold=0.1):
@@ -66,9 +73,10 @@ class EmbeddedExperiment(Experiment):
         :param vigor_threshold:
         :return:
         """
-        vigor = self.compute_vigor()
+        # Make sure there's a vigor column:
+        self.compute_vigor()
         bouts, _ = utilities.extract_segments_above_threshold(
-            vigor.values, vigor_threshold
+            self.behavior_log["vigor"].values, vigor_threshold
         )
 
         return bouts

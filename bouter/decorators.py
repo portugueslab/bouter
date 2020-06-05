@@ -14,28 +14,31 @@ def get_method_default_kwargs(method):
     return {n: v for n, v in zip(argnames, defaults)}
 
 
-def cache_results(target_logfile=None):
+def cache_results(cache_filename=None):
     """ Method decorator that caches an .h5 file with the results of the
     decorated function. This behavior can be disabled with the exp.cache_active
     flag.
     Function results are loaded if the new call arguments match the old call,
     or if the exp.default_cached flag is set.
     :param method:
-    :param targetfile: if not None, the cached value is written to a target (e.g. a log)
+    :param cache_filename: if not None, the cached value is written to a target (e.g. a log)
     :return:
     """
 
     def actual_decorator(wrapped):
         @functools.wraps(wrapped)
-        def decorated_method(exp, **kwargs):
+        def decorated_method(exp, force_recompute=False, **kwargs):
             # Combine default parameters and keyword specified arguments:
             full_params_dict = get_method_default_kwargs(wrapped)
             full_params_dict.update(kwargs)
+            print("a", force_recompute)
 
+            # If we are in caching mode:
             if exp.cache_active:
-                method_nm = wrapped.__name__
+                method_nm = wrapped.__name__  # name of the function
 
-                if target_logfile is None:
+                # produce filename for the cache:
+                if cache_filename is None:
                     targetfile = (
                         exp.root
                         / descriptors.CACHE_FILE_TEMPLATE.format(
@@ -43,22 +46,29 @@ def cache_results(target_logfile=None):
                         )
                     )
                 else:
-                    targetfile = exp._log_filename(target_logfile)
-                    print(targetfile)
+                    targetfile = exp.root / exp._log_filename(cache_filename)
 
-                if method_nm in exp.processing_params.keys():
-                    if full_params_dict == exp.processing_params[method_nm]:
-                        print(
-                            f"Using cached {method_nm} (this print will be removed)"
-                        )
-                        return fl.load(targetfile)
+                # If we already produced outputs for the function, we used
+                # the same parameters, and we don't force recalculation:
+                if (
+                    method_nm in exp.processing_params.keys()
+                    and full_params_dict == exp.processing_params[method_nm]
+                    and not force_recompute
+                ):
+                    print(
+                        f"Using cached {method_nm} in {targetfile} (this print will be removed)"
+                    )
+                    return fl.load(targetfile, "/data")
 
-            # Apply method:
+            # Apply the function we are decorating:
             results = wrapped(exp, **full_params_dict)
 
+            # If we are in caching mode, store results
             if exp.cache_active:
-                fl.save(targetfile, results)
+                fl.save(targetfile, dict(data=results))
                 exp.update_processing_params({method_nm: full_params_dict})
+
+            return results
 
         return decorated_method
 
