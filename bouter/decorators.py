@@ -1,12 +1,11 @@
 import warnings
 import functools
-import flammkuchen as fl
-from functools import wraps
+import inspect
 
+import flammkuchen as fl
 from numpy import VisibleDeprecationWarning
 
-
-CACHE_FILE_TEMPLATE = "{}_cache_{}.h5"
+from bouter import descriptors
 
 
 def cache_results(method):
@@ -19,27 +18,33 @@ def cache_results(method):
     :return:
     """
 
-    @wraps(method)
+    @functools.wraps(method)
     def decorated_method(exp, **kwargs):
+        _, _, keywords, defaults = inspect.getargspec(method)
         if exp.cache_active:
-            # Create cache file if none exists:
-            filename = exp.root / CACHE_FILE_TEMPLATE.format(
-                exp.session_id, method.__name__
+            method_nm = method.__name__
+
+            filename = exp.root / descriptors.CACHE_FILE_TEMPLATE.format(
+                exp.session_id, method_nm
             )
 
-            if filename.exists():
-                old_arguments = fl.load(filename, "/arguments")
-
-                if kwargs == old_arguments or exp.default_cached:
+            if method_nm in exp.processing_params.keys():
+                if (
+                    kwargs == exp.processing_params[method_nm]
+                    or exp.default_cached
+                ):
                     print(
-                        f"Using cached {method.__name__} (this print will be removed)"
+                        f"Using cached {method_nm} (this print will be removed)"
                     )
-                    return fl.load(filename, "/results")
+                    return fl.load(filename)
 
+        # Apply method:
+        print(method_nm, kwargs)
         results = method(exp, **kwargs)
 
         if exp.cache_active:
-            fl.save(filename, dict(results=results, arguments=kwargs))
+            fl.save(filename, results)
+            exp.update_processing_params({method_nm: kwargs})
 
         return results
 

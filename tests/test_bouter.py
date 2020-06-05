@@ -23,7 +23,7 @@ def test_class_instantiation(embedded_exp_path):
     )
 
 
-# TODO if we test multiple dataset this will have to be improved
+# TODO if we test multiple datasets this will have to be improved
 @pytest.mark.parametrize(
     "prop_name, outcome",
     [
