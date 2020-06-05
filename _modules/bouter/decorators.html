@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bouter.decorators &mdash; bouter 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> bouter
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#credits">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html">How to analyse a (Stytra) embedded tail tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">bouter</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../bouter.html">bouter</a> &raquo;</li>
+        
+      <li>bouter.decorators</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bouter.decorators</h1><div class="highlight"><pre>
+<span></span>import warnings
+import functools
+import inspect
+
+import flammkuchen as fl
+from numpy import VisibleDeprecationWarning
+
+from bouter import descriptors
+
+
+<div class="viewcode-block" id="get_method_default_kwargs"><a class="viewcode-back" href="../../source/bouter.html#bouter.decorators.get_method_default_kwargs">[docs]</a>def get_method_default_kwargs(method):
+    argnames, _, _, defaults = inspect.getargspec(method)
+    argnames.pop(argnames.index(&quot;self&quot;))
+    return {n: v for n, v in zip(argnames, defaults)}</div>
+
+
+<div class="viewcode-block" id="cache_results"><a class="viewcode-back" href="../../source/bouter.html#bouter.decorators.cache_results">[docs]</a>def cache_results(cache_filename=None):
+    &quot;&quot;&quot; Method decorator that caches an .h5 file with the results of the
+    decorated function. This behavior can be disabled with the exp.cache_active
+    flag.
+    Function results are loaded if the new call arguments match the old call,
+    or if the exp.default_cached flag is set.
+    :param method:
+    :param cache_filename: if not None, the cached value is written to a target (e.g. a log)
+    :return:
+    &quot;&quot;&quot;
+
+    def actual_decorator(wrapped):
+        @functools.wraps(wrapped)
+        def decorated_method(exp, force_recompute=False, **kwargs):
+            # Combine default parameters and keyword specified arguments:
+            full_params_dict = get_method_default_kwargs(wrapped)
+            full_params_dict.update(kwargs)
+
+            # If we are in caching mode:
+            if exp.cache_active:
+                method_nm = wrapped.__name__  # name of the function
+
+                # produce filename for the cache:
+                if cache_filename is None:
+                    targetfile = (
+                        exp.root
+                        / descriptors.CACHE_FILE_TEMPLATE.format(
+                            exp.session_id, method_nm
+                        )
+                    )
+                else:
+                    targetfile = exp.root / exp._log_filename(cache_filename)
+
+                # If we already produced outputs for the function, we used
+                # the same parameters, and we don&#39;t force recalculation:
+                if (
+                    method_nm in exp.processing_params.keys()
+                    and full_params_dict == exp.processing_params[method_nm]
+                    and not force_recompute
+                ):
+                    print(
+                        f&quot;Using cached {method_nm} in {targetfile} (this print will be removed)&quot;
+                    )
+                    return fl.load(targetfile, &quot;/data&quot;)
+
+            # Apply the function we are decorating:
+            results = wrapped(exp, **full_params_dict)
+
+            # If we are in caching mode, store results
+            if exp.cache_active:
+                fl.save(targetfile, dict(data=results))
+                exp.update_processing_params({method_nm: full_params_dict})
+
+            return results
+
+        return decorated_method
+
+    return actual_decorator</div>
+
+
+<div class="viewcode-block" id="deprecated"><a class="viewcode-back" href="../../source/bouter.html#bouter.decorators.deprecated">[docs]</a>def deprecated(message=None):
+    if message is None:
+        message = &quot;&quot;
+
+    def decorator(fn):
+        @functools.wraps(fn)
+        def wrapper(*args, **kwargs):
+            warnings.warn(
+                &quot;Function {0} is deprecated. {1}&quot;.format(fn.__name__, message),
+                category=VisibleDeprecationWarning,
+                stacklevel=2,
+            )
+
+            return fn(*args, **kwargs)
+
+        return wrapper
+
+    return decorator</div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Vilim Stih, Hagar Lavian, Luigi Petrucco, Ot Prat
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
