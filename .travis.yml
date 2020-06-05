@@ -18,7 +18,6 @@ script:
 - tox
 
 after_success:
-- python3 --version
 - pip install codecov
 - codecov
 - pip install Sphinx==3.0.3
@@ -28,7 +27,7 @@ after_success:
 - pip install pandoc
 - pip install ipykernel
 - cd docs
-- sphinx-apidoc ../bouter -o ./
+- sphinx-apidoc ../bouter -o source/
 - make html
 - cd ..
 
@@ -43,6 +42,7 @@ deploy:
     github_token:
         secure: "5XvJ2VWz+EY4ldj7rKIYsVzn9F7P76dkIOqdRs/NiDJzv2OGwksGNGEDEWJJKH3a23Lnqkmo2k+5/ZF4e4nukG3nNWGhcyMv3SUTPwA60fUvhpwyZt6VuM2qGUR1/71mMBHuOPW1lKM6cGcryyVMN0Qdbgr+C/9YMQltxkt0xN/e9Tdypd69xvuwJtfjWQ3a7MuoKkLpdYs2+RviItooZHH/sMGmYXA03n7YIc8rg0IC8SvSEFjjyPOyN60gSh6msTM9fPkvN3SjCkvkI0DXqYRHd4og3a9cjVq/3N4ut+N86xJHfAGD3Z+kkBHy04Wnic2867slRzGWzXaymyQK8TKsXMVmeXOFhgqyWBzIzjeB9s3nh7iFla6BArgknOoST5mUL7cy5BN6iI4V81sQVM0AGkhf0qJWRLsntg0KFRpBfGvei8TOb2P3k+TVkOJCeH3WKdRdstbh72eFJvlQvU3377Anma7j02hCm45pJ0tiJCrs5L8eKlxTaMgLAmNDE/UTMw79mRhChrI8Bu174Wym6m5Toxo8YyAqf4ZCIx5fT0CHTUFGkDkncEyGhWReOuyZmxBGrpFT0feDfeym2hT5RErfMUxrpzrr8Y9lInQDgDYirx4Jdf2dN1gT8sQowGBHsc0f7T7ir/yg1hJS8bzvj9PuDDtgHSgHMKsaE0s="
     on:
+      branch: test_example_notebooks
       python: 3.8
     local-dir: docs/_build/html
 

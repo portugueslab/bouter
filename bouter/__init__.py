@@ -8,7 +8,6 @@ from bouter.multisession_exp import MultiSessionExperiment
 
 # Locate assets
 ASSETS_PATH = Path(__file__).parent / "tests" / "assets"
-print(ASSETS_PATH)
 
 
 def load_folder(folder, exp_class=Experiment):
