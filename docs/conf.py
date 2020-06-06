@@ -55,6 +55,15 @@ html_sourcelink_suffix = ""
 # The master toctree document.
 master_doc = "index"
 
+nbsphinx_execute = "always"
+
+nbsphinx_kernel_name = "python3"
+
+nbsphinx_execute_arguments = [
+    "--InlineBackend.figure_formats={'svg', 'pdf'}",
+    "--InlineBackend.rc={'figure.dpi': 96}",
+]
+
 # General information about the project.
 project = "bouter"
 copyright = "2020, Vilim Stih, Hagar Lavian, Luigi Petrucco, Ot Prat"
