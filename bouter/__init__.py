@@ -6,8 +6,10 @@ from bouter.experiment import Experiment
 from bouter.embedded import EmbeddedExperiment
 from bouter.multisession_exp import MultiSessionExperiment
 
+from bouter import tests
+
 # Locate assets
-ASSETS_PATH = Path(__file__).parent / "tests" / "assets"
+ASSETS_PATH = Path(tests.__file__).parent / "assets"
 
 
 def load_folder(folder, exp_class=Experiment):
