@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bouter.multisession_exp &mdash; bouter 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> bouter
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#credits">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html">How to analyse a (Stytra) embedded tail tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">bouter</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../bouter.html">bouter</a> &raquo;</li>
+        
+      <li>bouter.multisession_exp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bouter.multisession_exp</h1><div class="highlight"><pre>
+<span></span>import json
+from datetime import datetime
+
+import pandas as pd
+
+from bouter.experiment import Experiment
+
+
+<div class="viewcode-block" id="MultiSessionExperiment"><a class="viewcode-back" href="../../source/bouter.html#bouter.multisession_exp.MultiSessionExperiment">[docs]</a>class MultiSessionExperiment(Experiment):
+    &quot;&quot;&quot; Class to handle the scenario of multiple stytra sessions within the
+    same experiment - typically, for plane-wise repetitions in 2p imaging.
+    &quot;&quot;&quot;
+
+    def __init__(self, path):
+        self.session_list = sorted(list(path.glob(&quot;*_metadata.json&quot;)))
+
+        super().__init__(self.session_list[0])
+
+        session_id_list = []
+        session_start = []
+        for i_meta in range(len(self.session_list)):
+            session_id_list += [
+                str(self.session_list[i_meta].name).split(&quot;_&quot;)[0]
+            ]
+            metadata_file = self.session_list[i_meta]
+            with open(str(metadata_file), &quot;r&quot;) as f:
+                source_metadata = json.load(f)
+            session_start += [source_metadata[&quot;general&quot;][&quot;t_protocol_start&quot;]]
+
+        # sorting the session_id list
+        self.session_id_list = [
+            x for _, x in sorted(zip(session_start, session_id_list))
+        ]
+        self.session_list = [
+            x for _, x in sorted(zip(session_start, self.session_list))
+        ]
+
+        for log_name in [
+            &quot;behavior_log&quot;,
+            &quot;stimulus_param_log&quot;,
+            &quot;estimator_log&quot;,
+        ]:
+            for possible_name in self.log_mapping[log_name]:
+                logfnames = list(self.root.glob(&quot;*_&quot; + possible_name + &quot;.*&quot;))
+                if len(logfnames) &gt; 0:
+                    self.log_mapping[log_name] = (
+                        possible_name + logfnames[0].suffix
+                    )
+
+    def _get_log(self, log_name):
+        &quot;&quot;&quot; Given name of the log get it from attributes or load it ex novo
+        :param log_name:  string with the type ot the log to load
+        :return:  loaded log DataFrame
+        &quot;&quot;&quot;
+        uname = &quot;_&quot; + log_name
+
+        # We will concatenate all logs in a single one using correct timestamps
+        # from first session start time:
+        timestarts = self.session_start_tstamps()
+        timedeltas = [(s - timestarts[0]).total_seconds() for s in timestarts]
+
+        # Check whether this was already set:
+        if getattr(self, uname) is None:
+            # If not, loop over different possibilities for that filename
+            # (from old stytra versions)
+            for possible_name in self.log_mapping[log_name]:
+                # TODO not sure what this is handling:
+                # if possible_name[:3] == &quot;key&quot;:
+                #    try:
+                #        data = self
+                #        path = possible_name[4:].split(&quot;/&quot;)
+                #        for i in range(0, len(path)):
+                #            data = data[path[i]]
+                #        setattr(self, uname, pd.DataFrame(data))
+                #        break
+                #    except KeyError:
+                #        pass
+                # else:
+                try:
+                    # Load all dataframes:
+                    logfnames = list(
+                        self.root.glob(&quot;*_&quot; + possible_name + &quot;.*&quot;)
+                    )
+                    all_logs = []
+                    k_idx = 0
+                    for logfname, dt in zip(logfnames, timedeltas):
+                        df = self._load_log(logfname.name)
+
+                        # Correct index for concatenation and compute time from
+                        # exp start:
+                        df.index += k_idx
+                        df[&quot;t&quot;] += dt
+                        k_idx += len(df)
+
+                        all_logs.append(df)
+
+                    df = pd.concat(all_logs)
+                    setattr(self, uname, df)
+                    break
+                except (ValueError, UnboundLocalError):
+                    pass
+            else:
+                raise ValueError(log_name + &quot; does not exist&quot;)
+
+        return getattr(self, uname)
+
+<div class="viewcode-block" id="MultiSessionExperiment.session_start_tstamps"><a class="viewcode-back" href="../../source/bouter.html#bouter.multisession_exp.MultiSessionExperiment.session_start_tstamps">[docs]</a>    def session_start_tstamps(self):
+        &quot;&quot;&quot; Return timestamps for all the sessions in this folder.
+        &quot;&quot;&quot;
+        start_tstamps = []
+        for p in self.session_list:
+            s = Experiment(p)[&quot;general&quot;][&quot;t_protocol_start&quot;]
+            start_tstamps.append(datetime.strptime(s, &quot;%Y-%m-%dT%H:%M:%S.%f&quot;))
+        return start_tstamps</div>
+
+<div class="viewcode-block" id="MultiSessionExperiment.get_session_log"><a class="viewcode-back" href="../../source/bouter.html#bouter.multisession_exp.MultiSessionExperiment.get_session_log">[docs]</a>    def get_session_log(self, log_name, session_idx):
+        &quot;&quot;&quot; Function to load a log for a single session, specified by index-
+        :param log_name: string specifying the type of log
+            (e.g., &quot;behavior_log&quot;)
+        :param session_idx: int, index of session to load:
+        :return:
+        &quot;&quot;&quot;
+        log_name = self.log_mapping[log_name]
+        session_log = self.root / str(
+            self.session_id_list[session_idx] + &quot;_&quot; + log_name
+        )
+        return self._load_log(session_log)</div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Vilim Stih, Hagar Lavian, Luigi Petrucco, Ot Prat
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

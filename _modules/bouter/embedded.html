@@ -1,0 +1,313 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bouter.embedded &mdash; bouter 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> bouter
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#credits">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html">How to analyse a (Stytra) embedded tail tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">bouter</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../bouter.html">bouter</a> &raquo;</li>
+        
+      <li>bouter.embedded</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bouter.embedded</h1><div class="highlight"><pre>
+<span></span>import numpy as np
+import pandas as pd
+
+from bouter import utilities, decorators, bout_stats
+from bouter import Experiment
+
+
+<div class="viewcode-block" id="EmbeddedExperiment"><a class="viewcode-back" href="../../source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment">[docs]</a>class EmbeddedExperiment(Experiment):
+    @property
+    def n_tail_segments(self):
+        return self[&quot;behavior&quot;][&quot;tail&quot;][&quot;n_segments&quot;]
+
+    @property
+    def tail_columns(self):
+        &quot;&quot;&quot;Return matrix with the tail points.
+        Careful, the array is not copied!
+        &quot;&quot;&quot;
+        return [f&quot;theta_{i:02}&quot; for i in range(self.n_tail_segments)]
+
+<div class="viewcode-block" id="EmbeddedExperiment.reconstruct_missing_segments"><a class="viewcode-back" href="../../source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment.reconstruct_missing_segments">[docs]</a>    @decorators.cache_results(cache_filename=&quot;behavior_log&quot;)
+    def reconstruct_missing_segments(self, continue_curvature=None):
+
+        columns = [f&quot;theta_{i:02}&quot; for i in range(self.n_tail_segments)]
+        segments = self.behavior_log.loc[:, self.tail_columns].values.copy()
+
+        if &quot;missing_n&quot; in self.behavior_log.columns:
+            revert_pts = self.behavior_log[&quot;missing_n&quot;].values
+        else:
+            revert_pts = None
+
+        # Revert if possible if continue_curvature is None:
+        if continue_curvature is None:
+            if revert_pts is not None:
+                fixed_segments = utilities.revert_segment_filling(
+                    segments, revert_pts=revert_pts,
+                )
+                self.behavior_log.loc[:, columns] = fixed_segments
+
+        # Otherwise, use the parameter to do the filling:
+        else:
+            fixed_segments, missing_n = utilities.fill_out_segments(
+                segments,
+                continue_curvature=continue_curvature,
+                revert_pts=revert_pts,
+            )
+            self.behavior_log.loc[:, columns] = fixed_segments
+            self.behavior_log[&quot;missing_n&quot;] = missing_n
+
+        return self.behavior_log</div>
+
+<div class="viewcode-block" id="EmbeddedExperiment.compute_vigor"><a class="viewcode-back" href="../../source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment.compute_vigor">[docs]</a>    @decorators.cache_results(cache_filename=&quot;behavior_log&quot;)
+    def compute_vigor(self, vigor_duration_s=0.05):
+        &quot;&quot;&quot;Compute vigor, the proxy of embedded fish forward velocity,
+        a standard deviation calculated on a rolling window of tail curvature.
+        Add it as a column to the dataframe log and return the full dataframe
+
+        :param vigor_duration: standard deviation window length in seconds
+        :return:
+        &quot;&quot;&quot;
+        vigor_win = int(vigor_duration_s / self.behavior_dt)
+        self.behavior_log[&quot;vigor&quot;] = (
+            self.behavior_log[&quot;tail_sum&quot;]
+            .interpolate()
+            .rolling(vigor_win, center=True)
+            .std()
+        )
+        return self.behavior_log</div>
+
+<div class="viewcode-block" id="EmbeddedExperiment.get_bouts"><a class="viewcode-back" href="../../source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment.get_bouts">[docs]</a>    @decorators.cache_results()
+    def get_bouts(self, vigor_threshold=0.1):
+        &quot;&quot;&quot;Extract bouts above threshold.
+        :param vigor_threshold:
+        :return:
+        &quot;&quot;&quot;
+        # Make sure there&#39;s a vigor column:
+        self.compute_vigor()
+        bouts, _ = utilities.extract_segments_above_threshold(
+            self.behavior_log[&quot;vigor&quot;].values, vigor_threshold
+        )
+
+        return bouts</div>
+
+<div class="viewcode-block" id="EmbeddedExperiment.get_bout_properties"><a class="viewcode-back" href="../../source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment.get_bout_properties">[docs]</a>    @decorators.cache_results()
+    def get_bout_properties(self, directionality_duration=0.07):
+        &quot;&quot;&quot;Create dataframe with summary of bouts properties.
+        :param directionality_duration: Window defining initial part of
+            the bout for the turning angle calculation, in seconds.
+        :return:
+        &quot;&quot;&quot;
+        bout_init_window_pts = int(directionality_duration / self.behavior_dt)
+        tail_sum = self.behavior_log[&quot;tail_sum&quot;].values
+        vigor = self.compute_vigor().values
+        bouts = self.get_bouts()
+        peak_vig, med_vig, ang_turn, ang_turn_tot = bout_stats.bout_stats(
+            vigor, tail_sum, bouts, bout_init_window_pts
+        )
+
+        t_array = self.behavior_log[&quot;t&quot;].values
+        t_start, t_end = [t_array[bouts[:, i]] for i in range(2)]
+        return pd.DataFrame(
+            dict(
+                t_start=t_start,
+                duration=t_end - t_start,
+                peak_vig=peak_vig,
+                med_vig=med_vig,
+                ang_turn=ang_turn,
+                ang_turn_tot=ang_turn_tot,
+            )
+        )</div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Vilim Stih, Hagar Lavian, Luigi Petrucco, Ot Prat
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
