@@ -1,6 +1,7 @@
 from bouter import Experiment
 from bouter import utilities, get_scale_mm
 import numpy as np
+import pandas as pd
 
 
 class FreelySwimmingExperiment(Experiment):
@@ -25,6 +26,40 @@ class FreelySwimmingExperiment(Experiment):
         # velocities are additionally divided by the time difference to get mm/s
         bout.iloc[:, 2:7:2] /= dt
         return bout
+
+
+    def _fish_column_names(self, i_fish, n_segments):
+        return [
+                   "f{:d}_x".format(i_fish),
+                   "f{:d}_vx".format(i_fish),
+                   "f{:d}_y".format(i_fish),
+                   "f{:d}_vy".format(i_fish),
+                   "f{:d}_theta".format(i_fish),
+                   "f{:d}_vtheta".format(i_fish),
+               ] + ["f{:d}_theta_{:02d}".format(i_fish, i) for i in range(n_segments)]
+
+
+    def _fish_renames(self, i_fish, n_segments):
+        return dict(
+            {
+                "f{:d}_x".format(i_fish): "x",
+                "f{:d}_vx".format(i_fish): "vx",
+                "f{:d}_y".format(i_fish): "y",
+                "f{:d}_vy".format(i_fish): "vy",
+                "f{:d}_theta".format(i_fish): "theta",
+                "f{:d}_vtheta".format(i_fish): "vtheta",
+            },
+            **{
+                "f{:d}_theta_{:02d}".format(i_fish, i): "theta_{:02d}".format(i)
+                for i in range(n_segments)
+            }
+        )
+
+
+    def _rename_fish(self, df, i_fish, n_segments):
+        return df.filter(["t"] + self._fish_column_names(i_fish, n_segments)).rename(
+            columns=self._fish_renames(i_fish, n_segments)
+        )
 
 
     def extract_bouts(
@@ -88,36 +123,53 @@ class FreelySwimmingExperiment(Experiment):
         return bouts, continuous
 
 
-    def _fish_column_names(self, i_fish, n_segments):
-        return [
-                   "f{:d}_x".format(i_fish),
-                   "f{:d}_vx".format(i_fish),
-                   "f{:d}_y".format(i_fish),
-                   "f{:d}_vy".format(i_fish),
-                   "f{:d}_theta".format(i_fish),
-                   "f{:d}_vtheta".format(i_fish),
-               ] + ["f{:d}_theta_{:02d}".format(i_fish, i) for i in range(n_segments)]
+    def summarize_bouts(self, bouts, continuity=None):
+        """ Makes a summary of all extracted bouts: basic kinematic parameters
+        and timing
 
+        :param bouts:a list of lists of fish
+        :param continuity:
+        :return: a dataframe containing all bouts
+        """
+        headers = [
+            "t_start",
+            "x_start",
+            "y_start",
+            "theta_start",
+            "t_end",
+            "x_end",
+            "y_end",
+            "theta_end",
+        ]
 
-    def _fish_renames(self, i_fish, n_segments):
-        return dict(
-            {
-                "f{:d}_x".format(i_fish): "x",
-                "f{:d}_vx".format(i_fish): "vx",
-                "f{:d}_y".format(i_fish): "y",
-                "f{:d}_vy".format(i_fish): "vy",
-                "f{:d}_theta".format(i_fish): "theta",
-                "f{:d}_vtheta".format(i_fish): "vtheta",
-            },
-            **{
-                "f{:d}_theta_{:02d}".format(i_fish, i): "theta_{:02d}".format(i)
-                for i in range(n_segments)
-            }
+        # an array is preallocated loop through the bouts
+        bout_data = np.empty(
+            (np.sum([len(bouts[i]) for i in range(len(bouts))]), len(headers))
         )
+        n_summarized_bouts = 0
+        for i_fish in range(len(bouts)):
+            for i_bout, bout in enumerate(bouts[i_fish]):
+                # slices from 0 to 4 are the start parameters, from 4 to 8 the end parameters
+                for sl, idx in zip([slice(0, 4), slice(4, 8)], [0, -1]):
+                    bout_data[n_summarized_bouts + i_bout, sl] = [
+                        bout.t.iloc[idx],
+                        bout.x.iloc[idx],
+                        bout.y.iloc[idx],
+                        bout.theta.iloc[idx],
+                    ]
+            n_summarized_bouts += len(bouts[i_fish])
 
+        bout_data_df = pd.DataFrame(bout_data, columns=headers)
+        if continuity:
+            bout_data_df["follows_previous"] = np.concatenate(continuity)
 
-    def _rename_fish(self, df, i_fish, n_segments):
-        return df.filter(["t"] + self._fish_column_names(i_fish, n_segments)).rename(
-            columns=self._fish_renames(i_fish, n_segments)
-        )
+        # if there are multiple fish tracked in the same experiments, assign the
+        # identities (there is no guarantee that the identity will be consistent if the
+        # fish cross or go outside of the visible region)
+        if len(bouts) > 1:
+            origin_fish = np.concatenate(
+                [np.full(len(bouts[i]), i, dtype=np.uint8) for i in range(len(bouts))]
+            )
+            bout_data_df.insert(0, "i_fish", origin_fish)
 
+        return bout_data_df

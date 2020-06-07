@@ -27,7 +27,7 @@ def test_bout_extraction():
     experiment = free.FreelySwimmingExperiment(dataset_path)
     bouts, cont = experiment.extract_bouts()
 
-    #Load expected bouts to be extracted. ONly first fish is used for the assertion
+    #Load expected bouts to be extracted. Only first fish is used for the assertion
     loaded_bouts = fl.load(ASSETS_PATH / "freely_swimming_dataset" / "test_extracted_bouts.h5", "/bouts")
     loaded_cont = fl.load(ASSETS_PATH / "freely_swimming_dataset" / "test_extracted_bouts.h5", "/continuity")
 
@@ -37,4 +37,19 @@ def test_bout_extraction():
 
     #Compare also continuity array
     assert_array_equal(cont[0], loaded_cont)
+
+
+def test_bout_summary():
+    experiment = free.FreelySwimmingExperiment(dataset_path)
+    bouts, _ = experiment.extract_bouts()
+
+    #Summarize all the bouts detected in the experiment.
+    bouts_summary = experiment.summarize_bouts(bouts)
+
+    #Load summary of bouts from all fish in the experiment.
+    loaded_bouts_summary = fl.load(ASSETS_PATH / "freely_swimming_dataset" / "test_extracted_bouts.h5", "/bouts_summary")
+
+    assert_frame_equal(bouts_summary, loaded_bouts_summary)
+
+
 
