@@ -3,12 +3,10 @@ from numpy.testing import assert_array_equal
 from pandas.testing import assert_frame_equal
 from pathlib import Path
 import flammkuchen as fl
-import numpy as np
+from bouter.tests import ASSETS_PATH
 
 from bouter import free
 
-
-ASSETS_PATH = Path(__file__).parent / "assets"
 
 # Define dataset Path
 dataset_path = ASSETS_PATH / "freely_swimming_dataset"
