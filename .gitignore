@@ -108,3 +108,5 @@ ENV/
 .idea/
 
 *_cache_*.h5
+
+*_processing_params.json

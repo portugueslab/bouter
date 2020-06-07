@@ -6,6 +6,43 @@ import json
 
 from bouter import decorators
 from bouter import utilities
+from bouter import descriptors
+
+
+def root_sid_from_path(path, session_id=None):
+    """Read root and session id from several combinations of inputs.
+    :param path:
+    :param session_id:
+    :return:
+    """
+
+    # Prepare path:
+    inpath = Path(path)
+
+    # if we are passing a metadata file:
+    if inpath.suffix == ".json":
+        root = inpath.parent
+        session_id = "_".join(inpath.name.split("_")[:-1])
+
+    # if this is a full directory:
+    else:
+        root = inpath
+
+        if session_id is None:
+            pattern = "*" + descriptors.METADATA_SFX
+            meta_files = sorted(list(root.glob(pattern)))
+
+            # Load metadata:
+            if len(meta_files) == 0:
+                raise FileNotFoundError("No metadata file in specified path!")
+            elif len(meta_files) > 1:
+                raise FileNotFoundError(
+                    "Multiple metadata files in specified path!"
+                )
+            else:
+                session_id = str(meta_files[0].name).split("_")[0]
+
+    return root, session_id
 
 
 class Experiment(dict):
@@ -27,47 +64,21 @@ class Experiment(dict):
         behavior_log=["behavior_log"],
     )
 
-    def __init__(
-        self, path, session_id=None, cache_active=True, default_cached=True
-    ):
+    def __init__(self, path, session_id=None, cache_active=False):
 
         # If true forces to use cached with whatever params it was computed:
-        self.default_cached = default_cached
         self.cache_active = cache_active
 
-        # Prepare path:
-        inpath = Path(path)
+        self.root, self.session_id = root_sid_from_path(
+            path, session_id=session_id
+        )
 
-        if inpath.suffix == ".json":  # if we are passing a metadata file:
-            self.root = inpath.parent
-            session_id = "_".join(inpath.name.split("_")[:-1])
+        metadata_file = self.root / (
+            self.session_id + descriptors.METADATA_SFX
+        )
 
-        else:  # if this is a full directory:
-            self.root = Path(path)
-
-            if session_id is None:
-                meta_files = sorted(list(self.root.glob("*metadata.json")))
-
-                # Load metadata:
-                if len(meta_files) == 0:
-                    raise FileNotFoundError(
-                        "No metadata file in specified path!"
-                    )
-                elif len(meta_files) > 1:
-                    raise FileNotFoundError(
-                        "Multiple metadata files in specified path!"
-                    )
-                else:
-                    session_id = str(meta_files[0].name).split("_")[0]
-
-        metadata_file = self.root / (session_id + "_metadata.json")
         with open(str(metadata_file), "r") as f:
             source_metadata = json.load(f)
-
-        self.fish_id = source_metadata["general"]["fish_id"]
-        self.session_id = session_id
-
-        self.full_name = self.fish_id + "_" + self.session_id
 
         # TODO semipermanent?
         # Temporary workaround for Stytra saving mess:
@@ -79,13 +90,62 @@ class Experiment(dict):
         super().__init__(self, **source_metadata)
 
         # Make list with all the files referring to this experiment:
-        self.file_list = list(self.root.glob(f"{self.session_id}*"))
 
-        # Private attributes for properties:
+        # Private attributes for properties caching:
         self._behavior_dt = None
         self._stimulus_param_log = None
         self._behavior_log = None
         self._estimator_log = None
+
+    @property
+    def params_filename(self):
+        if self.cache_active:
+            return self.root / (self.session_id + descriptors.PARAMS_LOG_SFX)
+        else:
+            raise ValueError("cache_active must be True to log parameters!")
+
+    @property
+    def processing_params(self):
+        """As a property it automatically keeps the log in synch.
+        """
+        if self.params_filename.exists():
+            with open(self.params_filename, "r") as f:
+                processing_params = json.load(f)
+        else:
+            processing_params = {}
+            with open(self.params_filename, "w") as f:
+                json.dump({}, f)
+
+        return processing_params
+
+    @processing_params.setter
+    def processing_params(self, vals):
+        if self.cache_active:
+            with open(self.params_filename, "w") as f:
+                json.dump(vals, f)
+        else:
+            raise ValueError(
+                "You want to store cached params but the cache_active flag attribute is false!"
+            )
+
+    def update_processing_params(self, new_dict):
+        params = self.processing_params
+        params.update(new_dict)
+        self.processing_params = params
+
+    @property
+    def file_list(self):
+        """As a property it automatically updates the cached files.
+        """
+        return list(self.root.glob(f"{self.session_id}*"))
+
+    @property
+    def fish_id(self):
+        return self["general"]["fish_id"]
+
+    @property
+    def full_name(self):
+        return self.fish_id + "_" + self.session_id
 
     @property
     def behavior_dt(self):
@@ -136,15 +196,6 @@ class Experiment(dict):
         """
         return np.array([stim["t_stop"] for stim in self["stimulus"]["log"]])
 
-    @decorators.deprecated(
-        "Use Experiment.stim_start_times and stim_end_times instead."
-    )
-    def stimulus_starts_ends(self):
-        """ Get start and end time of all stimuli in the log.
-        :return: arrays with start and end times for all stimuli
-        """
-        return self.stim_start_times, self.stim_end_times
-
     @property
     def stimulus_param_log(self):
         return self._get_log("stimulus_param_log")
@@ -156,6 +207,25 @@ class Experiment(dict):
     @property
     def behavior_log(self):
         return self._get_log("behavior_log")
+
+    def _log_filename(self, log_name):
+        # TODO cleanup with get_log
+
+        for possible_name in self.log_mapping[log_name]:
+            try:
+                # Load and set attribute
+                logname = next(
+                    self.root.glob(
+                        self.session_id + "_" + possible_name + ".*"
+                    )
+                ).name
+                break
+            except StopIteration:
+                pass
+        else:
+            raise ValueError(log_name + " does not exist")
+
+        return logname
 
     def _get_log(self, log_name):
         """ Given name of the log get it from attributes or load it ex novo
@@ -234,5 +304,14 @@ class Experiment(dict):
         for file in self.root.glob(decorators.CACHE_FILE_TEMPLATE.format("*")):
             shutil.rmtree(file)
 
-    def bouts(self):
+    def get_bouts(self):
         raise
+
+    @decorators.deprecated(
+        "Use Experiment.stim_start_times and stim_end_times instead."
+    )
+    def stimulus_starts_ends(self):
+        """ Get start and end time of all stimuli in the log.
+        :return: arrays with start and end times for all stimuli
+        """
+        return self.stim_start_times, self.stim_end_times

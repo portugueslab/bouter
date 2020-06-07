@@ -8,6 +8,7 @@ Welcome to bouter's documentation!
    readme
    installation
    usage
+   embedded-fish-behavioral-analysis
    modules
    contributing
    authors

@@ -1,17 +1,9 @@
 import pytest
 
-from pathlib import Path
 
 import numpy as np
 
 import bouter as bt
-
-ASSETS_PATH = Path(__file__).parent / "assets"
-
-
-@pytest.fixture
-def embedded_exp_path():
-    return ASSETS_PATH / "embedded_dataset"
 
 
 def test_class_instantiation(embedded_exp_path):
@@ -23,7 +15,7 @@ def test_class_instantiation(embedded_exp_path):
     )
 
 
-# TODO if we test multiple dataset this will have to be improved
+# TODO if we test multiple datasets this will have to be improved
 @pytest.mark.parametrize(
     "prop_name, outcome",
     [

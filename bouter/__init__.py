@@ -1,7 +1,16 @@
+__version__ = "0.1.1"
+
+from pathlib import Path
+
 from bouter.experiment import Experiment
 from bouter.embedded import EmbeddedExperiment
 from bouter.multisession_exp import MultiSessionExperiment
 import numpy as np
+
+from bouter import tests
+
+# Locate assets
+ASSETS_PATH = Path(tests.__file__).parent / "assets"
 
 
 def load_folder(folder, exp_class=Experiment):
