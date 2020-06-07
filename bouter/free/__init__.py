@@ -1,5 +1,5 @@
 from bouter import Experiment
-from bouter import utilities, get_scale_mm
+from bouter import utilities
 import numpy as np
 import pandas as pd
 
@@ -13,6 +13,19 @@ class FreelySwimmingExperiment(Experiment):
     @property
     def n_fish(self):
         return self["tracking+fish_tracking"]["n_fish_max"]
+
+    @property
+    def get_scale_mm(self):
+        """ Return camera pixel size in millimeters
+
+        :param exp:
+        :return:
+        """
+        cal_params = self["stimulus"]["calibration_params"]
+        proj_mat = np.array(cal_params["cam_to_proj"])
+        return (
+            np.linalg.norm(np.array([1.0, 0.0]) @ proj_mat[:, :2]) * cal_params["mm_px"]
+        )
 
 
     def _extract_bout(self, s, e, n_segments, i_fish=0, scale=1.0, dt=None):
@@ -89,7 +102,7 @@ class FreelySwimmingExperiment(Experiment):
 
         df = self.behavior_log
 
-        scale = scale or get_scale_mm(self)
+        scale = scale or self.get_scale_mm
 
         dt = np.mean(np.diff(df.t[100:200]))
 
