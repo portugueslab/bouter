@@ -39,7 +39,7 @@ def test_bout_extraction():
 
 def test_bout_summary():
     experiment = free.FreelySwimmingExperiment(dataset_path)
-    bouts, _ = experiment.extract_bouts()
+    bouts, cont = experiment.extract_bouts()
 
     #Summarize all the bouts detected in the experiment.
     bouts_summary = experiment.summarize_bouts(bouts)

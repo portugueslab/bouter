@@ -1,5 +1,5 @@
 from bouter import Experiment
-from bouter import utilities
+from bouter import utilities, decorators
 import numpy as np
 import pandas as pd
 
@@ -74,7 +74,7 @@ class FreelySwimmingExperiment(Experiment):
             columns=self._fish_renames(i_fish, n_segments)
         )
 
-
+    #@decorators.cache_results()
     def extract_bouts(
         self,
         max_interpolate=2,
@@ -102,7 +102,7 @@ class FreelySwimmingExperiment(Experiment):
 
         df = self.behavior_log
 
-        scale = scale or self.get_scale_mm
+        scale = scale or self.camera_px_in_mm
 
         dt = np.mean(np.diff(df.t[100:200]))
 
@@ -135,7 +135,7 @@ class FreelySwimmingExperiment(Experiment):
 
         return bouts, continuous
 
-
+    #@decorators.cache_results()
     def summarize_bouts(self, bouts, continuity=None):
         """ Makes a summary of all extracted bouts: basic kinematic parameters
         and timing
