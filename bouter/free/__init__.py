@@ -15,7 +15,7 @@ class FreelySwimmingExperiment(Experiment):
         return self["tracking+fish_tracking"]["n_fish_max"]
 
     @property
-    def get_scale_mm(self):
+    def camera_px_in_mm(self):
         """ Return camera pixel size in millimeters
 
         :param exp:
