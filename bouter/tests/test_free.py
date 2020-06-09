@@ -21,6 +21,18 @@ def test_n_segment_extraction():
     assert experiment.n_tail_segments == 9
 
 
+def test_compute_velocity():
+    experiment = free.FreelySwimmingExperiment(dataset_path)
+    extended_behavior_log = experiment.compute_velocity()
+    fish_vels = extended_behavior_log[["vel2_f{}".format(i_fish) for i_fish in range(experiment.n_fish)]]
+
+    #Load computed velocities
+    loaded_vel2 = fl.load(ASSETS_PATH / "freely_swimming_dataset" / "test_extracted_bouts.h5", "/velocities")
+
+    #Compare DataFrame with velocities from the 3 experiment fish
+    assert_frame_equal(fish_vels, loaded_vel2)
+
+
 def test_bout_extraction():
     experiment = free.FreelySwimmingExperiment(dataset_path)
     bouts, cont = experiment.get_bouts()

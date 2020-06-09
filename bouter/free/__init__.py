@@ -124,13 +124,8 @@ class FreelySwimmingExperiment(Experiment):
         """ Extracts all bouts from a freely-swimming tracking experiment
 
         :param exp: the experiment object
-        :param max_interpolate: number of points to interpolate if surrounded by NaNs in tracking
         :param scale: mm per pixel, recalculated by default
-        :param max_frames: the maximum numbers of frames to process, useful for debugging
         :param threshold: velocity threshold in mm/s
-        :param min_duration: minimal number of frames for a bout
-        :param pad_before: number of frames that gets added before
-        :param pad_after: number of frames added after
 
         :return: tuple: (list of single bout dataframes, list of boolean arrays marking if the
          bout i follows bout i-1)
@@ -143,7 +138,7 @@ class FreelySwimmingExperiment(Experiment):
 
         bouts = []
         continuous = []
-        
+
         for i_fish in range(n_fish):
             vel2 = self.behavior_log["vel2_f{}".format(i_fish)]
             if median_vel:
