@@ -75,7 +75,7 @@ class FreelySwimmingExperiment(Experiment):
         )
 
     @decorators.cache_results()
-    def extract_bouts(
+    def get_bouts(
         self,
         max_interpolate=2,
         window_size=7,
@@ -135,8 +135,9 @@ class FreelySwimmingExperiment(Experiment):
 
         return bouts, continuous
 
+
     @decorators.cache_results()
-    def summarize_bouts(self, bouts, continuity=None):
+    def get_bout_properties(self, continuity=None):
         """ Makes a summary of all extracted bouts: basic kinematic parameters
         and timing
 
@@ -155,7 +156,8 @@ class FreelySwimmingExperiment(Experiment):
             "theta_end",
         ]
 
-        print(bouts)
+        #Extract experiment bouts
+        bouts, _ = self.get_bouts()
 
         # an array is preallocated loop through the bouts
         bout_data = np.empty(

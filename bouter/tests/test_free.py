@@ -23,7 +23,7 @@ def test_n_segment_extraction():
 
 def test_bout_extraction():
     experiment = free.FreelySwimmingExperiment(dataset_path)
-    bouts, cont = experiment.extract_bouts()
+    bouts, cont = experiment.get_bouts()
 
     #Load expected bouts to be extracted. Only first fish is used for the assertion
     loaded_bouts = fl.load(ASSETS_PATH / "freely_swimming_dataset" / "test_extracted_bouts.h5", "/bouts")
@@ -39,10 +39,9 @@ def test_bout_extraction():
 
 def test_bout_summary():
     experiment = free.FreelySwimmingExperiment(dataset_path)
-    bouts, cont = experiment.extract_bouts()
 
     #Summarize all the bouts detected in the experiment.
-    bouts_summary = experiment.summarize_bouts(bouts)
+    bouts_summary = experiment.get_bout_properties()
 
     #Load summary of bouts from all fish in the experiment.
     loaded_bouts_summary = fl.load(ASSETS_PATH / "freely_swimming_dataset" / "test_extracted_bouts.h5", "/bouts_summary")
