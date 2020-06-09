@@ -74,12 +74,48 @@ class FreelySwimmingExperiment(Experiment):
             columns=self._fish_renames(i_fish, n_segments)
         )
 
+
+    @decorators.cache_results(cache_filename="behavior_log")
+    def compute_velocity(
+        self,
+        max_interpolate=2,
+        recalculate_vel=False,
+        scale=None
+    ):
+        """Compute the squared total swimming velocity for each fish.
+        Add them as new columns to the dataframe log and return the complete dataframe.
+
+        :param max_interpolate: number of points to interpolate if surrounded by NaNs in tracking
+        :param recalculate_vel:
+        :param scale: mm per pixel, recalculated by default
+        :return:
+        """
+        df = self.behavior_log
+        scale = scale or self.camera_px_in_mm
+        dt = np.mean(np.diff(df.t[100:200]))
+
+        n_fish = self.n_fish
+        dfint = df.interpolate("linear", limit=max_interpolate, limit_area="inside")
+        for i_fish in range(n_fish):
+            if recalculate_vel:
+                for thing in ["x", "y", "theta"]:
+                    dfint["f{}_v{}".format(i_fish, thing)] = np.r_[
+                        np.diff(dfint["f{}_{}".format(i_fish, thing)]), 0
+                    ]
+
+            vel2 = (
+                dfint["f{}_vx".format(i_fish)] ** 2 + dfint["f{}_vy".format(i_fish)] ** 2
+            ) * ((scale / dt) ** 2)
+
+            self.behavior_log["vel2_f{}".format(i_fish)] = vel2
+
+        return self.behavior_log
+
+
     @decorators.cache_results()
     def get_bouts(
         self,
-        max_interpolate=2,
         window_size=7,
-        recalculate_vel=False,
         median_vel=False,
         scale=None,
         threshold=1,
@@ -99,28 +135,17 @@ class FreelySwimmingExperiment(Experiment):
         :return: tuple: (list of single bout dataframes, list of boolean arrays marking if the
          bout i follows bout i-1)
         """
-
-        df = self.behavior_log
-
-        scale = scale or self.camera_px_in_mm
-
-        dt = np.mean(np.diff(df.t[100:200]))
-
         n_fish = self.n_fish
         n_segments = self.n_tail_segments
-        dfint = df.interpolate("linear", limit=max_interpolate, limit_area="inside")
+        scale = scale or self.camera_px_in_mm
+
+        self.compute_velocity()
+
         bouts = []
         continuous = []
+        
         for i_fish in range(n_fish):
-            if recalculate_vel:
-                for thing in ["x", "y", "theta"]:
-                    dfint["f{}_v{}".format(i_fish, thing)] = np.r_[
-                        np.diff(dfint["f{}_{}".format(i_fish, thing)]), 0
-                    ]
-
-            vel2 = (
-                dfint["f{}_vx".format(i_fish)] ** 2 + dfint["f{}_vy".format(i_fish)] ** 2
-            ) * ((scale / dt) ** 2)
+            vel2 = self.behavior_log["vel2_f{}".format(i_fish)]
             if median_vel:
                 vel2 = vel2.rolling(window=window_size, min_periods=1).median()
             bout_locations, continuity = utilities.extract_segments_above_threshold(
@@ -141,7 +166,6 @@ class FreelySwimmingExperiment(Experiment):
         """ Makes a summary of all extracted bouts: basic kinematic parameters
         and timing
 
-        :param bouts:a list of lists of fish
         :param continuity:
         :return: a dataframe containing all bouts
         """
