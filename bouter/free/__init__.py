@@ -207,3 +207,45 @@ class FreelySwimmingExperiment(Experiment):
             bout_data_df.insert(0, "i_fish", origin_fish)
 
         return bout_data_df
+
+
+    @property
+    def tail_columns(self):
+        """Return a nested list of names of columns with tracking data from all tracked segments.
+        One list for each fish tracked during the experiment.
+        """
+        return [[f"f{i}_theta_{j:02}" for j in range(self.n_tail_segments)] for i in range(self.n_fish)]
+
+
+    @decorators.cache_results(cache_filename="behavior_log")
+    def reconstruct_missing_segments(self, continue_curvature=None):
+
+        for i_fish in range(self.n_fish):
+
+            segments = self.behavior_log.loc[:, self.tail_columns[i_fish]].values.copy()
+
+            if "f{}_missing_n".format(i_fish) in self.behavior_log.columns:
+                revert_pts = self.behavior_log["f{}_missing_n".format(i_fish)].values
+            else:
+                revert_pts = None
+
+            # Revert if possible if continue_curvature is None:
+            if continue_curvature is None:
+                if revert_pts is not None:
+                    fixed_segments = utilities.revert_segment_filling(
+                        segments, revert_pts=revert_pts,
+                    )
+                    self.behavior_log.loc[:, self.tail_columns[i_fish]] = fixed_segments
+
+            # Otherwise, use the parameter to do the filling:
+            else:
+                fixed_segments, missing_n = utilities.fill_out_segments(
+                    segments,
+                    continue_curvature=continue_curvature,
+                    revert_pts=revert_pts,
+                )
+                self.behavior_log.loc[:, self.tail_columns[i_fish]] = fixed_segments
+                self.behavior_log["f{}_missing_n".format(i_fish)] = missing_n
+
+            return self.behavior_log
+

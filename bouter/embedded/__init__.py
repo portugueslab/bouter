@@ -12,7 +12,7 @@ class EmbeddedExperiment(Experiment):
 
     @property
     def tail_columns(self):
-        """Return matrix with the tail points.
+        """Return names of columns with tracking data from all tracked segments.
         Careful, the array is not copied!
         """
         return [f"theta_{i:02}" for i in range(self.n_tail_segments)]
