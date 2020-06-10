@@ -27,6 +27,13 @@ class FreelySwimmingExperiment(Experiment):
             np.linalg.norm(np.array([1.0, 0.0]) @ proj_mat[:, :2]) * cal_params["mm_px"]
         )
 
+    @property
+    def tail_columns(self):
+        """Return a nested list of names of columns with tracking data from all tracked segments.
+        One list for each fish tracked during the experiment.
+        """
+        return [[f"f{i}_theta_{j:02}" for j in range(self.n_tail_segments)] for i in range(self.n_fish)]
+
 
     def _extract_bout(self, s, e, n_segments, i_fish=0, scale=1.0, dt=None):
         bout = self._rename_fish(self.behavior_log.iloc[s:e], i_fish, n_segments)
@@ -209,14 +216,6 @@ class FreelySwimmingExperiment(Experiment):
         return bout_data_df
 
 
-    @property
-    def tail_columns(self):
-        """Return a nested list of names of columns with tracking data from all tracked segments.
-        One list for each fish tracked during the experiment.
-        """
-        return [[f"f{i}_theta_{j:02}" for j in range(self.n_tail_segments)] for i in range(self.n_fish)]
-
-
     @decorators.cache_results(cache_filename="behavior_log")
     def reconstruct_missing_segments(self, continue_curvature=None):
 
@@ -247,5 +246,5 @@ class FreelySwimmingExperiment(Experiment):
                 self.behavior_log.loc[:, self.tail_columns[i_fish]] = fixed_segments
                 self.behavior_log["f{}_missing_n".format(i_fish)] = missing_n
 
-            return self.behavior_log
+        return self.behavior_log
 
