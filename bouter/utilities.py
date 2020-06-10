@@ -81,9 +81,13 @@ def log_dt(log_df, i_start=10, i_end=110):
 
 @jit(nopython=True)
 def revert_segment_filling(fixed_mat, revert_pts):
-    """Revert filling of a tail segments matrix.
-    :param fixed_mat:
-    :param revert_pts:
+    """
+    Revert the filling of a tail segments matrix. Provided a data matrix and
+    array with the numbers of segments to be reverted at each timepoint,
+    this function will reset the previously-filled values to NaNs.
+
+    :param fixed_mat: Data matrix (timepoints x n_segments) with the tail tracking data.
+    :param revert_pts: Array (timepoints) registering how many segments were filled for each timepoint.
     :return:
     """
     # As they can be saved as uint8:
@@ -98,10 +102,13 @@ def revert_segment_filling(fixed_mat, revert_pts):
 
 @jit(nopython=True)
 def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
-    """Fills out segments of tail trace.
+    """Fills out NaN values in a tail-tracking data matrix.
+    Filling can consist on propagating the angle of the last tracked segment (continue_curvature=0)
+    or on simulating the tail curvature by linearly-extrapolating the curvature of the last
+    continue_curvature tracked segments.
 
-    :param tail_angle_mat
-    :param continue_curvature
+    :param tail_angle_mat: Data matrix (timepoints x n_segments) with the tail tracking data.
+    :param continue_curvature: Number of previous segments used for extrapolating curvature of each NaN segment.
     :return:
     """
     n_t, n_segments = tail_angle_mat.shape
@@ -114,6 +121,7 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
     # To keep track of segments missing for every time point:
     n_segments_missing = np.zeros(n_t, dtype=np.uint8)
 
+    # Fill in segments
     for i_t in range(tail_angle_mat.shape[0]):
         # If last value is nan...
         if np.isnan(tail_angle_mat[i_t, -1]):
@@ -135,7 +143,7 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
                         # samples:
                         previous_tail_curvature = np.diff(
                             tail_angle_mat[
-                                i_t, i_seg - continue_curvature : i_seg,
+                                i_t, i_seg - continue_curvature: i_seg,
                             ]
                         )
                         deviation = np.mean(previous_tail_curvature)
@@ -147,4 +155,5 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
                     tail_angle_mat[i_t, i_seg] = (
                         tail_angle_mat[i_t, i_seg - 1] + deviation
                     )
+
     return tail_angle_mat, n_segments_missing

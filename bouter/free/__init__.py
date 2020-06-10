@@ -126,7 +126,6 @@ class FreelySwimmingExperiment(Experiment):
         :param exp: the experiment object
         :param scale: mm per pixel, recalculated by default
         :param threshold: velocity threshold in mm/s
-
         :return: tuple: (list of single bout dataframes, list of boolean arrays marking if the
          bout i follows bout i-1)
         """
@@ -158,8 +157,7 @@ class FreelySwimmingExperiment(Experiment):
 
     @decorators.cache_results()
     def get_bout_properties(self, continuity=None):
-        """ Makes a summary of all extracted bouts: basic kinematic parameters
-        and timing
+        """ Makes a summary of all extracted bouts with basic kinematic parameters and timing.
 
         :param continuity:
         :return: a dataframe containing all bouts
