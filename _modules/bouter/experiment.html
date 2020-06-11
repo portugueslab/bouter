@@ -1,0 +1,524 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bouter.experiment &mdash; bouter 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> bouter
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#credits">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html">How to analyse a (Stytra) embedded tail tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html">How to analyse a (Stytra) freely-swimming tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">bouter</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../bouter.html">bouter</a> &raquo;</li>
+        
+      <li>bouter.experiment</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bouter.experiment</h1><div class="highlight"><pre>
+<span></span>import numpy as np
+import pandas as pd
+from pathlib import Path
+import shutil
+import json
+
+from bouter import decorators
+from bouter import utilities
+from bouter import descriptors
+
+
+<div class="viewcode-block" id="root_sid_from_path"><a class="viewcode-back" href="../../source/bouter.html#bouter.experiment.root_sid_from_path">[docs]</a>def root_sid_from_path(path, session_id=None):
+    &quot;&quot;&quot;Read root and session id from several combinations of inputs.
+    :param path:
+    :param session_id:
+    :return:
+    &quot;&quot;&quot;
+
+    # Prepare path:
+    inpath = Path(path)
+
+    # if we are passing a metadata file:
+    if inpath.suffix == &quot;.json&quot;:
+        root = inpath.parent
+        session_id = &quot;_&quot;.join(inpath.name.split(&quot;_&quot;)[:-1])
+
+    # if this is a full directory:
+    else:
+        root = inpath
+
+        if session_id is None:
+            pattern = &quot;*&quot; + descriptors.METADATA_SFX
+            meta_files = sorted(list(root.glob(pattern)))
+
+            # Load metadata:
+            if len(meta_files) == 0:
+                raise FileNotFoundError(&quot;No metadata file in specified path!&quot;)
+            elif len(meta_files) &gt; 1:
+                raise FileNotFoundError(
+                    &quot;Multiple metadata files in specified path!&quot;
+                )
+            else:
+                session_id = str(meta_files[0].name).split(&quot;_&quot;)[0]
+
+    return root, session_id</div>
+
+
+<div class="viewcode-block" id="Experiment"><a class="viewcode-back" href="../../source/bouter.html#bouter.experiment.Experiment">[docs]</a>class Experiment(dict):
+    &quot;&quot;&quot;
+
+    Parameters
+    ----------
+    path :
+
+
+    Returns
+    -------
+
+    &quot;&quot;&quot;
+
+    log_mapping = dict(
+        stimulus_param_log=[&quot;stimulus_log&quot;],
+        estimator_log=[&quot;estimator_log&quot;],
+        behavior_log=[&quot;behavior_log&quot;],
+    )
+
+    def __init__(self, path, session_id=None, cache_active=False):
+
+        # If true forces to use cached with whatever params it was computed:
+        self.cache_active = cache_active
+
+        self.root, self.session_id = root_sid_from_path(
+            path, session_id=session_id
+        )
+
+        metadata_file = self.root / (
+            self.session_id + descriptors.METADATA_SFX
+        )
+
+        with open(str(metadata_file), &quot;r&quot;) as f:
+            source_metadata = json.load(f)
+
+        # TODO semipermanent?
+        # Temporary workaround for Stytra saving mess:
+        try:
+            source_metadata[&quot;behavior&quot;] = source_metadata.pop(&quot;tracking&quot;)
+        except KeyError:
+            pass
+
+        super().__init__(self, **source_metadata)
+
+        # Make list with all the files referring to this experiment:
+
+        # Private attributes for properties caching:
+        self._behavior_dt = None
+        self._stimulus_param_log = None
+        self._behavior_log = None
+        self._estimator_log = None
+
+    @property
+    def params_filename(self):
+        if self.cache_active:
+            return self.root / (self.session_id + descriptors.PARAMS_LOG_SFX)
+        else:
+            raise ValueError(&quot;cache_active must be True to log parameters!&quot;)
+
+    @property
+    def processing_params(self):
+        &quot;&quot;&quot;As a property it automatically keeps the log in synch.
+        &quot;&quot;&quot;
+        if self.params_filename.exists():
+            with open(self.params_filename, &quot;r&quot;) as f:
+                processing_params = json.load(f)
+        else:
+            processing_params = {}
+            with open(self.params_filename, &quot;w&quot;) as f:
+                json.dump({}, f)
+
+        return processing_params
+
+    @processing_params.setter
+    def processing_params(self, vals):
+        if self.cache_active:
+            with open(self.params_filename, &quot;w&quot;) as f:
+                json.dump(vals, f)
+        else:
+            raise ValueError(
+                &quot;You want to store cached params but the cache_active flag attribute is false!&quot;
+            )
+
+<div class="viewcode-block" id="Experiment.update_processing_params"><a class="viewcode-back" href="../../source/bouter.html#bouter.experiment.Experiment.update_processing_params">[docs]</a>    def update_processing_params(self, new_dict):
+        params = self.processing_params
+        params.update(new_dict)
+        self.processing_params = params</div>
+
+    @property
+    def file_list(self):
+        &quot;&quot;&quot;As a property it automatically updates the cached files.
+        &quot;&quot;&quot;
+        return list(self.root.glob(f&quot;{self.session_id}*&quot;))
+
+    @property
+    def fish_id(self):
+        return self[&quot;general&quot;][&quot;fish_id&quot;]
+
+    @property
+    def full_name(self):
+        return self.fish_id + &quot;_&quot; + self.session_id
+
+    @property
+    def behavior_dt(self):
+        if self._behavior_dt is None:
+            self._behavior_dt = utilities.log_dt(self.behavior_log)
+
+        return self._behavior_dt
+
+    @property
+    def protocol_parameters(self):
+        &quot;&quot;&quot; Goes around annoying problem of knowing experiment number
+        and version as keywords for the stimulus parameters dictionary.
+        &quot;&quot;&quot;
+        if self.protocol_version is None:
+            return self[&quot;stimulus&quot;][&quot;protocol&quot;][self.protocol_name]
+        else:
+            return self[&quot;stimulus&quot;][&quot;protocol&quot;][self.protocol_name][
+                self.protocol_version
+            ]
+
+    @property
+    def protocol_name(self):
+        return list(self[&quot;stimulus&quot;][&quot;protocol&quot;].keys())[0]
+
+    @property
+    def protocol_version(self):
+        containing_dict = self[&quot;stimulus&quot;][&quot;protocol&quot;][self.protocol_name]
+        version = list(containing_dict.keys())[0]
+
+        # b/c of the funny nesting {protocol_name: {protocol_version: {}}},
+        # and since protocols might not have a version:
+        if isinstance(containing_dict[version], dict):
+            return version
+        else:
+            return None
+
+    @property
+    def stim_start_times(self):
+        &quot;&quot;&quot; Get start and end time of all stimuli in the log.
+        :return: arrays with start and end times for all stimuli
+        &quot;&quot;&quot;
+        return np.array([stim[&quot;t_start&quot;] for stim in self[&quot;stimulus&quot;][&quot;log&quot;]])
+
+    @property
+    def stim_end_times(self):
+        &quot;&quot;&quot; Get start and end time of all stimuli in the log.
+        :return: arrays with start and end times for all stimuli
+        &quot;&quot;&quot;
+        return np.array([stim[&quot;t_stop&quot;] for stim in self[&quot;stimulus&quot;][&quot;log&quot;]])
+
+    @property
+    def stimulus_param_log(self):
+        return self._get_log(&quot;stimulus_param_log&quot;)
+
+    @property
+    def estimator_log(self):
+        return self._get_log(&quot;estimator_log&quot;)
+
+    @property
+    def behavior_log(self):
+        return self._get_log(&quot;behavior_log&quot;)
+
+    def _log_filename(self, log_name):
+        # TODO cleanup with get_log
+
+        for possible_name in self.log_mapping[log_name]:
+            try:
+                # Load and set attribute
+                logname = next(
+                    self.root.glob(
+                        self.session_id + &quot;_&quot; + possible_name + &quot;.*&quot;
+                    )
+                ).name
+                break
+            except StopIteration:
+                pass
+        else:
+            raise ValueError(log_name + &quot; does not exist&quot;)
+
+        return logname
+
+    def _get_log(self, log_name):
+        &quot;&quot;&quot; Given name of the log get it from attributes or load it ex novo
+        :param log_name:  string with the type ot the log to load
+        :return:  loaded log DataFrame
+        &quot;&quot;&quot;
+        uname = &quot;_&quot; + log_name
+
+        # Check whether this was already set:
+        if getattr(self, uname) is None:
+
+            # If not, loop over different possibilities for that filename
+            for possible_name in self.log_mapping[log_name]:
+                try:
+                    # Load and set attribute
+                    logname = next(
+                        self.root.glob(
+                            self.session_id + &quot;_&quot; + possible_name + &quot;.*&quot;
+                        )
+                    ).name
+                    setattr(self, uname, self._load_log(logname))
+                    break
+                except StopIteration:
+                    pass
+            else:
+                raise ValueError(log_name + &quot; does not exist&quot;)
+
+        return getattr(self, uname)
+
+    def _load_log(self, data_name):
+        &quot;&quot;&quot;
+
+        Parameters
+        ----------
+        data_name : filename to load
+
+
+        Returns
+        -------
+        Loaded dataframe
+
+        &quot;&quot;&quot;
+
+        file = self.root / data_name
+        if file.suffix == &quot;.csv&quot;:
+            return pd.read_csv(str(file), delimiter=&quot;;&quot;).drop(
+                &quot;Unnamed: 0&quot;, axis=1
+            )
+        elif file.suffix == &quot;.h5&quot; or file.suffix == &quot;.hdf5&quot;:
+            return pd.read_hdf(file)
+        elif file.suffix == &quot;.feather&quot;:
+            return pd.read_feather(file)
+        elif file.suffix == &quot;.json&quot;:
+            return pd.read_json(file)
+        else:
+            raise ValueError(
+                str(data_name)
+                + &quot; format is not supported, trying to load &quot;
+                + str(file)
+            )
+
+<div class="viewcode-block" id="Experiment.copy_to_dir"><a class="viewcode-back" href="../../source/bouter.html#bouter.experiment.Experiment.copy_to_dir">[docs]</a>    def copy_to_dir(self, target_dir):
+        &quot;&quot;&quot; Copy all the files pertaining to this experiment in a target
+        directory. If it does not exist, make it.
+        &quot;&quot;&quot;
+        target_dir = Path(target_dir)
+
+        if target_dir != self.root:  # Make sure we don&#39;t overwrite
+            if not target_dir.exists():
+                target_dir.mkdir()
+
+            for f in self.file_list:
+                shutil.copyfile(f, target_dir / f.name)</div>
+
+<div class="viewcode-block" id="Experiment.clear_cache"><a class="viewcode-back" href="../../source/bouter.html#bouter.experiment.Experiment.clear_cache">[docs]</a>    def clear_cache(self):
+        for file in self.root.glob(decorators.CACHE_FILE_TEMPLATE.format(&quot;*&quot;)):
+            shutil.rmtree(file)</div>
+
+<div class="viewcode-block" id="Experiment.get_bouts"><a class="viewcode-back" href="../../source/bouter.html#bouter.experiment.Experiment.get_bouts">[docs]</a>    def get_bouts(self):
+        raise</div>
+
+<div class="viewcode-block" id="Experiment.stimulus_starts_ends"><a class="viewcode-back" href="../../source/bouter.html#bouter.experiment.Experiment.stimulus_starts_ends">[docs]</a>    @decorators.deprecated(
+        &quot;Use Experiment.stim_start_times and stim_end_times instead.&quot;
+    )
+    def stimulus_starts_ends(self):
+        &quot;&quot;&quot; Get start and end time of all stimuli in the log.
+        :return: arrays with start and end times for all stimuli
+        &quot;&quot;&quot;
+        return self.stim_start_times, self.stim_end_times</div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Vilim Stih, Hagar Lavian, Luigi Petrucco, Ot Prat
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

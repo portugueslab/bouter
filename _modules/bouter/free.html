@@ -1,0 +1,461 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bouter.free &mdash; bouter 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> bouter
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#credits">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html">How to analyse a (Stytra) embedded tail tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html">How to analyse a (Stytra) freely-swimming tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">bouter</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../bouter.html">bouter</a> &raquo;</li>
+        
+      <li>bouter.free</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bouter.free</h1><div class="highlight"><pre>
+<span></span>from bouter import Experiment
+from bouter import utilities, decorators
+import numpy as np
+import pandas as pd
+
+
+<div class="viewcode-block" id="FreelySwimmingExperiment"><a class="viewcode-back" href="../../source/bouter.free.html#bouter.free.FreelySwimmingExperiment">[docs]</a>class FreelySwimmingExperiment(Experiment):
+
+    @property
+    def n_tail_segments(self):
+        return self[&quot;tracking+fish_tracking&quot;][&quot;n_segments&quot;] - 1
+
+    @property
+    def n_fish(self):
+        return self[&quot;tracking+fish_tracking&quot;][&quot;n_fish_max&quot;]
+
+    @property
+    def camera_px_in_mm(self):
+        &quot;&quot;&quot; Return camera pixel size in millimeters
+
+        :param exp:
+        :return:
+        &quot;&quot;&quot;
+        cal_params = self[&quot;stimulus&quot;][&quot;calibration_params&quot;]
+        proj_mat = np.array(cal_params[&quot;cam_to_proj&quot;])
+        return (
+            np.linalg.norm(np.array([1.0, 0.0]) @ proj_mat[:, :2]) * cal_params[&quot;mm_px&quot;]
+        )
+
+    @property
+    def tail_columns(self):
+        &quot;&quot;&quot;Return a nested list of names of columns with tracking data from all tracked segments.
+        One list for each fish tracked during the experiment.
+        &quot;&quot;&quot;
+        return [[f&quot;f{i}_theta_{j:02}&quot; for j in range(self.n_tail_segments)] for i in range(self.n_fish)]
+
+
+    def _extract_bout(self, s, e, n_segments, i_fish=0, scale=1.0, dt=None):
+        bout = self._rename_fish(self.behavior_log.iloc[s:e], i_fish, n_segments)
+        # scale to physical coordinates
+        if dt is None:
+            dt = (bout.t.values[-1] - bout.t.values[0]) / bout.shape[0]
+
+        # pixels are scaled to millimeters (columns x, vx, y and vy)
+        bout.iloc[:, 1:5] *= scale
+        # velocities are additionally divided by the time difference to get mm/s
+        bout.iloc[:, 2:7:2] /= dt
+        return bout
+
+
+    def _fish_column_names(self, i_fish, n_segments):
+        return [
+                   &quot;f{:d}_x&quot;.format(i_fish),
+                   &quot;f{:d}_vx&quot;.format(i_fish),
+                   &quot;f{:d}_y&quot;.format(i_fish),
+                   &quot;f{:d}_vy&quot;.format(i_fish),
+                   &quot;f{:d}_theta&quot;.format(i_fish),
+                   &quot;f{:d}_vtheta&quot;.format(i_fish),
+               ] + [&quot;f{:d}_theta_{:02d}&quot;.format(i_fish, i) for i in range(n_segments)]
+
+
+    def _fish_renames(self, i_fish, n_segments):
+        return dict(
+            {
+                &quot;f{:d}_x&quot;.format(i_fish): &quot;x&quot;,
+                &quot;f{:d}_vx&quot;.format(i_fish): &quot;vx&quot;,
+                &quot;f{:d}_y&quot;.format(i_fish): &quot;y&quot;,
+                &quot;f{:d}_vy&quot;.format(i_fish): &quot;vy&quot;,
+                &quot;f{:d}_theta&quot;.format(i_fish): &quot;theta&quot;,
+                &quot;f{:d}_vtheta&quot;.format(i_fish): &quot;vtheta&quot;,
+            },
+            **{
+                &quot;f{:d}_theta_{:02d}&quot;.format(i_fish, i): &quot;theta_{:02d}&quot;.format(i)
+                for i in range(n_segments)
+            }
+        )
+
+
+    def _rename_fish(self, df, i_fish, n_segments):
+        return df.filter([&quot;t&quot;] + self._fish_column_names(i_fish, n_segments)).rename(
+            columns=self._fish_renames(i_fish, n_segments)
+        )
+
+
+<div class="viewcode-block" id="FreelySwimmingExperiment.compute_velocity"><a class="viewcode-back" href="../../source/bouter.free.html#bouter.free.FreelySwimmingExperiment.compute_velocity">[docs]</a>    def compute_velocity(
+        self,
+        max_interpolate=2,
+        recalculate_vel=False,
+        scale=None,
+        median_vel=False,
+        window_size=7,
+    ):
+        &quot;&quot;&quot;Compute the squared total swimming velocity for each fish.
+        Add them as new columns to the dataframe log and return the complete dataframe.
+
+        :param max_interpolate: number of points to interpolate if surrounded by NaNs in tracking
+        :param recalculate_vel:
+        :param scale: mm per pixel, recalculated by default
+        :return:
+        &quot;&quot;&quot;
+        df = self.behavior_log
+        scale = scale or self.camera_px_in_mm
+        dt = np.mean(np.diff(df.t[100:200]))
+
+        dfint = df.interpolate(&quot;linear&quot;, limit=max_interpolate, limit_area=&quot;inside&quot;)
+
+        fish_velocities = pd.DataFrame(np.nan,
+                                       index=self.behavior_log.index,
+                                       columns=[&quot;vel2_f{}&quot;.format(i_fish) for i_fish in range(self.n_fish)])
+
+        for i_fish in range(self.n_fish):
+            if recalculate_vel:
+                for thing in [&quot;x&quot;, &quot;y&quot;, &quot;theta&quot;]:
+                    dfint[&quot;f{}_v{}&quot;.format(i_fish, thing)] = np.r_[
+                        np.diff(dfint[&quot;f{}_{}&quot;.format(i_fish, thing)]), 0
+                    ]
+
+            vel2 = (
+                dfint[&quot;f{}_vx&quot;.format(i_fish)] ** 2 + dfint[&quot;f{}_vy&quot;.format(i_fish)] ** 2
+            ) * ((scale / dt) ** 2)
+
+            if median_vel:
+                vel2 = vel2.rolling(window=window_size, min_periods=1).median()
+
+            fish_velocities[&quot;vel2_f{}&quot;.format(i_fish)] = vel2
+
+        return fish_velocities</div>
+
+
+<div class="viewcode-block" id="FreelySwimmingExperiment.get_bouts"><a class="viewcode-back" href="../../source/bouter.free.html#bouter.free.FreelySwimmingExperiment.get_bouts">[docs]</a>    @decorators.cache_results()
+    def get_bouts(
+        self,
+        scale=None,
+        threshold=1,
+        **kwargs
+    ):
+        &quot;&quot;&quot; Extracts all bouts from a freely-swimming tracking experiment
+
+        :param exp: the experiment object
+        :param scale: mm per pixel, recalculated by default
+        :param threshold: velocity threshold in mm/s
+        :return: tuple: (list of single bout dataframes, list of boolean arrays marking if the
+         bout i follows bout i-1)
+        &quot;&quot;&quot;
+        n_fish = self.n_fish
+        n_segments = self.n_tail_segments
+        scale = scale or self.camera_px_in_mm
+
+        fish_velocities = self.compute_velocity()
+
+        bouts = []
+        continuous = []
+
+        for i_fish in range(n_fish):
+            vel2 = fish_velocities[&quot;vel2_f{}&quot;.format(i_fish)]
+            bout_locations, continuity = utilities.extract_segments_above_threshold(
+                vel2.values, threshold=threshold ** 2, **kwargs
+            )
+            all_bouts_fish = [
+                self._extract_bout(s, e, n_segments, i_fish, scale)
+                for s, e in bout_locations
+            ]
+            bouts.append(all_bouts_fish)
+            continuous.append(np.array(continuity))
+
+        return bouts, continuous</div>
+
+
+<div class="viewcode-block" id="FreelySwimmingExperiment.get_bout_properties"><a class="viewcode-back" href="../../source/bouter.free.html#bouter.free.FreelySwimmingExperiment.get_bout_properties">[docs]</a>    @decorators.cache_results()
+    def get_bout_properties(self, continuity=None):
+        &quot;&quot;&quot; Makes a summary of all extracted bouts with basic kinematic parameters and timing.
+
+        :param continuity:
+        :return: a dataframe containing all bouts
+        &quot;&quot;&quot;
+        headers = [
+            &quot;t_start&quot;,
+            &quot;x_start&quot;,
+            &quot;y_start&quot;,
+            &quot;theta_start&quot;,
+            &quot;t_end&quot;,
+            &quot;x_end&quot;,
+            &quot;y_end&quot;,
+            &quot;theta_end&quot;,
+        ]
+
+        #Extract experiment bouts
+        bouts, _ = self.get_bouts()
+
+        # an array is preallocated loop through the bouts
+        bout_data = np.empty(
+            (np.sum([len(bouts[i]) for i in range(len(bouts))]), len(headers))
+        )
+        n_summarized_bouts = 0
+        for i_fish in range(len(bouts)):
+            for i_bout, bout in enumerate(bouts[i_fish]):
+                # slices from 0 to 4 are the start parameters, from 4 to 8 the end parameters
+                for sl, idx in zip([slice(0, 4), slice(4, 8)], [0, -1]):
+                    bout_data[n_summarized_bouts + i_bout, sl] = [
+                        bout.t.iloc[idx],
+                        bout.x.iloc[idx],
+                        bout.y.iloc[idx],
+                        bout.theta.iloc[idx],
+                    ]
+            n_summarized_bouts += len(bouts[i_fish])
+
+        bout_data_df = pd.DataFrame(bout_data, columns=headers)
+        if continuity:
+            bout_data_df[&quot;follows_previous&quot;] = np.concatenate(continuity)
+
+        # if there are multiple fish tracked in the same experiments, assign the
+        # identities (there is no guarantee that the identity will be consistent if the
+        # fish cross or go outside of the visible region)
+        if len(bouts) &gt; 1:
+            origin_fish = np.concatenate(
+                [np.full(len(bouts[i]), i, dtype=np.uint8) for i in range(len(bouts))]
+            )
+            bout_data_df.insert(0, &quot;i_fish&quot;, origin_fish)
+
+        return bout_data_df</div>
+
+
+<div class="viewcode-block" id="FreelySwimmingExperiment.reconstruct_missing_segments"><a class="viewcode-back" href="../../source/bouter.free.html#bouter.free.FreelySwimmingExperiment.reconstruct_missing_segments">[docs]</a>    @decorators.cache_results(cache_filename=&quot;behavior_log&quot;)
+    def reconstruct_missing_segments(self, continue_curvature=None):
+
+        for i_fish in range(self.n_fish):
+
+            segments = self.behavior_log.loc[:, self.tail_columns[i_fish]].values.copy()
+
+            if &quot;f{}_missing_n&quot;.format(i_fish) in self.behavior_log.columns:
+                revert_pts = self.behavior_log[&quot;f{}_missing_n&quot;.format(i_fish)].values
+            else:
+                revert_pts = None
+
+            # Revert if possible if continue_curvature is None:
+            if continue_curvature is None:
+                if revert_pts is not None:
+                    fixed_segments = utilities.revert_segment_filling(
+                        segments, revert_pts=revert_pts,
+                    )
+                    self.behavior_log.loc[:, self.tail_columns[i_fish]] = fixed_segments
+
+            # Otherwise, use the parameter to do the filling:
+            else:
+                fixed_segments, missing_n = utilities.fill_out_segments(
+                    segments,
+                    continue_curvature=continue_curvature,
+                    revert_pts=revert_pts,
+                )
+                self.behavior_log.loc[:, self.tail_columns[i_fish]] = fixed_segments
+                self.behavior_log[&quot;f{}_missing_n&quot;.format(i_fish)] = missing_n
+
+        return self.behavior_log</div></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Vilim Stih, Hagar Lavian, Luigi Petrucco, Ot Prat
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

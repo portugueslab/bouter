@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bouter.tests.test_bouter &mdash; bouter 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> bouter
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html#credits">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../embedded-fish-behavioral-analysis.html">How to analyse a (Stytra) embedded tail tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../embedded-fish-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../embedded-fish-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../freely-swimming-behavioral-analysis.html">How to analyse a (Stytra) freely-swimming tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../freely-swimming-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../freely-swimming-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">bouter</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../bouter.html">bouter</a> &raquo;</li>
+        
+      <li>bouter.tests.test_bouter</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bouter.tests.test_bouter</h1><div class="highlight"><pre>
+<span></span>import pytest
+
+
+import numpy as np
+
+import bouter as bt
+
+
+<div class="viewcode-block" id="test_class_instantiation"><a class="viewcode-back" href="../../../source/bouter.tests.html#bouter.tests.test_bouter.test_class_instantiation">[docs]</a>def test_class_instantiation(embedded_exp_path):
+    # Test instantiation modalities:
+    assert (
+        bt.Experiment(embedded_exp_path)
+        == bt.Experiment(str(embedded_exp_path))
+        == bt.Experiment(embedded_exp_path / &quot;192316_metadata.json&quot;)
+    )</div>
+
+
+# TODO if we test multiple datasets this will have to be improved
+<div class="viewcode-block" id="test_class_properties"><a class="viewcode-back" href="../../../source/bouter.tests.html#bouter.tests.test_bouter.test_class_properties">[docs]</a>@pytest.mark.parametrize(
+    &quot;prop_name, outcome&quot;,
+    [
+        (&quot;protocol_name&quot;, &quot;closed_open_loop&quot;),
+        (&quot;protocol_version&quot;, None),
+        (
+            &quot;protocol_parameters&quot;,
+            {
+                &quot;grating_cycle&quot;: 10,
+                &quot;grating_duration&quot;: 4.0,
+                &quot;inter_stim_pause&quot;: 0,
+                &quot;n_repeats&quot;: 1,
+                &quot;post_pause&quot;: 0.0,
+                &quot;pre_pause&quot;: 0.0,
+            },
+        ),
+        (&quot;stim_start_times&quot;, [0.002]),
+        (&quot;stim_end_times&quot;, [600.004995]),
+    ],
+)
+def test_class_properties(embedded_exp_path, prop_name, outcome):
+    exp = bt.Experiment(embedded_exp_path)
+
+    val = getattr(exp, prop_name)
+    if isinstance(val, np.ndarray):
+        assert np.isclose(val, outcome)
+    else:
+        assert val == outcome</div>
+
+
+<div class="viewcode-block" id="test_logs_loading"><a class="viewcode-back" href="../../../source/bouter.tests.html#bouter.tests.test_bouter.test_logs_loading">[docs]</a>@pytest.mark.parametrize(
+    &quot;logname, log_props&quot;,
+    [
+        (
+            &quot;stimulus_param_log&quot;,
+            dict(
+                nrows=100,
+                columns=[
+                    &quot;closed loop 1D_vel&quot;,
+                    &quot;closed loop 1D_base_vel&quot;,
+                    &quot;closed loop 1D_gain&quot;,
+                    &quot;closed loop 1D_lag&quot;,
+                    &quot;closed loop 1D_fish_swimming&quot;,
+                    &quot;t&quot;,
+                ],
+            ),
+        ),
+        (&quot;estimator_log&quot;, dict(nrows=100, columns=[&quot;vigour&quot;, &quot;t&quot;])),
+        (
+            &quot;behavior_log&quot;,
+            dict(
+                nrows=1200,
+                columns=[&quot;tail_sum&quot;]
+                + [f&quot;theta_{i:02}&quot; for i in range(25)]
+                + [&quot;t&quot;],
+            ),
+        ),
+    ],
+)
+def test_logs_loading(embedded_exp_path, logname, log_props):
+    exp = bt.EmbeddedExperiment(embedded_exp_path)
+    df = getattr(exp, logname)
+
+    assert len(df) == log_props[&quot;nrows&quot;]
+    assert all(df.columns == log_props[&quot;columns&quot;])</div>
+
+
+<div class="viewcode-block" id="test_warning_raise"><a class="viewcode-back" href="../../../source/bouter.tests.html#bouter.tests.test_bouter.test_warning_raise">[docs]</a>def test_warning_raise(embedded_exp_path):
+    exp = bt.EmbeddedExperiment(embedded_exp_path)
+    starts, ends = exp.stimulus_starts_ends()
+    for s, t in zip(
+        [starts, ends], [np.array([0.002]), np.array([600.004995])]
+    ):
+        assert all(s == t)</div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Vilim Stih, Hagar Lavian, Luigi Petrucco, Ot Prat
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

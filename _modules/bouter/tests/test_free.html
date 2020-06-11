@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bouter.tests.test_free &mdash; bouter 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> bouter
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html#credits">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../embedded-fish-behavioral-analysis.html">How to analyse a (Stytra) embedded tail tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../embedded-fish-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../embedded-fish-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../freely-swimming-behavioral-analysis.html">How to analyse a (Stytra) freely-swimming tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../freely-swimming-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../freely-swimming-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">bouter</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../bouter.html">bouter</a> &raquo;</li>
+        
+      <li>bouter.tests.test_free</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bouter.tests.test_free</h1><div class="highlight"><pre>
+<span></span>from numpy.testing import assert_array_equal
+from pandas.testing import assert_frame_equal
+import flammkuchen as fl
+from bouter.tests import ASSETS_PATH
+import numpy as np
+from bouter import free
+
+
+<div class="viewcode-block" id="corrupt_tail_matrix"><a class="viewcode-back" href="../../../source/bouter.tests.html#bouter.tests.test_free.corrupt_tail_matrix">[docs]</a>def corrupt_tail_matrix(tail_matrix, prop_missing=0.2, std=3):
+    &quot;&quot;&quot;Add some nan values to tail segments.
+    &quot;&quot;&quot;
+    np.random.seed(1520)
+
+    corrupted_mat = tail_matrix.copy()
+    n_pts = corrupted_mat.shape[0]
+
+    for i in range(n_pts):
+        if np.random.rand() &lt; prop_missing:
+            n_missing = abs(int(np.random.randn() * std)) + 1
+            corrupted_mat[i, -n_missing:] = np.nan
+
+    return corrupted_mat</div>
+
+
+<div class="viewcode-block" id="test_n_fish_extraction"><a class="viewcode-back" href="../../../source/bouter.tests.html#bouter.tests.test_free.test_n_fish_extraction">[docs]</a>def test_n_fish_extraction(freely_swimming_exp_path):
+    experiment = free.FreelySwimmingExperiment(freely_swimming_exp_path)
+    assert experiment.n_fish == 3</div>
+
+
+<div class="viewcode-block" id="test_n_segment_extraction"><a class="viewcode-back" href="../../../source/bouter.tests.html#bouter.tests.test_free.test_n_segment_extraction">[docs]</a>def test_n_segment_extraction(freely_swimming_exp_path):
+    experiment = free.FreelySwimmingExperiment(freely_swimming_exp_path)
+    assert experiment.n_tail_segments == 9</div>
+
+
+<div class="viewcode-block" id="test_tail_fixing_experiment"><a class="viewcode-back" href="../../../source/bouter.tests.html#bouter.tests.test_free.test_tail_fixing_experiment">[docs]</a>def test_tail_fixing_experiment(freely_swimming_exp_path):
+    experiment = free.FreelySwimmingExperiment(freely_swimming_exp_path)
+
+    # Empty lists to store the generated corrupted matrices
+    original_mats = []
+    corrupted_mats = []
+
+    for i_fish in range(experiment.n_fish):
+
+        # Load original dataframe:
+        original_fish_mat = experiment.behavior_log.loc[:, experiment.tail_columns[i_fish]].values.copy()
+        original_mats.append(original_fish_mat)
+
+        # Nan random points and substitute experiment data, in place:
+        corrupted_fish_mat = corrupt_tail_matrix(original_fish_mat, prop_missing=0.3, std=1)
+        corrupted_mats.append(corrupted_fish_mat)
+        experiment.behavior_log.loc[:, experiment.tail_columns[i_fish]] = corrupted_fish_mat
+
+    # Fix the experiment behavior_log, in place
+    experiment.reconstruct_missing_segments(continue_curvature=4)
+
+    # Assert success for each fish in the experiment
+    for i_fish in range(experiment.n_fish):
+
+        fixed_pts = np.isnan(corrupted_mats[i_fish])
+        diff_mat = np.abs(
+            original_mats[i_fish] - experiment.behavior_log.loc[:, experiment.tail_columns[i_fish]].values
+        )
+
+        assert np.median(diff_mat[fixed_pts]) &lt; 0.1
+        assert np.median(diff_mat[~fixed_pts]) == 0</div>
+
+
+<div class="viewcode-block" id="test_tail_fixing_revert"><a class="viewcode-back" href="../../../source/bouter.tests.html#bouter.tests.test_free.test_tail_fixing_revert">[docs]</a>def test_tail_fixing_revert(freely_swimming_exp_path):
+    experiment = free.FreelySwimmingExperiment(freely_swimming_exp_path)
+
+    for i_fish in range(experiment.n_fish):
+
+        # Load original dataframe:
+        original_fish_mat = experiment.behavior_log.loc[:, experiment.tail_columns[i_fish]].values.copy()
+
+        # Nan random points and substitute experiment data, in place:
+        corrupted_fish_mat = corrupt_tail_matrix(original_fish_mat, prop_missing=0.3, std=1)
+        experiment.behavior_log.loc[:, experiment.tail_columns[i_fish]] = corrupted_fish_mat
+
+    corrupted_behavior_log = experiment.behavior_log
+
+    # Fix the behavior_log, in place:
+    experiment.reconstruct_missing_segments(continue_curvature=4)
+
+    # Revert fixing:
+    experiment.reconstruct_missing_segments(continue_curvature=None)
+
+    assert_frame_equal(corrupted_behavior_log, experiment.behavior_log)</div>
+
+
+<div class="viewcode-block" id="test_compute_velocity"><a class="viewcode-back" href="../../../source/bouter.tests.html#bouter.tests.test_free.test_compute_velocity">[docs]</a>def test_compute_velocity(freely_swimming_exp_path):
+    experiment = free.FreelySwimmingExperiment(freely_swimming_exp_path)
+    velocities_df = experiment.compute_velocity()
+    fish_vels = velocities_df[[&quot;vel2_f{}&quot;.format(i_fish) for i_fish in range(experiment.n_fish)]]
+
+    #Load computed velocities
+    loaded_vel2 = fl.load(ASSETS_PATH / &quot;freely_swimming_dataset&quot; / &quot;test_extracted_bouts.h5&quot;, &quot;/velocities&quot;)
+
+    #Compare DataFrame with velocities from the 3 experiment fish
+    assert_frame_equal(fish_vels, loaded_vel2)</div>
+
+
+<div class="viewcode-block" id="test_bout_extraction"><a class="viewcode-back" href="../../../source/bouter.tests.html#bouter.tests.test_free.test_bout_extraction">[docs]</a>def test_bout_extraction(freely_swimming_exp_path):
+    experiment = free.FreelySwimmingExperiment(freely_swimming_exp_path)
+    bouts, cont = experiment.get_bouts()
+
+    #Load expected bouts to be extracted. Only first fish is used for the assertion
+    loaded_bouts = fl.load(ASSETS_PATH / &quot;freely_swimming_dataset&quot; / &quot;test_extracted_bouts.h5&quot;, &quot;/bouts&quot;)
+    loaded_cont = fl.load(ASSETS_PATH / &quot;freely_swimming_dataset&quot; / &quot;test_extracted_bouts.h5&quot;, &quot;/continuity&quot;)
+
+    #Compare dataframes for each of the detected bouts in the first fish
+    for bout in range(len(bouts[0])):
+        assert_frame_equal(bouts[0][bout], loaded_bouts[bout])
+
+    #Compare also continuity array
+    assert_array_equal(cont[0], loaded_cont)</div>
+
+
+<div class="viewcode-block" id="test_bout_summary"><a class="viewcode-back" href="../../../source/bouter.tests.html#bouter.tests.test_free.test_bout_summary">[docs]</a>def test_bout_summary(freely_swimming_exp_path):
+    experiment = free.FreelySwimmingExperiment(freely_swimming_exp_path)
+
+    #Summarize all the bouts detected in the experiment.
+    bouts_summary = experiment.get_bout_properties()
+
+    #Load summary of bouts from all fish in the experiment.
+    loaded_bouts_summary = fl.load(ASSETS_PATH / &quot;freely_swimming_dataset&quot; / &quot;test_extracted_bouts.h5&quot;, &quot;/bouts_summary&quot;)
+
+    assert_frame_equal(bouts_summary, loaded_bouts_summary)</div>
+
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Vilim Stih, Hagar Lavian, Luigi Petrucco, Ot Prat
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,366 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bouter.tests package &mdash; bouter 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> bouter
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#credits">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../embedded-fish-behavioral-analysis.html">How to analyse a (Stytra) embedded tail tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../embedded-fish-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../embedded-fish-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../freely-swimming-behavioral-analysis.html">How to analyse a (Stytra) freely-swimming tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../freely-swimming-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../freely-swimming-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">bouter</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>bouter.tests package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/bouter.tests.rst" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="bouter-tests-package">
+<h1>bouter.tests package<a class="headerlink" href="#bouter-tests-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-bouter.tests.conftest">
+<span id="bouter-tests-conftest-module"></span><h2>bouter.tests.conftest module<a class="headerlink" href="#module-bouter.tests.conftest" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="bouter.tests.conftest.embedded_exp_path">
+<code class="sig-prename descclassname">bouter.tests.conftest.</code><code class="sig-name descname">embedded_exp_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/conftest.html#embedded_exp_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.conftest.embedded_exp_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.conftest.freely_swimming_exp_path">
+<code class="sig-prename descclassname">bouter.tests.conftest.</code><code class="sig-name descname">freely_swimming_exp_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/conftest.html#freely_swimming_exp_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.conftest.freely_swimming_exp_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-bouter.tests.test_bouter">
+<span id="bouter-tests-test-bouter-module"></span><h2>bouter.tests.test_bouter module<a class="headerlink" href="#module-bouter.tests.test_bouter" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="bouter.tests.test_bouter.test_class_instantiation">
+<code class="sig-prename descclassname">bouter.tests.test_bouter.</code><code class="sig-name descname">test_class_instantiation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">embedded_exp_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_bouter.html#test_class_instantiation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_bouter.test_class_instantiation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_bouter.test_class_properties">
+<code class="sig-prename descclassname">bouter.tests.test_bouter.</code><code class="sig-name descname">test_class_properties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">embedded_exp_path</span></em>, <em class="sig-param"><span class="n">prop_name</span></em>, <em class="sig-param"><span class="n">outcome</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_bouter.html#test_class_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_bouter.test_class_properties" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_bouter.test_logs_loading">
+<code class="sig-prename descclassname">bouter.tests.test_bouter.</code><code class="sig-name descname">test_logs_loading</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">embedded_exp_path</span></em>, <em class="sig-param"><span class="n">logname</span></em>, <em class="sig-param"><span class="n">log_props</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_bouter.html#test_logs_loading"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_bouter.test_logs_loading" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_bouter.test_warning_raise">
+<code class="sig-prename descclassname">bouter.tests.test_bouter.</code><code class="sig-name descname">test_warning_raise</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">embedded_exp_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_bouter.html#test_warning_raise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_bouter.test_warning_raise" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-bouter.tests.test_embedded">
+<span id="bouter-tests-test-embedded-module"></span><h2>bouter.tests.test_embedded module<a class="headerlink" href="#module-bouter.tests.test_embedded" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="bouter.tests.test_embedded.corrupt_tail_matrix">
+<code class="sig-prename descclassname">bouter.tests.test_embedded.</code><code class="sig-name descname">corrupt_tail_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tail_matrix</span></em>, <em class="sig-param"><span class="n">prop_missing</span><span class="o">=</span><span class="default_value">0.2</span></em>, <em class="sig-param"><span class="n">std</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_embedded.html#corrupt_tail_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_embedded.corrupt_tail_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add some nan values to tail segments.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_embedded.test_class_simple_properties">
+<code class="sig-prename descclassname">bouter.tests.test_embedded.</code><code class="sig-name descname">test_class_simple_properties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">embedded_exp_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_embedded.html#test_class_simple_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_embedded.test_class_simple_properties" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_embedded.test_tail_fix_function_real_data">
+<code class="sig-prename descclassname">bouter.tests.test_embedded.</code><code class="sig-name descname">test_tail_fix_function_real_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">embedded_exp_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_embedded.html#test_tail_fix_function_real_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_embedded.test_tail_fix_function_real_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_embedded.test_tail_fixing_experiment">
+<code class="sig-prename descclassname">bouter.tests.test_embedded.</code><code class="sig-name descname">test_tail_fixing_experiment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">embedded_exp_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_embedded.html#test_tail_fixing_experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_embedded.test_tail_fixing_experiment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_embedded.test_tail_fixing_revert">
+<code class="sig-prename descclassname">bouter.tests.test_embedded.</code><code class="sig-name descname">test_tail_fixing_revert</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">embedded_exp_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_embedded.html#test_tail_fixing_revert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_embedded.test_tail_fixing_revert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_embedded.test_vigor_and_bouts">
+<code class="sig-prename descclassname">bouter.tests.test_embedded.</code><code class="sig-name descname">test_vigor_and_bouts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">embedded_exp_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_embedded.html#test_vigor_and_bouts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_embedded.test_vigor_and_bouts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-bouter.tests.test_free">
+<span id="bouter-tests-test-free-module"></span><h2>bouter.tests.test_free module<a class="headerlink" href="#module-bouter.tests.test_free" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="bouter.tests.test_free.corrupt_tail_matrix">
+<code class="sig-prename descclassname">bouter.tests.test_free.</code><code class="sig-name descname">corrupt_tail_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tail_matrix</span></em>, <em class="sig-param"><span class="n">prop_missing</span><span class="o">=</span><span class="default_value">0.2</span></em>, <em class="sig-param"><span class="n">std</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_free.html#corrupt_tail_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_free.corrupt_tail_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add some nan values to tail segments.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_free.test_bout_extraction">
+<code class="sig-prename descclassname">bouter.tests.test_free.</code><code class="sig-name descname">test_bout_extraction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">freely_swimming_exp_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_free.html#test_bout_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_free.test_bout_extraction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_free.test_bout_summary">
+<code class="sig-prename descclassname">bouter.tests.test_free.</code><code class="sig-name descname">test_bout_summary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">freely_swimming_exp_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_free.html#test_bout_summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_free.test_bout_summary" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_free.test_compute_velocity">
+<code class="sig-prename descclassname">bouter.tests.test_free.</code><code class="sig-name descname">test_compute_velocity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">freely_swimming_exp_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_free.html#test_compute_velocity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_free.test_compute_velocity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_free.test_n_fish_extraction">
+<code class="sig-prename descclassname">bouter.tests.test_free.</code><code class="sig-name descname">test_n_fish_extraction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">freely_swimming_exp_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_free.html#test_n_fish_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_free.test_n_fish_extraction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_free.test_n_segment_extraction">
+<code class="sig-prename descclassname">bouter.tests.test_free.</code><code class="sig-name descname">test_n_segment_extraction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">freely_swimming_exp_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_free.html#test_n_segment_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_free.test_n_segment_extraction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_free.test_tail_fixing_experiment">
+<code class="sig-prename descclassname">bouter.tests.test_free.</code><code class="sig-name descname">test_tail_fixing_experiment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">freely_swimming_exp_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_free.html#test_tail_fixing_experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_free.test_tail_fixing_experiment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_free.test_tail_fixing_revert">
+<code class="sig-prename descclassname">bouter.tests.test_free.</code><code class="sig-name descname">test_tail_fixing_revert</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">freely_swimming_exp_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_free.html#test_tail_fixing_revert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_free.test_tail_fixing_revert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-bouter.tests.test_utilities">
+<span id="bouter-tests-test-utilities-module"></span><h2>bouter.tests.test_utilities module<a class="headerlink" href="#module-bouter.tests.test_utilities" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="bouter.tests.test_utilities.test_continue_curvature">
+<code class="sig-prename descclassname">bouter.tests.test_utilities.</code><code class="sig-name descname">test_continue_curvature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_utilities.html#test_continue_curvature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_utilities.test_continue_curvature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.tests.test_utilities.test_segment_extraction">
+<code class="sig-prename descclassname">bouter.tests.test_utilities.</code><code class="sig-name descname">test_segment_extraction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/tests/test_utilities.html#test_segment_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.tests.test_utilities.test_segment_extraction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-bouter.tests">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bouter.tests" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Vilim Stih, Hagar Lavian, Luigi Petrucco, Ot Prat
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
