@@ -90,8 +90,8 @@ def test_tail_fixing_revert(freely_swimming_exp_path):
 
 def test_compute_velocity(freely_swimming_exp_path):
     experiment = free.FreelySwimmingExperiment(freely_swimming_exp_path)
-    extended_behavior_log = experiment.compute_velocity()
-    fish_vels = extended_behavior_log[["vel2_f{}".format(i_fish) for i_fish in range(experiment.n_fish)]]
+    velocities_df = experiment.compute_velocity()
+    fish_vels = velocities_df[["vel2_f{}".format(i_fish) for i_fish in range(experiment.n_fish)]]
 
     #Load computed velocities
     loaded_vel2 = fl.load(ASSETS_PATH / "freely_swimming_dataset" / "test_extracted_bouts.h5", "/velocities")
