@@ -4,7 +4,9 @@ from pathlib import Path
 
 from bouter.experiment import Experiment
 from bouter.embedded import EmbeddedExperiment
+from bouter.free import FreelySwimmingExperiment
 from bouter.multisession_exp import MultiSessionExperiment
+import numpy as np
 
 from bouter import tests
 
@@ -23,3 +25,4 @@ def load_folder(folder, exp_class=Experiment):
     """
     folder = Path(folder)
     return [exp_class(f) for f in sorted(folder.glob("**/*_metadata.json"))]
+

@@ -9,6 +9,7 @@ Welcome to bouter's documentation!
    installation
    usage
    embedded-fish-behavioral-analysis
+   freely-swimming-behavioral-analysis
    modules
    contributing
    authors

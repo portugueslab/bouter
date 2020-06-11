@@ -106,7 +106,7 @@ def test_vigor_and_bouts(embedded_exp_path):
         "vigor"
     ]
 
-    expected_vigor = fl.load(ASSETS_PATH / "expected_vigor.h5", "/vigor")
+    expected_vigor = fl.load(ASSETS_PATH / "embedded_dataset" / "expected_vigor.h5", "/vigor")
 
     assert_array_almost_equal(calculated_vigor, expected_vigor, 5)
 

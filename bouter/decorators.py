@@ -9,7 +9,7 @@ from bouter import descriptors
 
 
 def get_method_default_kwargs(method):
-    argnames, _, _, defaults = inspect.getargspec(method)
+    argnames, _, _, defaults, _, _, _ = inspect.getfullargspec(method)
     argnames.pop(argnames.index("self"))
     return {n: v for n, v in zip(argnames, defaults)}
 

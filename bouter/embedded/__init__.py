@@ -12,7 +12,7 @@ class EmbeddedExperiment(Experiment):
 
     @property
     def tail_columns(self):
-        """Return matrix with the tail points.
+        """Return names of columns with tracking data from all tracked segments.
         Careful, the array is not copied!
         """
         return [f"theta_{i:02}" for i in range(self.n_tail_segments)]
@@ -20,7 +20,6 @@ class EmbeddedExperiment(Experiment):
     @decorators.cache_results(cache_filename="behavior_log")
     def reconstruct_missing_segments(self, continue_curvature=None):
 
-        columns = [f"theta_{i:02}" for i in range(self.n_tail_segments)]
         segments = self.behavior_log.loc[:, self.tail_columns].values.copy()
 
         if "missing_n" in self.behavior_log.columns:
@@ -34,7 +33,7 @@ class EmbeddedExperiment(Experiment):
                 fixed_segments = utilities.revert_segment_filling(
                     segments, revert_pts=revert_pts,
                 )
-                self.behavior_log.loc[:, columns] = fixed_segments
+                self.behavior_log.loc[:, self.tail_columns] = fixed_segments
 
         # Otherwise, use the parameter to do the filling:
         else:
@@ -43,7 +42,7 @@ class EmbeddedExperiment(Experiment):
                 continue_curvature=continue_curvature,
                 revert_pts=revert_pts,
             )
-            self.behavior_log.loc[:, columns] = fixed_segments
+            self.behavior_log.loc[:, self.tail_columns] = fixed_segments
             self.behavior_log["missing_n"] = missing_n
 
         return self.behavior_log
