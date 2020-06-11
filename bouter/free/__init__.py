@@ -122,8 +122,8 @@ class FreelySwimmingExperiment(Experiment):
     @decorators.cache_results()
     def get_bouts(
         self,
-        window_size=7,
         median_vel=False,
+        window_size=7,
         scale=None,
         threshold=1,
         **kwargs

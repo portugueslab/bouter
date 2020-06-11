@@ -4,6 +4,7 @@ from pathlib import Path
 
 from bouter.experiment import Experiment
 from bouter.embedded import EmbeddedExperiment
+from bouter.free import FreelySwimmingExperiment
 from bouter.multisession_exp import MultiSessionExperiment
 import numpy as np
 
