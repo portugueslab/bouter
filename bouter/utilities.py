@@ -157,3 +157,24 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
                     )
 
     return tail_angle_mat, n_segments_missing
+
+
+def calc_vel(dx, t):
+    """ Calculates velocities from deltas and times, skipping over duplicate
+    times
+
+    Parameters
+    ----------
+    dx the differences in the parameter
+    t times at which the parameter was sampled
+
+    Returns
+    -------
+    t_vel, vel
+
+    """
+    dt = np.diff(t)
+    duplicate_t = (dt == 0)
+    vel = dx[~duplicate_t] / dt[~duplicate_t]
+    t_vel = t[1:][~duplicate_t]
+    return t_vel, vel
