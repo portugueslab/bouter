@@ -322,6 +322,27 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
                     )
 
     return tail_angle_mat, n_segments_missing</div>
+
+
+<div class="viewcode-block" id="calc_vel"><a class="viewcode-back" href="../../source/bouter.html#bouter.utilities.calc_vel">[docs]</a>def calc_vel(dx, t):
+    &quot;&quot;&quot; Calculates velocities from deltas and times, skipping over duplicate
+    times
+
+    Parameters
+    ----------
+    dx the differences in the parameter
+    t times at which the parameter was sampled
+
+    Returns
+    -------
+    t_vel, vel
+
+    &quot;&quot;&quot;
+    dt = np.diff(t)
+    duplicate_t = (dt == 0)
+    vel = dx[~duplicate_t] / dt[~duplicate_t]
+    t_vel = t[1:][~duplicate_t]
+    return t_vel, vel</div>
 </pre></div>
 
            </div>
