@@ -8,7 +8,10 @@ from bouter import Experiment
 class EmbeddedExperiment(Experiment):
     @property
     def n_tail_segments(self):
-        return self["behavior"]["tail"]["n_segments"]
+        try:
+            return self["behavior"]["tail"]["n_segments"]
+        except KeyError:
+            return self["tracking+tail_tracking"]["n_segments"]
 
     @property
     def tail_columns(self):
