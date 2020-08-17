@@ -173,7 +173,10 @@ from bouter import Experiment
 <div class="viewcode-block" id="EmbeddedExperiment"><a class="viewcode-back" href="../../source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment">[docs]</a>class EmbeddedExperiment(Experiment):
     @property
     def n_tail_segments(self):
-        return self[&quot;behavior&quot;][&quot;tail&quot;][&quot;n_segments&quot;]
+        try:
+            return self[&quot;behavior&quot;][&quot;tail&quot;][&quot;n_segments&quot;]
+        except KeyError:
+            return self[&quot;tracking+tail_tracking&quot;][&quot;n_segments&quot;]
 
     @property
     def tail_columns(self):
