@@ -101,6 +101,18 @@ def revert_segment_filling(fixed_mat, revert_pts):
 
 
 @jit(nopython=True)
+def n_missing_segments(tail_angle_mat):
+    n_t, n_segments = tail_angle_mat.shape
+    n_missing = np.zeros(n_t, dtype=np.uint8)
+    for i in range(n_t):
+        for i_seg in range(n_segments):
+            if np.isnan(tail_angle_mat[i, i_seg]):
+                n_missing[i] = n_segments - i_seg
+                break
+    return n_missing
+
+
+@jit(nopython=True)
 def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
     """Fills out NaN values in a tail-tracking data matrix.
     Filling can consist on propagating the angle of the last tracked segment (continue_curvature=0)

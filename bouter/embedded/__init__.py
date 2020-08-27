@@ -11,7 +11,7 @@ class EmbeddedExperiment(Experiment):
         try:
             return self["behavior"]["tail"]["n_segments"]
         except KeyError:
-            return self["tracking+tail_tracking"]["n_segments"]
+            return self["tracking+tail_tracking"]["n_output_segments"]
 
     @property
     def tail_columns(self):
@@ -50,7 +50,7 @@ class EmbeddedExperiment(Experiment):
 
         return self.behavior_log
 
-    @decorators.cache_results(cache_filename="polynomial_tail")
+    @decorators.cache_results()
     def polynomial_tail_coefficients(self, n_max_missing=7, degree=3):
         """ Fits a polynomial to the bout shape
 
@@ -62,15 +62,15 @@ class EmbeddedExperiment(Experiment):
         segments -= segments[:, 0:1]
         n_max_missing = min(self.n_tail_segments - degree, n_max_missing)
 
+        # the Stytra tail tracking introduces NaNs at breaking point
+        # a situation number - NaN - number never occurs in tracking
+        n_missing = utilities.n_missing_segments(segments)
+
         poly_coefs = np.zeros((segments.shape[0], degree + 1))
         line_points = np.linspace(0, 1, self.n_tail_segments)
 
-        # the Stytra tail tracking introduces NaNs at breaking point
-        # a situation number - NaN - number never occurs in tracking
         for i_missing in range(n_max_missing + 1):
-            sel_time = np.logical_not(
-                np.isnan(segments[:, self.n_tail_segments - (i_missing + 1)])
-            )
+            sel_time = n_missing == i_missing
             poly_coefs[sel_time, :] = np.polynomial.polynomial.polyfit(
                 line_points[0 : self.n_tail_segments - i_missing],
                 segments[sel_time, 0 : self.n_tail_segments - i_missing].T,
@@ -78,7 +78,7 @@ class EmbeddedExperiment(Experiment):
             ).T
         return poly_coefs
 
-    @decorators.cache_results(cache_filename="polynomial_tailsum")
+    @decorators.cache_results()
     def polynomial_tailsum(self):
         return np.polynomial.polynomial.polyval(
             1, self.polynomial_tail_coefficients().T, False
