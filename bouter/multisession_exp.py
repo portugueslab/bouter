@@ -3,15 +3,15 @@ from datetime import datetime
 
 import pandas as pd
 
-from bouter.experiment import Experiment
+from bouter.embedded import EmbeddedExperiment
 
 
-class MultiSessionExperiment(Experiment):
+class MultiSessionExperiment(EmbeddedExperiment):
     """ Class to handle the scenario of multiple stytra sessions within the
     same experiment - typically, for plane-wise repetitions in 2p imaging.
     """
 
-    def __init__(self, path):
+    def __init__(self, path, **kwargs):
         self.session_list = sorted(list(path.glob("*_metadata.json")))
 
         super().__init__(self.session_list[0])
@@ -46,6 +46,10 @@ class MultiSessionExperiment(Experiment):
                     self.log_mapping[log_name] = (
                         possible_name + logfnames[0].suffix
                     )
+
+        self.experiments = [
+            EmbeddedExperiment(pth, **kwargs) for pth in self.session_list
+        ]
 
     def _get_log(self, log_name):
         """ Given name of the log get it from attributes or load it ex novo
@@ -108,20 +112,7 @@ class MultiSessionExperiment(Experiment):
         """ Return timestamps for all the sessions in this folder.
         """
         start_tstamps = []
-        for p in self.session_list:
-            s = Experiment(p)["general"]["t_protocol_start"]
+        for exp in self.experiments:
+            s = exp["general"]["t_protocol_start"]
             start_tstamps.append(datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.%f"))
         return start_tstamps
-
-    def get_session_log(self, log_name, session_idx):
-        """ Function to load a log for a single session, specified by index-
-        :param log_name: string specifying the type of log
-            (e.g., "behavior_log")
-        :param session_idx: int, index of session to load:
-        :return:
-        """
-        log_name = self.log_mapping[log_name]
-        session_log = self.root / str(
-            self.session_id_list[session_idx] + "_" + log_name
-        )
-        return self._load_log(session_log)
