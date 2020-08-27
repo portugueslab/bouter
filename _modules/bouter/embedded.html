@@ -177,7 +177,7 @@ from bouter import Experiment
         try:
             return self[&quot;behavior&quot;][&quot;tail&quot;][&quot;n_segments&quot;]
         except KeyError:
-            return self[&quot;tracking+tail_tracking&quot;][&quot;n_segments&quot;]
+            return self[&quot;tracking+tail_tracking&quot;][&quot;n_output_segments&quot;]
 
     @property
     def tail_columns(self):
@@ -216,7 +216,7 @@ from bouter import Experiment
 
         return self.behavior_log</div>
 
-<div class="viewcode-block" id="EmbeddedExperiment.polynomial_tail_coefficients"><a class="viewcode-back" href="../../source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment.polynomial_tail_coefficients">[docs]</a>    @decorators.cache_results(cache_filename=&quot;polynomial_tail&quot;)
+<div class="viewcode-block" id="EmbeddedExperiment.polynomial_tail_coefficients"><a class="viewcode-back" href="../../source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment.polynomial_tail_coefficients">[docs]</a>    @decorators.cache_results()
     def polynomial_tail_coefficients(self, n_max_missing=7, degree=3):
         &quot;&quot;&quot; Fits a polynomial to the bout shape
 
@@ -228,15 +228,15 @@ from bouter import Experiment
         segments -= segments[:, 0:1]
         n_max_missing = min(self.n_tail_segments - degree, n_max_missing)
 
+        # the Stytra tail tracking introduces NaNs at breaking point
+        # a situation number - NaN - number never occurs in tracking
+        n_missing = utilities.n_missing_segments(segments)
+
         poly_coefs = np.zeros((segments.shape[0], degree + 1))
         line_points = np.linspace(0, 1, self.n_tail_segments)
 
-        # the Stytra tail tracking introduces NaNs at breaking point
-        # a situation number - NaN - number never occurs in tracking
         for i_missing in range(n_max_missing + 1):
-            sel_time = np.logical_not(
-                np.isnan(segments[:, self.n_tail_segments - (i_missing + 1)])
-            )
+            sel_time = n_missing == i_missing
             poly_coefs[sel_time, :] = np.polynomial.polynomial.polyfit(
                 line_points[0 : self.n_tail_segments - i_missing],
                 segments[sel_time, 0 : self.n_tail_segments - i_missing].T,
@@ -244,7 +244,7 @@ from bouter import Experiment
             ).T
         return poly_coefs</div>
 
-<div class="viewcode-block" id="EmbeddedExperiment.polynomial_tailsum"><a class="viewcode-back" href="../../source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment.polynomial_tailsum">[docs]</a>    @decorators.cache_results(cache_filename=&quot;polynomial_tailsum&quot;)
+<div class="viewcode-block" id="EmbeddedExperiment.polynomial_tailsum"><a class="viewcode-back" href="../../source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment.polynomial_tailsum">[docs]</a>    @decorators.cache_results()
     def polynomial_tailsum(self):
         return np.polynomial.polynomial.polyval(
             1, self.polynomial_tail_coefficients().T, False
