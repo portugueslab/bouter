@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html">How to analyse a (Stytra) freely-swimming tracking experiment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../caching.html">Caching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
@@ -308,7 +309,7 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
                         # samples:
                         previous_tail_curvature = np.diff(
                             tail_angle_mat[
-                                i_t, i_seg - continue_curvature: i_seg,
+                                i_t, i_seg - continue_curvature : i_seg,
                             ]
                         )
                         deviation = np.mean(previous_tail_curvature)
@@ -339,7 +340,7 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
 
     &quot;&quot;&quot;
     dt = np.diff(t)
-    duplicate_t = (dt == 0)
+    duplicate_t = dt == 0
     vel = dx[~duplicate_t] / dt[~duplicate_t]
     t_vel = t[1:][~duplicate_t]
     return t_vel, vel</div>

@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../freely-swimming-behavioral-analysis.html">How to analyse a (Stytra) freely-swimming tracking experiment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../freely-swimming-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../freely-swimming-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../caching.html">Caching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
@@ -196,7 +197,7 @@
 <dd><p>Bases: <a class="reference internal" href="bouter.html#bouter.experiment.Experiment" title="bouter.experiment.Experiment"><code class="xref py py-class docutils literal notranslate"><span class="pre">bouter.experiment.Experiment</span></code></a></p>
 <dl class="py method">
 <dt id="bouter.embedded.EmbeddedExperiment.compute_vigor">
-<code class="sig-name descname">compute_vigor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vigor_duration_s</span><span class="o">=</span><span class="default_value">0.05</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/embedded.html#EmbeddedExperiment.compute_vigor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.embedded.EmbeddedExperiment.compute_vigor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_vigor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vigor_duration_s</span><span class="o">=</span><span class="default_value">0.05</span></em>, <em class="sig-param"><span class="n">use_polynomial_tailsum</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/embedded.html#EmbeddedExperiment.compute_vigor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.embedded.EmbeddedExperiment.compute_vigor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute vigor, the proxy of embedded fish forward velocity,
 a standard deviation calculated on a rolling window of tail curvature.
 Add it as a column to the dataframe log and return the full dataframe</p>
@@ -212,15 +213,19 @@ Add it as a column to the dataframe log and return the full dataframe</p>
 
 <dl class="py method">
 <dt id="bouter.embedded.EmbeddedExperiment.get_bout_properties">
-<code class="sig-name descname">get_bout_properties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directionality_duration</span><span class="o">=</span><span class="default_value">0.07</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/embedded.html#EmbeddedExperiment.get_bout_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.embedded.EmbeddedExperiment.get_bout_properties" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_bout_properties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directionality_duration</span><span class="o">=</span><span class="default_value">0.07</span></em>, <em class="sig-param"><span class="n">use_polynomial_tailsum</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/embedded.html#EmbeddedExperiment.get_bout_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.embedded.EmbeddedExperiment.get_bout_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create dataframe with summary of bouts properties.
 :param directionality_duration: Window defining initial part of</p>
 <blockquote>
 <div><p>the bout for the turning angle calculation, in seconds.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>use_polynomial_tailsum</strong> – If the polynomial tail sum is to be used
+instead of the raw one created by Stytra</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a dataframe giving properties for each bout</p>
 </dd>
 </dl>
 </dd></dl>
@@ -236,6 +241,28 @@ Add it as a column to the dataframe log and return the full dataframe</p>
 <dl class="py method">
 <dt id="bouter.embedded.EmbeddedExperiment.n_tail_segments">
 <em class="property">property </em><code class="sig-name descname">n_tail_segments</code><a class="headerlink" href="#bouter.embedded.EmbeddedExperiment.n_tail_segments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="bouter.embedded.EmbeddedExperiment.polynomial_tail_coefficients">
+<code class="sig-name descname">polynomial_tail_coefficients</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_max_missing</span><span class="o">=</span><span class="default_value">7</span></em>, <em class="sig-param"><span class="n">degree</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/embedded.html#EmbeddedExperiment.polynomial_tail_coefficients"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.embedded.EmbeddedExperiment.polynomial_tail_coefficients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits a polynomial to the bout shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_max_missing</strong> – </p></li>
+<li><p><strong>degree</strong> – the polynomial degree</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bouter.embedded.EmbeddedExperiment.polynomial_tailsum">
+<code class="sig-name descname">polynomial_tailsum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/embedded.html#EmbeddedExperiment.polynomial_tailsum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.embedded.EmbeddedExperiment.polynomial_tailsum" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

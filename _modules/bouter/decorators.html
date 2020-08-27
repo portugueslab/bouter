@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html">How to analyse a (Stytra) freely-swimming tracking experiment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../caching.html">Caching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
@@ -176,7 +177,10 @@ from bouter import descriptors
 <div class="viewcode-block" id="get_method_default_kwargs"><a class="viewcode-back" href="../../source/bouter.html#bouter.decorators.get_method_default_kwargs">[docs]</a>def get_method_default_kwargs(method):
     argnames, _, _, defaults, _, _, _ = inspect.getfullargspec(method)
     argnames.pop(argnames.index(&quot;self&quot;))
-    return {n: v for n, v in zip(argnames, defaults)}</div>
+    if len(argnames) &gt; 0:
+        return {n: v for n, v in zip(argnames, defaults)}
+    else:
+        return dict()</div>
 
 
 <div class="viewcode-block" id="cache_results"><a class="viewcode-back" href="../../source/bouter.html#bouter.decorators.cache_results">[docs]</a>def cache_results(cache_filename=None):
@@ -194,6 +198,8 @@ from bouter import descriptors
         @functools.wraps(wrapped)
         def decorated_method(exp, force_recompute=False, **kwargs):
             # Combine default parameters and keyword specified arguments:
+            no_new_paramters = len(kwargs) == 0
+
             full_params_dict = get_method_default_kwargs(wrapped)
             full_params_dict.update(kwargs)
 
@@ -216,7 +222,10 @@ from bouter import descriptors
                 # the same parameters, and we don&#39;t force recalculation:
                 if (
                     method_nm in exp.processing_params.keys()
-                    and full_params_dict == exp.processing_params[method_nm]
+                    and (
+                        full_params_dict == exp.processing_params[method_nm]
+                        or no_new_paramters
+                    )
                     and not force_recompute
                 ):
                     print(

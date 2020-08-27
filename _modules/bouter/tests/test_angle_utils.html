@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bouter.tests.conftest &mdash; bouter 0.1.1 documentation</title>
+  <title>bouter.tests.test_angle_utils &mdash; bouter 0.1.1 documentation</title>
   
 
   
@@ -148,7 +148,7 @@
         
           <li><a href="../../bouter.html">bouter</a> &raquo;</li>
         
-      <li>bouter.tests.conftest</li>
+      <li>bouter.tests.test_angle_utils</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -163,30 +163,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for bouter.tests.conftest</h1><div class="highlight"><pre>
-<span></span>import tempfile
-import pytest
-from distutils.dir_util import copy_tree
-from pathlib import Path
-
-from bouter.tests import ASSETS_PATH
+  <h1>Source code for bouter.tests.test_angle_utils</h1><div class="highlight"><pre>
+<span></span>import numpy as np
+from bouter.angles import quantize_directions
 
 
-<div class="viewcode-block" id="embedded_exp_path"><a class="viewcode-back" href="../../../source/bouter.tests.html#bouter.tests.conftest.embedded_exp_path">[docs]</a>@pytest.fixture()
-def embedded_exp_path():
-    tempdir = tempfile.mkdtemp()
-    source_dataset_path = ASSETS_PATH / &quot;embedded_dataset&quot;
-    copy_tree(source_dataset_path, tempdir)
-
-    return Path(tempdir)</div>
-
-<div class="viewcode-block" id="freely_swimming_exp_path"><a class="viewcode-back" href="../../../source/bouter.tests.html#bouter.tests.conftest.freely_swimming_exp_path">[docs]</a>@pytest.fixture()
-def freely_swimming_exp_path():
-    tempdir = tempfile.mkdtemp()
-    source_dataset_path = ASSETS_PATH / &quot;freely_swimming_dataset&quot;
-    copy_tree(source_dataset_path, tempdir)
-
-    return Path(tempdir)</div>
+<div class="viewcode-block" id="test_quantize"><a class="viewcode-back" href="../../../source/bouter.tests.html#bouter.tests.test_angle_utils.test_quantize">[docs]</a>def test_quantize():
+    dirs, bins = quantize_directions(
+        np.array([0, -np.pi, np.pi, np.pi / 2 + 0.01])
+    )
+    np.testing.assert_array_equal(bins, [0, 4, 4, 2])</div>
 </pre></div>
 
            </div>

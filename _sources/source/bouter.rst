@@ -14,6 +14,14 @@ Subpackages
 Submodules
 ----------
 
+bouter.angles module
+--------------------
+
+.. automodule:: bouter.angles
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 bouter.bout\_stats module
 -------------------------
 

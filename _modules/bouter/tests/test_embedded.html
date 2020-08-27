@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../freely-swimming-behavioral-analysis.html">How to analyse a (Stytra) freely-swimming tracking experiment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../freely-swimming-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../freely-swimming-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../caching.html">Caching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
@@ -271,7 +272,9 @@ from bouter.tests import ASSETS_PATH
         &quot;vigor&quot;
     ]
 
-    expected_vigor = fl.load(ASSETS_PATH / &quot;embedded_dataset&quot; / &quot;expected_vigor.h5&quot;, &quot;/vigor&quot;)
+    expected_vigor = fl.load(
+        ASSETS_PATH / &quot;embedded_dataset&quot; / &quot;expected_vigor.h5&quot;, &quot;/vigor&quot;
+    )
 
     assert_array_almost_equal(calculated_vigor, expected_vigor, 5)
 
@@ -284,14 +287,7 @@ from bouter.tests import ASSETS_PATH
     bts_df = embedded_exp.get_bout_properties(directionality_duration=0.07)
     assert all(
         bts_df.columns
-        == [
-            &quot;t_start&quot;,
-            &quot;duration&quot;,
-            &quot;peak_vig&quot;,
-            &quot;med_vig&quot;,
-            &quot;ang_turn&quot;,
-            &quot;ang_turn_tot&quot;,
-        ]
+        == [&quot;t_start&quot;, &quot;duration&quot;, &quot;peak_vig&quot;, &quot;med_vig&quot;, &quot;bias&quot;, &quot;bias_tot&quot;,]
     )
 
     np.testing.assert_array_almost_equal(

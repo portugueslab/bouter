@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html">How to analyse a (Stytra) freely-swimming tracking experiment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../caching.html">Caching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
@@ -215,8 +216,44 @@ from bouter import Experiment
 
         return self.behavior_log</div>
 
+<div class="viewcode-block" id="EmbeddedExperiment.polynomial_tail_coefficients"><a class="viewcode-back" href="../../source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment.polynomial_tail_coefficients">[docs]</a>    @decorators.cache_results(cache_filename=&quot;polynomial_tail&quot;)
+    def polynomial_tail_coefficients(self, n_max_missing=7, degree=3):
+        &quot;&quot;&quot; Fits a polynomial to the bout shape
+
+        :param n_max_missing:
+        :param degree: the polynomial degree
+        :return:
+        &quot;&quot;&quot;
+        segments = self.behavior_log.loc[:, self.tail_columns].values
+        segments -= segments[:, 0:1]
+        n_max_missing = min(self.n_tail_segments - degree, n_max_missing)
+
+        poly_coefs = np.zeros((segments.shape[0], degree + 1))
+        line_points = np.linspace(0, 1, self.n_tail_segments)
+
+        # the Stytra tail tracking introduces NaNs at breaking point
+        # a situation number - NaN - number never occurs in tracking
+        for i_missing in range(n_max_missing + 1):
+            sel_time = np.logical_not(
+                np.isnan(segments[:, self.n_tail_segments - (i_missing + 1)])
+            )
+            poly_coefs[sel_time, :] = np.polynomial.polynomial.polyfit(
+                line_points[0 : self.n_tail_segments - i_missing],
+                segments[sel_time, 0 : self.n_tail_segments - i_missing].T,
+                degree,
+            ).T
+        return poly_coefs</div>
+
+<div class="viewcode-block" id="EmbeddedExperiment.polynomial_tailsum"><a class="viewcode-back" href="../../source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment.polynomial_tailsum">[docs]</a>    @decorators.cache_results(cache_filename=&quot;polynomial_tailsum&quot;)
+    def polynomial_tailsum(self):
+        return np.polynomial.polynomial.polyval(
+            1, self.polynomial_tail_coefficients().T, False
+        )</div>
+
 <div class="viewcode-block" id="EmbeddedExperiment.compute_vigor"><a class="viewcode-back" href="../../source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment.compute_vigor">[docs]</a>    @decorators.cache_results(cache_filename=&quot;behavior_log&quot;)
-    def compute_vigor(self, vigor_duration_s=0.05):
+    def compute_vigor(
+        self, vigor_duration_s=0.05, use_polynomial_tailsum=False
+    ):
         &quot;&quot;&quot;Compute vigor, the proxy of embedded fish forward velocity,
         a standard deviation calculated on a rolling window of tail curvature.
         Add it as a column to the dataframe log and return the full dataframe
@@ -225,11 +262,13 @@ from bouter import Experiment
         :return:
         &quot;&quot;&quot;
         vigor_win = int(vigor_duration_s / self.behavior_dt)
+        tailsum = (
+            pd.Series(self.polynomial_tailsum())
+            if use_polynomial_tailsum
+            else self.behavior_log[&quot;tail_sum&quot;]
+        )
         self.behavior_log[&quot;vigor&quot;] = (
-            self.behavior_log[&quot;tail_sum&quot;]
-            .interpolate()
-            .rolling(vigor_win, center=True)
-            .std()
+            tailsum.interpolate().rolling(vigor_win, center=True).std()
         )
         return self.behavior_log</div>
 
@@ -248,17 +287,27 @@ from bouter import Experiment
         return bouts</div>
 
 <div class="viewcode-block" id="EmbeddedExperiment.get_bout_properties"><a class="viewcode-back" href="../../source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment.get_bout_properties">[docs]</a>    @decorators.cache_results()
-    def get_bout_properties(self, directionality_duration=0.07):
+    def get_bout_properties(
+        self, directionality_duration=0.07, use_polynomial_tailsum=False,
+    ):
         &quot;&quot;&quot;Create dataframe with summary of bouts properties.
         :param directionality_duration: Window defining initial part of
             the bout for the turning angle calculation, in seconds.
-        :return:
+        :param use_polynomial_tailsum: If the polynomial tail sum is to be used
+            instead of the raw one created by Stytra
+        :return: a dataframe giving properties for each bout
         &quot;&quot;&quot;
         bout_init_window_pts = int(directionality_duration / self.behavior_dt)
-        tail_sum = self.behavior_log[&quot;tail_sum&quot;].values
-        vigor = self.compute_vigor().values
+        tail_sum = (
+            self.polynomial_tailsum()
+            if use_polynomial_tailsum
+            else self.behavior_log[&quot;tail_sum&quot;].values
+        )
+        vigor = self.compute_vigor(
+            use_polynomial_tailsum=use_polynomial_tailsum
+        ).values
         bouts = self.get_bouts()
-        peak_vig, med_vig, ang_turn, ang_turn_tot = bout_stats.bout_stats(
+        peak_vig, med_vig, bias, bias_tot = bout_stats.bout_stats(
             vigor, tail_sum, bouts, bout_init_window_pts
         )
 
@@ -270,8 +319,8 @@ from bouter import Experiment
                 duration=t_end - t_start,
                 peak_vig=peak_vig,
                 med_vig=med_vig,
-                ang_turn=ang_turn,
-                ang_turn_tot=ang_turn_tot,
+                bias=bias,
+                bias_tot=bias_tot,
             )
         )</div></div>
 </pre></div>

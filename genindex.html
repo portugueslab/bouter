@@ -96,6 +96,7 @@
 <li class="toctree-l1"><a class="reference internal" href="freely-swimming-behavioral-analysis.html">How to analyse a (Stytra) freely-swimming tracking experiment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="freely-swimming-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="freely-swimming-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="caching.html">Caching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
@@ -165,7 +166,8 @@
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
- <a href="#B"><strong>B</strong></a>
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
@@ -175,12 +177,25 @@
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
  | <a href="#P"><strong>P</strong></a>
+ | <a href="#Q"><strong>Q</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
  
 </div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/bouter.html#bouter.angles.angle_dif">angle_dif() (in module bouter.angles)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/bouter.html#bouter.angles.angle_mean">angle_mean() (in module bouter.angles)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -195,6 +210,13 @@
 
       <ul>
         <li><a href="source/bouter.html#module-bouter">module</a>
+</li>
+      </ul></li>
+      <li>
+    bouter.angles
+
+      <ul>
+        <li><a href="source/bouter.html#module-bouter.angles">module</a>
 </li>
       </ul></li>
       <li>
@@ -270,6 +292,13 @@
 </li>
       </ul></li>
       <li>
+    bouter.tests.test_angle_utils
+
+      <ul>
+        <li><a href="source/bouter.tests.html#module-bouter.tests.test_angle_utils">module</a>
+</li>
+      </ul></li>
+      <li>
     bouter.tests.test_bouter
 
       <ul>
@@ -318,10 +347,10 @@
 </li>
       <li><a href="source/bouter.html#bouter.experiment.Experiment.clear_cache">clear_cache() (bouter.experiment.Experiment method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/bouter.free.html#bouter.free.FreelySwimmingExperiment.compute_velocity">compute_velocity() (bouter.free.FreelySwimmingExperiment method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment.compute_vigor">compute_vigor() (bouter.embedded.EmbeddedExperiment method)</a>
 </li>
       <li><a href="source/bouter.html#bouter.experiment.Experiment.copy_to_dir">copy_to_dir() (bouter.experiment.Experiment method)</a>
@@ -332,6 +361,8 @@
         <li><a href="source/bouter.tests.html#bouter.tests.test_free.corrupt_tail_matrix">(in module bouter.tests.test_free)</a>
 </li>
       </ul></li>
+      <li><a href="source/bouter.html#bouter.angles.cossin">cossin() (in module bouter.angles)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -434,6 +465,8 @@
       <ul>
         <li><a href="source/bouter.html#module-bouter">bouter</a>
 </li>
+        <li><a href="source/bouter.html#module-bouter.angles">bouter.angles</a>
+</li>
         <li><a href="source/bouter.html#module-bouter.bout_stats">bouter.bout_stats</a>
 </li>
         <li><a href="source/bouter.html#module-bouter.decorators">bouter.decorators</a>
@@ -453,6 +486,8 @@
         <li><a href="source/bouter.tests.html#module-bouter.tests">bouter.tests</a>
 </li>
         <li><a href="source/bouter.tests.html#module-bouter.tests.conftest">bouter.tests.conftest</a>
+</li>
+        <li><a href="source/bouter.tests.html#module-bouter.tests.test_angle_utils">bouter.tests.test_angle_utils</a>
 </li>
         <li><a href="source/bouter.tests.html#module-bouter.tests.test_bouter">bouter.tests.test_bouter</a>
 </li>
@@ -493,15 +528,27 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/bouter.html#bouter.experiment.Experiment.params_filename">params_filename() (bouter.experiment.Experiment property)</a>
 </li>
-      <li><a href="source/bouter.html#bouter.experiment.Experiment.processing_params">processing_params() (bouter.experiment.Experiment property)</a>
+      <li><a href="source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment.polynomial_tail_coefficients">polynomial_tail_coefficients() (bouter.embedded.EmbeddedExperiment method)</a>
+</li>
+      <li><a href="source/bouter.embedded.html#bouter.embedded.EmbeddedExperiment.polynomial_tailsum">polynomial_tailsum() (bouter.embedded.EmbeddedExperiment method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/bouter.html#bouter.experiment.Experiment.processing_params">processing_params() (bouter.experiment.Experiment property)</a>
+</li>
       <li><a href="source/bouter.html#bouter.experiment.Experiment.protocol_name">protocol_name() (bouter.experiment.Experiment property)</a>
 </li>
       <li><a href="source/bouter.html#bouter.experiment.Experiment.protocol_parameters">protocol_parameters() (bouter.experiment.Experiment property)</a>
 </li>
       <li><a href="source/bouter.html#bouter.experiment.Experiment.protocol_version">protocol_version() (bouter.experiment.Experiment property)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Q">Q</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/bouter.html#bouter.angles.quantize_directions">quantize_directions() (in module bouter.angles)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -515,11 +562,15 @@
         <li><a href="source/bouter.free.html#bouter.free.FreelySwimmingExperiment.reconstruct_missing_segments">(bouter.free.FreelySwimmingExperiment method)</a>
 </li>
       </ul></li>
+      <li><a href="source/bouter.html#bouter.angles.reduce_to_pi">reduce_to_pi() (in module bouter.angles)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/bouter.html#bouter.utilities.revert_segment_filling">revert_segment_filling() (in module bouter.utilities)</a>
 </li>
       <li><a href="source/bouter.html#bouter.experiment.root_sid_from_path">root_sid_from_path() (in module bouter.experiment)</a>
+</li>
+      <li><a href="source/bouter.html#bouter.angles.rot_mat">rot_mat() (in module bouter.angles)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -529,10 +580,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/bouter.html#bouter.multisession_exp.MultiSessionExperiment.session_start_tstamps">session_start_tstamps() (bouter.multisession_exp.MultiSessionExperiment method)</a>
 </li>
-      <li><a href="source/bouter.html#bouter.experiment.Experiment.stim_end_times">stim_end_times() (bouter.experiment.Experiment property)</a>
+      <li><a href="source/bouter.html#bouter.angles.smooth_tail_angles">smooth_tail_angles() (in module bouter.angles)</a>
+</li>
+      <li><a href="source/bouter.html#bouter.angles.smooth_tail_angles_series">smooth_tail_angles_series() (in module bouter.angles)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/bouter.html#bouter.experiment.Experiment.stim_end_times">stim_end_times() (bouter.experiment.Experiment property)</a>
+</li>
       <li><a href="source/bouter.html#bouter.experiment.Experiment.stim_start_times">stim_start_times() (bouter.experiment.Experiment property)</a>
 </li>
       <li><a href="source/bouter.html#bouter.experiment.Experiment.stimulus_param_log">stimulus_param_log() (bouter.experiment.Experiment property)</a>
@@ -567,13 +622,15 @@
 </li>
       <li><a href="source/bouter.tests.html#bouter.tests.test_utilities.test_continue_curvature">test_continue_curvature() (in module bouter.tests.test_utilities)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/bouter.tests.html#bouter.tests.test_bouter.test_logs_loading">test_logs_loading() (in module bouter.tests.test_bouter)</a>
 </li>
       <li><a href="source/bouter.tests.html#bouter.tests.test_free.test_n_fish_extraction">test_n_fish_extraction() (in module bouter.tests.test_free)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/bouter.tests.html#bouter.tests.test_free.test_n_segment_extraction">test_n_segment_extraction() (in module bouter.tests.test_free)</a>
+</li>
+      <li><a href="source/bouter.tests.html#bouter.tests.test_angle_utils.test_quantize">test_quantize() (in module bouter.tests.test_angle_utils)</a>
 </li>
       <li><a href="source/bouter.tests.html#bouter.tests.test_utilities.test_segment_extraction">test_segment_extraction() (in module bouter.tests.test_utilities)</a>
 </li>
@@ -594,6 +651,10 @@
       <li><a href="source/bouter.tests.html#bouter.tests.test_embedded.test_vigor_and_bouts">test_vigor_and_bouts() (in module bouter.tests.test_embedded)</a>
 </li>
       <li><a href="source/bouter.tests.html#bouter.tests.test_bouter.test_warning_raise">test_warning_raise() (in module bouter.tests.test_bouter)</a>
+</li>
+      <li><a href="source/bouter.html#bouter.angles.transform_affine">transform_affine() (in module bouter.angles)</a>
+</li>
+      <li><a href="source/bouter.html#bouter.angles.transform_affine_point">transform_affine_point() (in module bouter.angles)</a>
 </li>
   </ul></td>
 </tr></table>

@@ -12,6 +12,14 @@ bouter.tests.conftest module
    :undoc-members:
    :show-inheritance:
 
+bouter.tests.test\_angle\_utils module
+--------------------------------------
+
+.. automodule:: bouter.tests.test_angle_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 bouter.tests.test\_bouter module
 --------------------------------
 
