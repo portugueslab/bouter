@@ -136,7 +136,7 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
                     # 2) Extrapolate:
                     if (
                         continue_curvature > 0
-                        and i_seg > continue_curvature + 2
+                        and i_seg > continue_curvature + 1
                     ):
                         # a) if we have at least continue_curvature+1 points
                         # and we want to interpolate from continue_curvature
