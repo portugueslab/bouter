@@ -50,6 +50,38 @@ class EmbeddedExperiment(Experiment):
 
         return self.behavior_log
 
+    @decorators.cache_results(cache_filename="polynomial_tail")
+    def polynomial_tail_coefficients(self, n_max_missing=7, degree=3):
+        """ Fits a polynomial to the bout shape
+
+        :param n_max_missing:
+        :param degree: the polynomial degree
+        :return:
+        """
+        segments = self.behavior_log.loc[:, self.tail_columns].values
+        segments -= segments[:, 0]
+        n_max_missing = min(self.n_tail_segments - degree, n_max_missing)
+
+        poly_coefs = np.zeros((segments.shape[0], degree + 1))
+        line_points = np.linspace(0, 1, self.n_tail_segments)
+
+        # the Stytra tail tracking introduces NaNs at breaking point
+        # a situation number - NaN - number never occurs in tracking
+        for i_missing in range(n_max_missing + 1):
+            sel_time = np.isnan(segments[:, self.n_tail_segments - i_missing])
+            poly_coefs[sel_time, :] = np.polynomial.polynomial.polyfit(
+                line_points[0 : self.n_tail_segments - i_missing],
+                segments[sel_time, 0 : self.n_tail_segments - i_missing].T,
+                degree,
+            ).T
+        return poly_coefs
+
+    @decorators.cache_results(cache_filename="polynomial_tailsum")
+    def polynomial_tailsum(self, **poly_args):
+        return np.polynomial.polynomial.polyval(
+            1, self.polynomial_tail_coefficients(**poly_args)
+        )
+
     @decorators.cache_results(cache_filename="behavior_log")
     def compute_vigor(self, vigor_duration_s=0.05):
         """Compute vigor, the proxy of embedded fish forward velocity,

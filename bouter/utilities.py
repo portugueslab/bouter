@@ -136,14 +136,14 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
                     # 2) Extrapolate:
                     if (
                         continue_curvature > 0
-                        and i_seg > continue_curvature + 1
+                        and i_seg > continue_curvature + 2
                     ):
                         # a) if we have at least continue_curvature+1 points
                         # and we want to interpolate from continue_curvature
                         # samples:
                         previous_tail_curvature = np.diff(
                             tail_angle_mat[
-                                i_t, i_seg - continue_curvature: i_seg,
+                                i_t, i_seg - continue_curvature : i_seg,
                             ]
                         )
                         deviation = np.mean(previous_tail_curvature)
@@ -174,7 +174,7 @@ def calc_vel(dx, t):
 
     """
     dt = np.diff(t)
-    duplicate_t = (dt == 0)
+    duplicate_t = dt == 0
     vel = dx[~duplicate_t] / dt[~duplicate_t]
     t_vel = t[1:][~duplicate_t]
     return t_vel, vel
