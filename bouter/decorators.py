@@ -32,6 +32,8 @@ def cache_results(cache_filename=None):
         @functools.wraps(wrapped)
         def decorated_method(exp, force_recompute=False, **kwargs):
             # Combine default parameters and keyword specified arguments:
+            no_new_paramters = len(kwargs) == 0
+
             full_params_dict = get_method_default_kwargs(wrapped)
             full_params_dict.update(kwargs)
 
@@ -54,7 +56,10 @@ def cache_results(cache_filename=None):
                 # the same parameters, and we don't force recalculation:
                 if (
                     method_nm in exp.processing_params.keys()
-                    and full_params_dict == exp.processing_params[method_nm]
+                    and (
+                        full_params_dict == exp.processing_params[method_nm]
+                        or no_new_paramters
+                    )
                     and not force_recompute
                 ):
                     print(

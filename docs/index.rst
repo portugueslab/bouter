@@ -10,6 +10,7 @@ Welcome to bouter's documentation!
    usage
    embedded-fish-behavioral-analysis
    freely-swimming-behavioral-analysis
+   caching
    modules
    contributing
    authors
