@@ -59,7 +59,7 @@ class EmbeddedExperiment(Experiment):
         :return:
         """
         segments = self.behavior_log.loc[:, self.tail_columns].values
-        segments -= segments[:, 0]
+        segments -= segments[:, 0:1]
         n_max_missing = min(self.n_tail_segments - degree, n_max_missing)
 
         poly_coefs = np.zeros((segments.shape[0], degree + 1))
@@ -68,7 +68,9 @@ class EmbeddedExperiment(Experiment):
         # the Stytra tail tracking introduces NaNs at breaking point
         # a situation number - NaN - number never occurs in tracking
         for i_missing in range(n_max_missing + 1):
-            sel_time = np.isnan(segments[:, self.n_tail_segments - i_missing])
+            sel_time = np.logical_not(
+                np.isnan(segments[:, self.n_tail_segments - (i_missing + 1)])
+            )
             poly_coefs[sel_time, :] = np.polynomial.polynomial.polyfit(
                 line_points[0 : self.n_tail_segments - i_missing],
                 segments[sel_time, 0 : self.n_tail_segments - i_missing].T,
@@ -79,12 +81,12 @@ class EmbeddedExperiment(Experiment):
     @decorators.cache_results(cache_filename="polynomial_tailsum")
     def polynomial_tailsum(self):
         return np.polynomial.polynomial.polyval(
-            1, self.polynomial_tail_coefficients()
+            1, self.polynomial_tail_coefficients().T, False
         )
 
     @decorators.cache_results(cache_filename="behavior_log")
     def compute_vigor(
-        self, vigor_duration_s=0.05, use_polynomial_tailsum=True
+        self, vigor_duration_s=0.05, use_polynomial_tailsum=False
     ):
         """Compute vigor, the proxy of embedded fish forward velocity,
         a standard deviation calculated on a rolling window of tail curvature.
@@ -120,7 +122,7 @@ class EmbeddedExperiment(Experiment):
 
     @decorators.cache_results()
     def get_bout_properties(
-        self, directionality_duration=0.07, use_polynomial_tailsum=True,
+        self, directionality_duration=0.07, use_polynomial_tailsum=False,
     ):
         """Create dataframe with summary of bouts properties.
         :param directionality_duration: Window defining initial part of

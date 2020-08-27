@@ -11,7 +11,10 @@ from bouter import descriptors
 def get_method_default_kwargs(method):
     argnames, _, _, defaults, _, _, _ = inspect.getfullargspec(method)
     argnames.pop(argnames.index("self"))
-    return {n: v for n, v in zip(argnames, defaults)}
+    if len(argnames) > 0:
+        return {n: v for n, v in zip(argnames, defaults)}
+    else:
+        return dict()
 
 
 def cache_results(cache_filename=None):
