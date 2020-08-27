@@ -77,13 +77,15 @@ class EmbeddedExperiment(Experiment):
         return poly_coefs
 
     @decorators.cache_results(cache_filename="polynomial_tailsum")
-    def polynomial_tailsum(self, **poly_args):
+    def polynomial_tailsum(self):
         return np.polynomial.polynomial.polyval(
-            1, self.polynomial_tail_coefficients(**poly_args)
+            1, self.polynomial_tail_coefficients()
         )
 
     @decorators.cache_results(cache_filename="behavior_log")
-    def compute_vigor(self, vigor_duration_s=0.05):
+    def compute_vigor(
+        self, vigor_duration_s=0.05, use_polynomial_tailsum=True
+    ):
         """Compute vigor, the proxy of embedded fish forward velocity,
         a standard deviation calculated on a rolling window of tail curvature.
         Add it as a column to the dataframe log and return the full dataframe
@@ -92,11 +94,13 @@ class EmbeddedExperiment(Experiment):
         :return:
         """
         vigor_win = int(vigor_duration_s / self.behavior_dt)
+        tailsum = (
+            pd.Series(self.polynomial_tailsum())
+            if use_polynomial_tailsum
+            else self.behavior_log["tail_sum"]
+        )
         self.behavior_log["vigor"] = (
-            self.behavior_log["tail_sum"]
-            .interpolate()
-            .rolling(vigor_win, center=True)
-            .std()
+            tailsum.interpolate().rolling(vigor_win, center=True).std()
         )
         return self.behavior_log
 
@@ -115,17 +119,27 @@ class EmbeddedExperiment(Experiment):
         return bouts
 
     @decorators.cache_results()
-    def get_bout_properties(self, directionality_duration=0.07):
+    def get_bout_properties(
+        self, directionality_duration=0.07, use_polynomial_tailsum=True,
+    ):
         """Create dataframe with summary of bouts properties.
         :param directionality_duration: Window defining initial part of
             the bout for the turning angle calculation, in seconds.
-        :return:
+        :param use_polynomial_tailsum: If the polynomial tail sum is to be used
+            instead of the raw one created by Stytra
+        :return: a dataframe giving properties for each bout
         """
         bout_init_window_pts = int(directionality_duration / self.behavior_dt)
-        tail_sum = self.behavior_log["tail_sum"].values
-        vigor = self.compute_vigor().values
+        tail_sum = (
+            self.polynomial_tailsum()
+            if use_polynomial_tailsum
+            else self.behavior_log["tail_sum"].values
+        )
+        vigor = self.compute_vigor(
+            use_polynomial_tailsum=use_polynomial_tailsum
+        ).values
         bouts = self.get_bouts()
-        peak_vig, med_vig, ang_turn, ang_turn_tot = bout_stats.bout_stats(
+        peak_vig, med_vig, bias, bias_tot = bout_stats.bout_stats(
             vigor, tail_sum, bouts, bout_init_window_pts
         )
 
@@ -137,7 +151,7 @@ class EmbeddedExperiment(Experiment):
                 duration=t_end - t_start,
                 peak_vig=peak_vig,
                 med_vig=med_vig,
-                ang_turn=ang_turn,
-                ang_turn_tot=ang_turn_tot,
+                bias=bias,
+                bias_tot=bias_tot,
             )
         )

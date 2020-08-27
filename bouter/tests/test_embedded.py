@@ -106,7 +106,9 @@ def test_vigor_and_bouts(embedded_exp_path):
         "vigor"
     ]
 
-    expected_vigor = fl.load(ASSETS_PATH / "embedded_dataset" / "expected_vigor.h5", "/vigor")
+    expected_vigor = fl.load(
+        ASSETS_PATH / "embedded_dataset" / "expected_vigor.h5", "/vigor"
+    )
 
     assert_array_almost_equal(calculated_vigor, expected_vigor, 5)
 
@@ -119,14 +121,7 @@ def test_vigor_and_bouts(embedded_exp_path):
     bts_df = embedded_exp.get_bout_properties(directionality_duration=0.07)
     assert all(
         bts_df.columns
-        == [
-            "t_start",
-            "duration",
-            "peak_vig",
-            "med_vig",
-            "ang_turn",
-            "ang_turn_tot",
-        ]
+        == ["t_start", "duration", "peak_vig", "med_vig", "bias", "bias_tot",]
     )
 
     np.testing.assert_array_almost_equal(
