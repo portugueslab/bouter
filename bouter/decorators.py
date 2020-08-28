@@ -1,6 +1,7 @@
 import warnings
 import functools
 import inspect
+from logging import info
 
 import flammkuchen as fl
 from numpy import VisibleDeprecationWarning
@@ -62,9 +63,7 @@ def cache_results(cache_filename=None):
                     )
                     and not force_recompute
                 ):
-                    print(
-                        f"Using cached {method_nm} in {targetfile} (this print will be removed)"
-                    )
+                    info(f"Using cached {method_nm} in {targetfile}")
                     return fl.load(targetfile, "/data")
 
             # Apply the function we are decorating:
