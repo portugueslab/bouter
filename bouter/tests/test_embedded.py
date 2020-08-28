@@ -121,17 +121,26 @@ def test_vigor_and_bouts(embedded_exp_path):
     bts_df = embedded_exp.get_bout_properties(directionality_duration=0.07)
     assert all(
         bts_df.columns
-        == ["t_start", "duration", "peak_vig", "med_vig", "bias", "bias_tot",]
+        == [
+            "t_start",
+            "duration",
+            "peak_vig",
+            "med_vig",
+            "bias",
+            "bias_total",
+            "n_pos_peaks",
+            "n_neg_peaks",
+        ]
     )
 
     np.testing.assert_array_almost_equal(
         bts_df.values,
         np.array(
             [
-                [0.1, 0.7, 1.9, 0.0, -1.8, -5.1],
-                [1.3, 0.7, 2.9, 0.0, 18.0, 35.0],
-                [2.4, 0.6, 3.0, 0.0, 18.0, 38.1],
-                [3.4, 0.5, 3.9, 0.0, 14.9, 20.7],
+                [0.1, 0.7, 1.9, 0.0, -1.8, -5.1, 15, 15],
+                [1.3, 0.7, 2.9, 0.0, 18.0, 35.0, 15, 14],
+                [2.4, 0.6, 3.0, 0.0, 18.0, 38.1, 13, 12],
+                [3.4, 0.5, 3.9, 0.0, 14.9, 20.7, 11, 13],
             ]
         ),
         1,
