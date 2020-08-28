@@ -35,18 +35,6 @@ class MultiSessionExperiment(EmbeddedExperiment):
             x for _, x in sorted(zip(session_start, self.session_list))
         ]
 
-        for log_name in [
-            "behavior_log",
-            "stimulus_param_log",
-            "estimator_log",
-        ]:
-            for possible_name in self.log_mapping[log_name]:
-                logfnames = list(self.root.glob("*_" + possible_name + ".*"))
-                if len(logfnames) > 0:
-                    self.log_mapping[log_name] = (
-                        possible_name + logfnames[0].suffix
-                    )
-
         self.experiments = [
             EmbeddedExperiment(pth, **kwargs) for pth in self.session_list
         ]

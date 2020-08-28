@@ -218,7 +218,6 @@ class Experiment(dict):
 
     def _log_filename(self, log_name):
         # TODO cleanup with get_log
-
         for possible_name in self.log_mapping[log_name]:
             try:
                 # Load and set attribute
@@ -248,6 +247,14 @@ class Experiment(dict):
             # If not, loop over different possibilities for that filename
             for possible_name in self.log_mapping[log_name]:
                 try:
+                    print(self.session_id + "_" + possible_name + ".*")
+                    print(
+                        list(
+                            self.root.glob(
+                                self.session_id + "_" + possible_name + ".*"
+                            )
+                        )
+                    )
                     # Load and set attribute
                     logname = next(
                         self.root.glob(
