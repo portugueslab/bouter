@@ -167,6 +167,7 @@
 <span></span>import numpy as np
 from numba import jit
 from typing import Tuple
+from scipy import signal
 
 
 <div class="viewcode-block" id="extract_segments_above_threshold"><a class="viewcode-back" href="../../source/bouter.html#bouter.utilities.extract_segments_above_threshold">[docs]</a>@jit(nopython=True)
@@ -356,6 +357,21 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
     vel = dx[~duplicate_t] / dt[~duplicate_t]
     t_vel = t[1:][~duplicate_t]
     return t_vel, vel</div>
+
+
+<div class="viewcode-block" id="bandpass"><a class="viewcode-back" href="../../source/bouter.html#bouter.utilities.bandpass">[docs]</a>def bandpass(timeseries, dt, f_min=12, f_max=62, n_taps=9, axis=0):
+    &quot;&quot;&quot; Bandpass filtering used for tail motion, filters
+    out unphysical frequencies for the fish tail
+
+    :param timeseries:
+    :param dt:
+    :param f_min:
+    :param f_max:
+    :param n_taps:
+    :return:
+    &quot;&quot;&quot;
+    cfilt = signal.firwin(n_taps, [f_min, f_max], pass_zero=False, fs=1 / dt)
+    return signal.filtfilt(cfilt, 1, timeseries, axis=axis)</div>
 </pre></div>
 
            </div>

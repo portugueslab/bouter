@@ -167,6 +167,7 @@
 <span></span>import warnings
 import functools
 import inspect
+from logging import info
 
 import flammkuchen as fl
 from numpy import VisibleDeprecationWarning
@@ -228,9 +229,7 @@ from bouter import descriptors
                     )
                     and not force_recompute
                 ):
-                    print(
-                        f&quot;Using cached {method_nm} in {targetfile} (this print will be removed)&quot;
-                    )
+                    info(f&quot;Using cached {method_nm} in {targetfile}&quot;)
                     return fl.load(targetfile, &quot;/data&quot;)
 
             # Apply the function we are decorating:

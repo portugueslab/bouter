@@ -272,7 +272,7 @@ from bouter import descriptors
 
     @property
     def processing_params(self):
-        &quot;&quot;&quot;As a property it automatically keeps the log in synch.
+        &quot;&quot;&quot;As a property it automatically keeps the log in sync.
         &quot;&quot;&quot;
         if self.params_filename.exists():
             with open(self.params_filename, &quot;r&quot;) as f:
@@ -293,6 +293,14 @@ from bouter import descriptors
             raise ValueError(
                 &quot;You want to store cached params but the cache_active flag attribute is false!&quot;
             )
+
+<div class="viewcode-block" id="Experiment.invalidate_cache"><a class="viewcode-back" href="../../source/bouter.html#bouter.experiment.Experiment.invalidate_cache">[docs]</a>    def invalidate_cache(self):
+        &quot;&quot;&quot; Invalidates the cached function results,
+        but does not delete any files on disk
+
+        :return:
+        &quot;&quot;&quot;
+        self.processing_params = dict()</div>
 
 <div class="viewcode-block" id="Experiment.update_processing_params"><a class="viewcode-back" href="../../source/bouter.html#bouter.experiment.Experiment.update_processing_params">[docs]</a>    def update_processing_params(self, new_dict):
         params = self.processing_params
@@ -376,7 +384,6 @@ from bouter import descriptors
 
     def _log_filename(self, log_name):
         # TODO cleanup with get_log
-
         for possible_name in self.log_mapping[log_name]:
             try:
                 # Load and set attribute
@@ -406,6 +413,14 @@ from bouter import descriptors
             # If not, loop over different possibilities for that filename
             for possible_name in self.log_mapping[log_name]:
                 try:
+                    print(self.session_id + &quot;_&quot; + possible_name + &quot;.*&quot;)
+                    print(
+                        list(
+                            self.root.glob(
+                                self.session_id + &quot;_&quot; + possible_name + &quot;.*&quot;
+                            )
+                        )
+                    )
                     # Load and set attribute
                     logname = next(
                         self.root.glob(

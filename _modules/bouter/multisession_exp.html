@@ -169,15 +169,15 @@ from datetime import datetime
 
 import pandas as pd
 
-from bouter.experiment import Experiment
+from bouter.embedded import EmbeddedExperiment
 
 
-<div class="viewcode-block" id="MultiSessionExperiment"><a class="viewcode-back" href="../../source/bouter.html#bouter.multisession_exp.MultiSessionExperiment">[docs]</a>class MultiSessionExperiment(Experiment):
+<div class="viewcode-block" id="MultiSessionExperiment"><a class="viewcode-back" href="../../source/bouter.html#bouter.multisession_exp.MultiSessionExperiment">[docs]</a>class MultiSessionExperiment(EmbeddedExperiment):
     &quot;&quot;&quot; Class to handle the scenario of multiple stytra sessions within the
     same experiment - typically, for plane-wise repetitions in 2p imaging.
     &quot;&quot;&quot;
 
-    def __init__(self, path):
+    def __init__(self, path, **kwargs):
         self.session_list = sorted(list(path.glob(&quot;*_metadata.json&quot;)))
 
         super().__init__(self.session_list[0])
@@ -201,17 +201,9 @@ from bouter.experiment import Experiment
             x for _, x in sorted(zip(session_start, self.session_list))
         ]
 
-        for log_name in [
-            &quot;behavior_log&quot;,
-            &quot;stimulus_param_log&quot;,
-            &quot;estimator_log&quot;,
-        ]:
-            for possible_name in self.log_mapping[log_name]:
-                logfnames = list(self.root.glob(&quot;*_&quot; + possible_name + &quot;.*&quot;))
-                if len(logfnames) &gt; 0:
-                    self.log_mapping[log_name] = (
-                        possible_name + logfnames[0].suffix
-                    )
+        self.experiments = [
+            EmbeddedExperiment(pth, **kwargs) for pth in self.session_list
+        ]
 
     def _get_log(self, log_name):
         &quot;&quot;&quot; Given name of the log get it from attributes or load it ex novo
@@ -274,23 +266,10 @@ from bouter.experiment import Experiment
         &quot;&quot;&quot; Return timestamps for all the sessions in this folder.
         &quot;&quot;&quot;
         start_tstamps = []
-        for p in self.session_list:
-            s = Experiment(p)[&quot;general&quot;][&quot;t_protocol_start&quot;]
+        for exp in self.experiments:
+            s = exp[&quot;general&quot;][&quot;t_protocol_start&quot;]
             start_tstamps.append(datetime.strptime(s, &quot;%Y-%m-%dT%H:%M:%S.%f&quot;))
-        return start_tstamps</div>
-
-<div class="viewcode-block" id="MultiSessionExperiment.get_session_log"><a class="viewcode-back" href="../../source/bouter.html#bouter.multisession_exp.MultiSessionExperiment.get_session_log">[docs]</a>    def get_session_log(self, log_name, session_idx):
-        &quot;&quot;&quot; Function to load a log for a single session, specified by index-
-        :param log_name: string specifying the type of log
-            (e.g., &quot;behavior_log&quot;)
-        :param session_idx: int, index of session to load:
-        :return:
-        &quot;&quot;&quot;
-        log_name = self.log_mapping[log_name]
-        session_log = self.root / str(
-            self.session_id_list[session_idx] + &quot;_&quot; + log_name
-        )
-        return self._load_log(session_log)</div></div>
+        return start_tstamps</div></div>
 </pre></div>
 
            </div>

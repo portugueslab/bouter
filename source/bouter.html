@@ -347,6 +347,11 @@ tail segments is smoothly changing, applied on series</p>
 and bouts indexes.</p>
 </dd></dl>
 
+<dl class="py function">
+<dt id="bouter.bout_stats.count_peaks_between">
+<code class="sig-prename descclassname">bouter.bout_stats.</code><code class="sig-name descname">count_peaks_between</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ts</span></em>, <em class="sig-param"><span class="n">start_indices</span></em>, <em class="sig-param"><span class="n">end_indices</span></em>, <em class="sig-param"><span class="n">min_peak_dist</span><span class="o">=</span><span class="default_value">5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/bout_stats.html#count_peaks_between"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.bout_stats.count_peaks_between" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-bouter.decorators">
 <span id="bouter-decorators-module"></span><h2>bouter.decorators module<a class="headerlink" href="#module-bouter.decorators" title="Permalink to this headline">¶</a></h2>
@@ -455,6 +460,18 @@ directory. If it does not exist, make it.</p>
 <code class="sig-name descname">get_bouts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/experiment.html#Experiment.get_bouts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.experiment.Experiment.get_bouts" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt id="bouter.experiment.Experiment.invalidate_cache">
+<code class="sig-name descname">invalidate_cache</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/experiment.html#Experiment.invalidate_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.experiment.Experiment.invalidate_cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invalidates the cached function results,
+but does not delete any files on disk</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py attribute">
 <dt id="bouter.experiment.Experiment.log_mapping">
 <code class="sig-name descname">log_mapping</code><em class="property"> = {'behavior_log': ['behavior_log'], 'estimator_log': ['estimator_log'], 'stimulus_param_log': ['stimulus_log']}</em><a class="headerlink" href="#bouter.experiment.Experiment.log_mapping" title="Permalink to this definition">¶</a></dt>
@@ -468,7 +485,7 @@ directory. If it does not exist, make it.</p>
 <dl class="py method">
 <dt id="bouter.experiment.Experiment.processing_params">
 <em class="property">property </em><code class="sig-name descname">processing_params</code><a class="headerlink" href="#bouter.experiment.Experiment.processing_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>As a property it automatically keeps the log in synch.</p>
+<dd><p>As a property it automatically keeps the log in sync.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -535,28 +552,10 @@ and version as keywords for the stimulus parameters dictionary.</p>
 <span id="bouter-multisession-exp-module"></span><h2>bouter.multisession_exp module<a class="headerlink" href="#module-bouter.multisession_exp" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="bouter.multisession_exp.MultiSessionExperiment">
-<em class="property">class </em><code class="sig-prename descclassname">bouter.multisession_exp.</code><code class="sig-name descname">MultiSessionExperiment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/multisession_exp.html#MultiSessionExperiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.multisession_exp.MultiSessionExperiment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bouter.experiment.Experiment" title="bouter.experiment.Experiment"><code class="xref py py-class docutils literal notranslate"><span class="pre">bouter.experiment.Experiment</span></code></a></p>
+<em class="property">class </em><code class="sig-prename descclassname">bouter.multisession_exp.</code><code class="sig-name descname">MultiSessionExperiment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/multisession_exp.html#MultiSessionExperiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.multisession_exp.MultiSessionExperiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="bouter.embedded.html#bouter.embedded.EmbeddedExperiment" title="bouter.embedded.EmbeddedExperiment"><code class="xref py py-class docutils literal notranslate"><span class="pre">bouter.embedded.EmbeddedExperiment</span></code></a></p>
 <p>Class to handle the scenario of multiple stytra sessions within the
 same experiment - typically, for plane-wise repetitions in 2p imaging.</p>
-<dl class="py method">
-<dt id="bouter.multisession_exp.MultiSessionExperiment.get_session_log">
-<code class="sig-name descname">get_session_log</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">log_name</span></em>, <em class="sig-param"><span class="n">session_idx</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/multisession_exp.html#MultiSessionExperiment.get_session_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.multisession_exp.MultiSessionExperiment.get_session_log" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to load a log for a single session, specified by index-
-:param log_name: string specifying the type of log</p>
-<blockquote>
-<div><p>(e.g., “behavior_log”)</p>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>session_idx</strong> – int, index of session to load:</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt id="bouter.multisession_exp.MultiSessionExperiment.session_start_tstamps">
 <code class="sig-name descname">session_start_tstamps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/multisession_exp.html#MultiSessionExperiment.session_start_tstamps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.multisession_exp.MultiSessionExperiment.session_start_tstamps" title="Permalink to this definition">¶</a></dt>
@@ -568,6 +567,27 @@ same experiment - typically, for plane-wise repetitions in 2p imaging.</p>
 </div>
 <div class="section" id="module-bouter.utilities">
 <span id="bouter-utilities-module"></span><h2>bouter.utilities module<a class="headerlink" href="#module-bouter.utilities" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="bouter.utilities.bandpass">
+<code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">bandpass</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeseries</span></em>, <em class="sig-param"><span class="n">dt</span></em>, <em class="sig-param"><span class="n">f_min</span><span class="o">=</span><span class="default_value">12</span></em>, <em class="sig-param"><span class="n">f_max</span><span class="o">=</span><span class="default_value">62</span></em>, <em class="sig-param"><span class="n">n_taps</span><span class="o">=</span><span class="default_value">9</span></em>, <em class="sig-param"><span class="n">axis</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#bandpass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.bandpass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bandpass filtering used for tail motion, filters
+out unphysical frequencies for the fish tail</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeseries</strong> – </p></li>
+<li><p><strong>dt</strong> – </p></li>
+<li><p><strong>f_min</strong> – </p></li>
+<li><p><strong>f_max</strong> – </p></li>
+<li><p><strong>n_taps</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt id="bouter.utilities.calc_vel">
 <code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">calc_vel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dx</span></em>, <em class="sig-param"><span class="n">t</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#calc_vel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.calc_vel" title="Permalink to this definition">¶</a></dt>
