@@ -141,8 +141,28 @@ class EmbeddedExperiment(Experiment):
             use_polynomial_tailsum=use_polynomial_tailsum
         ).values
         bouts = self.get_bouts()
+
+        if bouts.shape[0] == 0:
+            return pd.DataFrame(
+                dict(
+                    t_start=[],
+                    duration=[],
+                    peak_vig=[],
+                    med_vig=[],
+                    bias=[],
+                    bias_total=[],
+                    n_pos_peaks=[],
+                    n_neg_peaks=[],
+                )
+            )
+
         peak_vig, med_vig, bias, bias_tot = bout_stats.bout_stats(
             vigor, tail_sum, bouts, bout_init_window_pts
+        )
+        n_pos_peaks, n_neg_peaks = bout_stats.count_peaks_between(
+            utilities.bandpass(tail_sum, self.behavior_dt),
+            bouts[:, 0],
+            bouts[:, 1],
         )
 
         t_array = self.behavior_log["t"].values
@@ -154,6 +174,8 @@ class EmbeddedExperiment(Experiment):
                 peak_vig=peak_vig,
                 med_vig=med_vig,
                 bias=bias,
-                bias_tot=bias_tot,
+                bias_total=bias_tot,
+                n_pos_peaks=n_pos_peaks,
+                n_neg_peaks=n_neg_peaks,
             )
         )

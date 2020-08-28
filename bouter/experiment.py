@@ -106,7 +106,7 @@ class Experiment(dict):
 
     @property
     def processing_params(self):
-        """As a property it automatically keeps the log in synch.
+        """As a property it automatically keeps the log in sync.
         """
         if self.params_filename.exists():
             with open(self.params_filename, "r") as f:
@@ -127,6 +127,14 @@ class Experiment(dict):
             raise ValueError(
                 "You want to store cached params but the cache_active flag attribute is false!"
             )
+
+    def invalidate_cache(self):
+        """ Invalidates the cached function results,
+        but does not delete any files on disk
+
+        :return:
+        """
+        self.processing_params = dict()
 
     def update_processing_params(self, new_dict):
         params = self.processing_params

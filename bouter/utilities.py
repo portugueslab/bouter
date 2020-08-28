@@ -1,6 +1,7 @@
 import numpy as np
 from numba import jit
 from typing import Tuple
+from scipy import signal
 
 
 @jit(nopython=True)
@@ -190,3 +191,18 @@ def calc_vel(dx, t):
     vel = dx[~duplicate_t] / dt[~duplicate_t]
     t_vel = t[1:][~duplicate_t]
     return t_vel, vel
+
+
+def bandpass(timeseries, dt, f_min=12, f_max=62, n_taps=9, axis=0):
+    """ Bandpass filtering used for tail motion, filters
+    out unphysical frequencies for the fish tail
+
+    :param timeseries:
+    :param dt:
+    :param f_min:
+    :param f_max:
+    :param n_taps:
+    :return:
+    """
+    cfilt = signal.firwin(n_taps, [f_min, f_max], pass_zero=False, fs=1 / dt)
+    return signal.filtfilt(cfilt, 1, timeseries, axis=axis)

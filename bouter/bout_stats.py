@@ -23,3 +23,21 @@ def bout_stats(vigor, tail_sum, bouts, wnd_turn_pts):
         bias_tot[i] = np.nansum(tail_sum[s:e])
 
     return peak_vig, med_vig, bias, bias_tot
+
+
+@jit(nopython=True)
+def count_peaks_between(ts, start_indices, end_indices, min_peak_dist=5):
+    pos_peaks = np.zeros(len(start_indices), dtype=np.uint8)
+    neg_peaks = np.zeros(len(start_indices), dtype=np.uint8)
+    for i_bout, (si, ei) in enumerate(zip(start_indices, end_indices)):
+        i = si
+        while i < ei - 1:
+            if ts[i - 1] < ts[i] > ts[i + 1]:
+                pos_peaks[i_bout] += 1
+                i += min_peak_dist
+            elif ts[i - 1] > ts[i] < ts[i + 1]:
+                neg_peaks[i_bout] += 1
+                i += min_peak_dist
+            else:
+                i += 1
+    return pos_peaks, neg_peaks
