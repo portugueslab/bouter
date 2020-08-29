@@ -58,12 +58,6 @@ class Experiment(dict):
 
     """
 
-    log_mapping = dict(
-        stimulus_param_log=["stimulus_log"],
-        estimator_log=["estimator_log"],
-        behavior_log=["behavior_log"],
-    )
-
     def __init__(self, path, session_id=None, cache_active=False):
 
         # If true forces to use cached with whatever params it was computed:
@@ -93,7 +87,7 @@ class Experiment(dict):
 
         # Private attributes for properties caching:
         self._behavior_dt = None
-        self._stimulus_param_log = None
+        self._stimulus_log = None
         self._behavior_log = None
         self._estimator_log = None
 
@@ -205,8 +199,8 @@ class Experiment(dict):
         return np.array([stim["t_stop"] for stim in self["stimulus"]["log"]])
 
     @property
-    def stimulus_param_log(self):
-        return self._get_log("stimulus_param_log")
+    def stimulus_log(self):
+        return self._get_log("stimulus_log")
 
     @property
     def estimator_log(self):
@@ -217,20 +211,20 @@ class Experiment(dict):
         return self._get_log("behavior_log")
 
     def _log_filename(self, log_name):
-        # TODO cleanup with get_log
-        for possible_name in self.log_mapping[log_name]:
-            try:
-                # Load and set attribute
-                logname = next(
-                    self.root.glob(
-                        self.session_id + "_" + possible_name + ".*"
-                    )
-                ).name
-                break
-            except StopIteration:
-                pass
-        else:
-            raise ValueError(log_name + " does not exist")
+        try:
+            # Load and set attribute
+            logname = next(
+                self.root.glob(self.session_id + "_" + log_name + ".*")
+            ).name
+        except StopIteration:
+            raise AttributeError(
+                "No log "
+                + self.session_id
+                + "_"
+                + log_name
+                + ".* in "
+                + self.root
+            )
 
         return logname
 
@@ -242,33 +236,12 @@ class Experiment(dict):
         uname = "_" + log_name
 
         # Check whether this was already set:
-        if getattr(self, uname) is None:
+        if getattr(self, uname) is not None:
+            return getattr(self, uname)
 
-            # If not, loop over different possibilities for that filename
-            for possible_name in self.log_mapping[log_name]:
-                try:
-                    print(self.session_id + "_" + possible_name + ".*")
-                    print(
-                        list(
-                            self.root.glob(
-                                self.session_id + "_" + possible_name + ".*"
-                            )
-                        )
-                    )
-                    # Load and set attribute
-                    logname = next(
-                        self.root.glob(
-                            self.session_id + "_" + possible_name + ".*"
-                        )
-                    ).name
-                    setattr(self, uname, self._load_log(logname))
-                    break
-                except StopIteration:
-                    pass
-            else:
-                raise ValueError(log_name + " does not exist")
-
-        return getattr(self, uname)
+        log = self._load_log(self._log_filename(log_name))
+        setattr(self, uname, log)
+        return log
 
     def _load_log(self, data_name):
         """
