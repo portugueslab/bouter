@@ -1,0 +1,1462 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>How to analyse a (Stytra) embedded tail tracking experiment &mdash; bouter 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How to analyse a (Stytra) freely-swimming tracking experiment" href="freely-swimming-behavioral-analysis.html" />
+    <link rel="prev" title="Usage" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> bouter
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#credits">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to analyse a (Stytra) embedded tail tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#The-behavioural-logs">The behavioural logs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Filter-the-tail-log">Filter the tail log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Extract-and-analyse-bouts">Extract and analyse bouts</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="freely-swimming-behavioral-analysis.html">How to analyse a (Stytra) freely-swimming tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="freely-swimming-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="freely-swimming-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="caching.html">Caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bouter</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>How to analyse a (Stytra) embedded tail tracking experiment</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/embedded-fish-behavioral-analysis.ipynb" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="How-to-analyse-a-(Stytra)-embedded-tail-tracking-experiment">
+<h1>How to analyse a (Stytra) embedded tail tracking experiment<a class="headerlink" href="#How-to-analyse-a-(Stytra)-embedded-tail-tracking-experiment" title="Permalink to this headline">¶</a></h1>
+<p>In this tutorial we show how to use bouter to analyse data that was aquired with <a class="reference external" href="http://www.portugueslab.com/stytra/">Stytra</a>.</p>
+<p>First, some imports:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">bouter</span> <span class="kn">import</span> <span class="n">EmbeddedExperiment</span>
+<span class="kn">from</span> <span class="nn">bouter</span> <span class="kn">import</span> <span class="n">ASSETS_PATH</span>
+</pre></div>
+</div>
+</div>
+<p>Given a folder containing data from a Stytra experiment, it’s very easy to instantiate an <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> object. Here we use example bouter data, otherwise replace the path with the folder to your data:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">experiment_data_path</span> <span class="o">=</span> <span class="n">ASSETS_PATH</span> <span class="o">/</span> <span class="s2">&quot;embedded_dataset&quot;</span>
+
+<span class="c1"># Initialize the experiment:</span>
+<span class="n">exp</span> <span class="o">=</span> <span class="n">EmbeddedExperiment</span><span class="p">(</span><span class="n">experiment_data_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="The-Experiment-class">
+<h1>The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class<a class="headerlink" href="#The-Experiment-class" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">Experiment</span></code> objects are objects that behaves like dictionariers with extended magical properties.</p>
+<p>They have keys, reflecting the Stytra metadata:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="n">exp</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+dict_keys([&#39;camera_params&#39;, &#39;general&#39;, &#39;gui&#39;, &#39;stimulus&#39;, &#39;behavior&#39;])
+</pre></div></div>
+</div>
+<p>And looking inside these keys, we found Stytra hierarchical data log:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="n">exp</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;animal&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;age&#39;: 8, &#39;comments&#39;: &#39;&#39;, &#39;dish_diameter&#39;: &#39;30&#39;, &#39;embedded&#39;: True, &#39;genotype&#39;: &#39;TL&#39;, &#39;id&#39;: 10, &#39;screened&#39;: &#39;not&#39;, &#39;species&#39;: &#39;Danio Rerio&#39;, &#39;treatment&#39;: &#39;&#39;}
+</pre></div></div>
+</div>
+<p>In addition, there are some values (<em>properties</em>) that are computed from the metadata, invoked in this way:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># sampling dt of the behavioral tracking</span>
+<span class="n">exp</span><span class="o">.</span><span class="n">behavior_dt</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.003343767676767584
+</pre></div></div>
+</div>
+<p>There’s several useful properties. E.g.</p>
+<ul class="simple">
+<li><p>Fish id from folder:</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">exp</span><span class="o">.</span><span class="n">fish_id</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;181115_f10&#39;
+</pre></div></div>
+</div>
+<ul class="simple">
+<li><p>Unique id for the experiment:</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">exp</span><span class="o">.</span><span class="n">full_name</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;181115_f10_192316&#39;
+</pre></div></div>
+</div>
+<ul class="simple">
+<li><p>Protocol name:</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">exp</span><span class="o">.</span><span class="n">protocol_name</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;closed_open_loop&#39;
+</pre></div></div>
+</div>
+<ul class="simple">
+<li><p>Simplified protocol parameters dict:</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">exp</span><span class="o">.</span><span class="n">protocol_parameters</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;grating_cycle&#39;: 10,
+ &#39;grating_duration&#39;: 4.0,
+ &#39;inter_stim_pause&#39;: 0,
+ &#39;n_repeats&#39;: 1,
+ &#39;post_pause&#39;: 0.0,
+ &#39;pre_pause&#39;: 0.0}
+</pre></div></div>
+</div>
+<ul class="simple">
+<li><p>Start and end times of each stimulus in the log:</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="p">(</span><span class="n">exp</span><span class="o">.</span><span class="n">stim_start_times</span><span class="p">,</span> <span class="n">exp</span><span class="o">.</span><span class="n">stim_end_times</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(array([0.002]), array([600.004995]))
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="The-behavioural-logs">
+<h1>The behavioural logs<a class="headerlink" href="#The-behavioural-logs" title="Permalink to this headline">¶</a></h1>
+<p>The bulk of the behavioural data is contained in the stytra log files. With properties you can look at the logs of the experiments, returned as <code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span></code>s; depending on what experiment you run you’ll find for example:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Experiment.stimulus_log</span></code>: the dynamic log of stytra stimulus</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">exp</span><span class="o">.</span><span class="n">stimulus_log</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>closed loop 1D_vel</th>
+      <th>closed loop 1D_base_vel</th>
+      <th>closed loop 1D_gain</th>
+      <th>closed loop 1D_lag</th>
+      <th>closed loop 1D_fish_swimming</th>
+      <th>t</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-10.000000</td>
+      <td>-10.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.026302</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-10.000000</td>
+      <td>-10.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.070306</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-10.000000</td>
+      <td>-10.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.104309</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>-10.000000</td>
+      <td>-10.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.158315</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1.554264</td>
+      <td>-10.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.189318</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Experiment.behavior_log</span></code>: the dynamic log of the tracked tail (or eye, position, etc.):</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">exp</span><span class="o">.</span><span class="n">behavior_log</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tail_sum</th>
+      <th>theta_00</th>
+      <th>theta_01</th>
+      <th>theta_02</th>
+      <th>theta_03</th>
+      <th>theta_04</th>
+      <th>theta_05</th>
+      <th>theta_06</th>
+      <th>theta_07</th>
+      <th>theta_08</th>
+      <th>...</th>
+      <th>theta_16</th>
+      <th>theta_17</th>
+      <th>theta_18</th>
+      <th>theta_19</th>
+      <th>theta_20</th>
+      <th>theta_21</th>
+      <th>theta_22</th>
+      <th>theta_23</th>
+      <th>theta_24</th>
+      <th>t</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.009258</td>
+      <td>0.054718</td>
+      <td>0.006608</td>
+      <td>-0.003954</td>
+      <td>0.002449</td>
+      <td>0.009792</td>
+      <td>0.007008</td>
+      <td>-0.012253</td>
+      <td>0.001501</td>
+      <td>0.001586</td>
+      <td>...</td>
+      <td>-0.000696</td>
+      <td>0.003783</td>
+      <td>0.029968</td>
+      <td>0.078343</td>
+      <td>-0.015539</td>
+      <td>0.032789</td>
+      <td>0.030664</td>
+      <td>0.018611</td>
+      <td>0.051973</td>
+      <td>0.000299</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.007062</td>
+      <td>0.054792</td>
+      <td>0.006414</td>
+      <td>-0.003654</td>
+      <td>0.002591</td>
+      <td>0.009731</td>
+      <td>0.006824</td>
+      <td>-0.012492</td>
+      <td>0.001748</td>
+      <td>0.001355</td>
+      <td>...</td>
+      <td>0.000460</td>
+      <td>0.002993</td>
+      <td>0.030286</td>
+      <td>0.075214</td>
+      <td>-0.014672</td>
+      <td>0.033336</td>
+      <td>0.030252</td>
+      <td>0.016750</td>
+      <td>0.051518</td>
+      <td>0.004300</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.007431</td>
+      <td>0.054551</td>
+      <td>0.006468</td>
+      <td>-0.003410</td>
+      <td>0.003069</td>
+      <td>0.009150</td>
+      <td>0.007100</td>
+      <td>-0.012553</td>
+      <td>0.001517</td>
+      <td>0.001845</td>
+      <td>...</td>
+      <td>0.000749</td>
+      <td>0.003484</td>
+      <td>0.031352</td>
+      <td>0.073967</td>
+      <td>-0.013793</td>
+      <td>0.031789</td>
+      <td>0.030658</td>
+      <td>0.016382</td>
+      <td>0.052068</td>
+      <td>0.007300</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.006643</td>
+      <td>0.054923</td>
+      <td>0.006485</td>
+      <td>-0.003741</td>
+      <td>0.002603</td>
+      <td>0.009605</td>
+      <td>0.006857</td>
+      <td>-0.012986</td>
+      <td>0.001931</td>
+      <td>0.002025</td>
+      <td>...</td>
+      <td>0.000263</td>
+      <td>0.003009</td>
+      <td>0.030150</td>
+      <td>0.075574</td>
+      <td>-0.014799</td>
+      <td>0.032864</td>
+      <td>0.031805</td>
+      <td>0.016760</td>
+      <td>0.051292</td>
+      <td>0.010300</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.007127</td>
+      <td>0.054769</td>
+      <td>0.006760</td>
+      <td>-0.004054</td>
+      <td>0.002216</td>
+      <td>0.010527</td>
+      <td>0.007025</td>
+      <td>-0.012684</td>
+      <td>0.001756</td>
+      <td>0.001611</td>
+      <td>...</td>
+      <td>-0.000001</td>
+      <td>0.003914</td>
+      <td>0.029962</td>
+      <td>0.073601</td>
+      <td>-0.014057</td>
+      <td>0.033337</td>
+      <td>0.030134</td>
+      <td>0.016966</td>
+      <td>0.051691</td>
+      <td>0.014301</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 27 columns</p>
+</div></div>
+</div>
+<div class="section" id="Filter-the-tail-log">
+<h2>Filter the tail log<a class="headerlink" href="#Filter-the-tail-log" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes, Stytra will mess the tracking of the last tail segments. Luckily, this can be fixed using a custom interpolation function. It uses n=<code class="docutils literal notranslate"><span class="pre">continue_curvature</span></code> points to average the difference of consecutive segments and fill the nan values using the same incremental difference. This in general is safe as long as the tail tracking was not completely off.</p>
+<p>To use it, before using the behavior log, run the following:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">exp</span><span class="o">.</span><span class="n">reconstruct_missing_segments</span><span class="p">(</span><span class="n">continue_curvature</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">exp</span><span class="o">.</span><span class="n">behavior_log</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tail_sum</th>
+      <th>theta_00</th>
+      <th>theta_01</th>
+      <th>theta_02</th>
+      <th>theta_03</th>
+      <th>theta_04</th>
+      <th>theta_05</th>
+      <th>theta_06</th>
+      <th>theta_07</th>
+      <th>theta_08</th>
+      <th>...</th>
+      <th>theta_17</th>
+      <th>theta_18</th>
+      <th>theta_19</th>
+      <th>theta_20</th>
+      <th>theta_21</th>
+      <th>theta_22</th>
+      <th>theta_23</th>
+      <th>theta_24</th>
+      <th>t</th>
+      <th>missing_n</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.009258</td>
+      <td>0.054718</td>
+      <td>0.006608</td>
+      <td>-0.003954</td>
+      <td>0.002449</td>
+      <td>0.009792</td>
+      <td>0.007008</td>
+      <td>-0.012253</td>
+      <td>0.001501</td>
+      <td>0.001586</td>
+      <td>...</td>
+      <td>0.003783</td>
+      <td>0.029968</td>
+      <td>0.078343</td>
+      <td>-0.015539</td>
+      <td>0.032789</td>
+      <td>0.030664</td>
+      <td>0.018611</td>
+      <td>0.051973</td>
+      <td>0.000299</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.007062</td>
+      <td>0.054792</td>
+      <td>0.006414</td>
+      <td>-0.003654</td>
+      <td>0.002591</td>
+      <td>0.009731</td>
+      <td>0.006824</td>
+      <td>-0.012492</td>
+      <td>0.001748</td>
+      <td>0.001355</td>
+      <td>...</td>
+      <td>0.002993</td>
+      <td>0.030286</td>
+      <td>0.075214</td>
+      <td>-0.014672</td>
+      <td>0.033336</td>
+      <td>0.030252</td>
+      <td>0.016750</td>
+      <td>0.051518</td>
+      <td>0.004300</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.007431</td>
+      <td>0.054551</td>
+      <td>0.006468</td>
+      <td>-0.003410</td>
+      <td>0.003069</td>
+      <td>0.009150</td>
+      <td>0.007100</td>
+      <td>-0.012553</td>
+      <td>0.001517</td>
+      <td>0.001845</td>
+      <td>...</td>
+      <td>0.003484</td>
+      <td>0.031352</td>
+      <td>0.073967</td>
+      <td>-0.013793</td>
+      <td>0.031789</td>
+      <td>0.030658</td>
+      <td>0.016382</td>
+      <td>0.052068</td>
+      <td>0.007300</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.006643</td>
+      <td>0.054923</td>
+      <td>0.006485</td>
+      <td>-0.003741</td>
+      <td>0.002603</td>
+      <td>0.009605</td>
+      <td>0.006857</td>
+      <td>-0.012986</td>
+      <td>0.001931</td>
+      <td>0.002025</td>
+      <td>...</td>
+      <td>0.003009</td>
+      <td>0.030150</td>
+      <td>0.075574</td>
+      <td>-0.014799</td>
+      <td>0.032864</td>
+      <td>0.031805</td>
+      <td>0.016760</td>
+      <td>0.051292</td>
+      <td>0.010300</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.007127</td>
+      <td>0.054769</td>
+      <td>0.006760</td>
+      <td>-0.004054</td>
+      <td>0.002216</td>
+      <td>0.010527</td>
+      <td>0.007025</td>
+      <td>-0.012684</td>
+      <td>0.001756</td>
+      <td>0.001611</td>
+      <td>...</td>
+      <td>0.003914</td>
+      <td>0.029962</td>
+      <td>0.073601</td>
+      <td>-0.014057</td>
+      <td>0.033337</td>
+      <td>0.030134</td>
+      <td>0.016966</td>
+      <td>0.051691</td>
+      <td>0.014301</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 28 columns</p>
+</div></div>
+</div>
+</div>
+<div class="section" id="Extract-and-analyse-bouts">
+<h2>Extract and analyse bouts<a class="headerlink" href="#Extract-and-analyse-bouts" title="Permalink to this headline">¶</a></h2>
+<p>To analyse bouts, we will need to:</p>
+<ol class="arabic simple">
+<li><p>Compute vigor</p></li>
+<li><p>Detect bouts</p></li>
+<li><p>(Optional) Extract bout statistics</p></li>
+</ol>
+<p><strong>1. Compute vigor</strong>: use a rolling standard deviation to infer fish speed. After calling the function, a <code class="docutils literal notranslate"><span class="pre">exp._behavior_log[&quot;vigor&quot;]</span></code> column is added to our <code class="docutils literal notranslate"><span class="pre">exp._behavior_log</span></code> dataframe.</p>
+<p><code class="docutils literal notranslate"><span class="pre">vigor_duration_s</span></code> is the window for the rolling std in s; the default 0.05 is the lab standard.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">exp</span><span class="o">.</span><span class="n">compute_vigor</span><span class="p">(</span><span class="n">vigor_duration_s</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">exp</span><span class="o">.</span><span class="n">behavior_log</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tail_sum</th>
+      <th>theta_00</th>
+      <th>theta_01</th>
+      <th>theta_02</th>
+      <th>theta_03</th>
+      <th>theta_04</th>
+      <th>theta_05</th>
+      <th>theta_06</th>
+      <th>theta_07</th>
+      <th>theta_08</th>
+      <th>...</th>
+      <th>theta_18</th>
+      <th>theta_19</th>
+      <th>theta_20</th>
+      <th>theta_21</th>
+      <th>theta_22</th>
+      <th>theta_23</th>
+      <th>theta_24</th>
+      <th>t</th>
+      <th>missing_n</th>
+      <th>vigor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.009258</td>
+      <td>0.054718</td>
+      <td>0.006608</td>
+      <td>-0.003954</td>
+      <td>0.002449</td>
+      <td>0.009792</td>
+      <td>0.007008</td>
+      <td>-0.012253</td>
+      <td>0.001501</td>
+      <td>0.001586</td>
+      <td>...</td>
+      <td>0.029968</td>
+      <td>0.078343</td>
+      <td>-0.015539</td>
+      <td>0.032789</td>
+      <td>0.030664</td>
+      <td>0.018611</td>
+      <td>0.051973</td>
+      <td>0.000299</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.007062</td>
+      <td>0.054792</td>
+      <td>0.006414</td>
+      <td>-0.003654</td>
+      <td>0.002591</td>
+      <td>0.009731</td>
+      <td>0.006824</td>
+      <td>-0.012492</td>
+      <td>0.001748</td>
+      <td>0.001355</td>
+      <td>...</td>
+      <td>0.030286</td>
+      <td>0.075214</td>
+      <td>-0.014672</td>
+      <td>0.033336</td>
+      <td>0.030252</td>
+      <td>0.016750</td>
+      <td>0.051518</td>
+      <td>0.004300</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.007431</td>
+      <td>0.054551</td>
+      <td>0.006468</td>
+      <td>-0.003410</td>
+      <td>0.003069</td>
+      <td>0.009150</td>
+      <td>0.007100</td>
+      <td>-0.012553</td>
+      <td>0.001517</td>
+      <td>0.001845</td>
+      <td>...</td>
+      <td>0.031352</td>
+      <td>0.073967</td>
+      <td>-0.013793</td>
+      <td>0.031789</td>
+      <td>0.030658</td>
+      <td>0.016382</td>
+      <td>0.052068</td>
+      <td>0.007300</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.006643</td>
+      <td>0.054923</td>
+      <td>0.006485</td>
+      <td>-0.003741</td>
+      <td>0.002603</td>
+      <td>0.009605</td>
+      <td>0.006857</td>
+      <td>-0.012986</td>
+      <td>0.001931</td>
+      <td>0.002025</td>
+      <td>...</td>
+      <td>0.030150</td>
+      <td>0.075574</td>
+      <td>-0.014799</td>
+      <td>0.032864</td>
+      <td>0.031805</td>
+      <td>0.016760</td>
+      <td>0.051292</td>
+      <td>0.010300</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.007127</td>
+      <td>0.054769</td>
+      <td>0.006760</td>
+      <td>-0.004054</td>
+      <td>0.002216</td>
+      <td>0.010527</td>
+      <td>0.007025</td>
+      <td>-0.012684</td>
+      <td>0.001756</td>
+      <td>0.001611</td>
+      <td>...</td>
+      <td>0.029962</td>
+      <td>0.073601</td>
+      <td>-0.014057</td>
+      <td>0.033337</td>
+      <td>0.030134</td>
+      <td>0.016966</td>
+      <td>0.051691</td>
+      <td>0.014301</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 29 columns</p>
+</div></div>
+</div>
+<p><strong>2. Detect bouts</strong>: threshold the vigor to find consecutive periods of continuous swimming. # This will return an array with the <em>index</em> (not the time) for the detected bouts start and end points.</p>
+<p><code class="docutils literal notranslate"><span class="pre">vigor_threshold</span></code> is the threshold on the vigor in a.u.; 0.1 is a reasonable value that will work in 95% of cases.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">exp</span><span class="o">.</span><span class="n">get_bouts</span><span class="p">(</span><span class="n">vigor_threshold</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([[  40,  236],
+       [ 377,  584],
+       [ 717,  887],
+       [1015, 1174]])
+</pre></div></div>
+</div>
+<p><strong>3. Extract bouts properties</strong>: Infer some properties of the detected bouts. It Returns a dataframe with bout properties.</p>
+<p><code class="docutils literal notranslate"><span class="pre">directionality_duration</span></code> is a window in seconds to compute directionality idx; lab standard is 0.07 s.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">exp</span><span class="o">.</span><span class="n">get_bout_properties</span><span class="p">(</span><span class="n">directionality_duration</span><span class="o">=</span><span class="mf">0.07</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>t_start</th>
+      <th>duration</th>
+      <th>peak_vig</th>
+      <th>med_vig</th>
+      <th>bias</th>
+      <th>bias_total</th>
+      <th>n_pos_peaks</th>
+      <th>n_neg_peaks</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.133313</td>
+      <td>0.654065</td>
+      <td>1.934675</td>
+      <td>0.012229</td>
+      <td>-0.087974</td>
+      <td>-0.026151</td>
+      <td>15</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1.257425</td>
+      <td>0.689069</td>
+      <td>2.929249</td>
+      <td>0.025798</td>
+      <td>0.901800</td>
+      <td>0.169295</td>
+      <td>15</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2.390538</td>
+      <td>0.567057</td>
+      <td>3.014080</td>
+      <td>0.036779</td>
+      <td>0.900419</td>
+      <td>0.223960</td>
+      <td>13</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3.384638</td>
+      <td>0.529053</td>
+      <td>3.910690</td>
+      <td>0.029872</td>
+      <td>0.745277</td>
+      <td>0.130034</td>
+      <td>11</td>
+      <td>13</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="freely-swimming-behavioral-analysis.html" class="btn btn-neutral float-right" title="How to analyse a (Stytra) freely-swimming tracking experiment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Vilim Stih, Hagar Lavian, Luigi Petrucco, Ot Prat
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,369 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bouter.angles &mdash; bouter 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> bouter
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#credits">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html">How to analyse a (Stytra) embedded tail tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embedded-fish-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html">How to analyse a (Stytra) freely-swimming tracking experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html#The-Experiment-class">The <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../freely-swimming-behavioral-analysis.html#The-behavioural-logs">The behavioural logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../caching.html">Caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">bouter</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../bouter.html">bouter</a> &raquo;</li>
+        
+      <li>bouter.angles</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bouter.angles</h1><div class="highlight"><pre>
+<span></span>import numpy as np
+from numba import jit
+
+
+<div class="viewcode-block" id="quantize_directions"><a class="viewcode-back" href="../../source/bouter.html#bouter.angles.quantize_directions">[docs]</a>def quantize_directions(angles, n_dirs=8):
+    &quot;&quot;&quot; Bin angles into wedge bins
+
+    Parameters
+    ----------
+    angles: array of angles
+    n_dirs: number of wedges to split circles into
+
+    Returns
+    -------
+    bin indices of the angles
+
+    &quot;&quot;&quot;
+
+    bin_centers = np.arange(n_dirs + 1) * 2 * np.pi / n_dirs
+    bin_hw = np.pi / n_dirs
+    bins = np.r_[bin_centers - bin_hw, bin_centers[-1] + bin_hw]
+    return (
+        bin_centers[:n_dirs],
+        (np.digitize(np.mod(angles, np.pi * 2), bins) - 1) % n_dirs,
+    )</div>
+
+
+<div class="viewcode-block" id="reduce_to_pi"><a class="viewcode-back" href="../../source/bouter.html#bouter.angles.reduce_to_pi">[docs]</a>def reduce_to_pi(ar):
+    &quot;&quot;&quot;Reduce angles to the -pi to pi range&quot;&quot;&quot;
+    return np.mod(ar + np.pi, np.pi * 2) - np.pi</div>
+
+
+<div class="viewcode-block" id="angle_mean"><a class="viewcode-back" href="../../source/bouter.html#bouter.angles.angle_mean">[docs]</a>def angle_mean(angles, axis=1):
+    &quot;&quot;&quot;Correct calculation of a mean of an array of angles
+
+    Parameters
+    ----------
+    angles :
+        
+    axis :
+         (Default value = 1)
+
+    Returns
+    -------
+
+    &quot;&quot;&quot;
+    return np.arctan2(
+        np.sum(np.sin(angles), axis), np.sum(np.cos(angles), axis)
+    )</div>
+
+
+<div class="viewcode-block" id="angle_dif"><a class="viewcode-back" href="../../source/bouter.html#bouter.angles.angle_dif">[docs]</a>def angle_dif(a, b):
+    &quot;&quot;&quot;
+
+    Parameters
+    ----------
+    a :
+        
+    b :
+        
+
+    Returns
+    -------
+    type
+        
+
+    &quot;&quot;&quot;
+    return np.minimum(
+        np.minimum(np.abs(a - b), np.abs(a - b + 2 * np.pi)),
+        np.abs(a - b - 2 * np.pi),
+    )</div>
+
+
+<div class="viewcode-block" id="cossin"><a class="viewcode-back" href="../../source/bouter.html#bouter.angles.cossin">[docs]</a>def cossin(theta):
+    &quot;&quot;&quot;Expands theta into sine and cosine&quot;&quot;&quot;
+    return np.array((np.cos(theta), np.sin(theta)))</div>
+
+
+<div class="viewcode-block" id="transform_affine_point"><a class="viewcode-back" href="../../source/bouter.html#bouter.angles.transform_affine_point">[docs]</a>@jit(nopython=True)
+def transform_affine_point(point, tm):
+    return tm[:, :2] @ point + tm[:, 2]</div>
+
+
+<div class="viewcode-block" id="transform_affine"><a class="viewcode-back" href="../../source/bouter.html#bouter.angles.transform_affine">[docs]</a>@jit(nopython=True)
+def transform_affine(points, tm):
+    &quot;&quot;&quot;Affine transform a point or an array of points with the matrix tm
+
+    Parameters
+    ----------
+    points :
+        
+    tm :
+        
+
+    Returns
+    -------
+
+    &quot;&quot;&quot;
+    padded = np.ones((points.shape[0], points.shape[1] + 1))
+    padded[:, :-1] = points
+
+    return padded @ tm.T</div>
+
+
+<div class="viewcode-block" id="rot_mat"><a class="viewcode-back" href="../../source/bouter.html#bouter.angles.rot_mat">[docs]</a>def rot_mat(theta):
+    &quot;&quot;&quot;The rotation matrix for an angle theta &quot;&quot;&quot;
+    return np.array(
+        [[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]]
+    )</div>
+
+
+<div class="viewcode-block" id="smooth_tail_angles"><a class="viewcode-back" href="../../source/bouter.html#bouter.angles.smooth_tail_angles">[docs]</a>@jit(nopython=True)
+def smooth_tail_angles(tail_angles):
+    &quot;&quot;&quot;Smooths out the tau jumps in tail angles, so that the angle between
+    tail segments is smoothly changing
+
+    Parameters
+    ----------
+    tail_angles :
+        return:
+
+    Returns
+    -------
+
+    &quot;&quot;&quot;
+
+    tau = 2 * np.pi
+
+    for i in range(1, tail_angles.shape[0]):
+        previous = tail_angles[i - 1]
+        dist = np.abs(previous - tail_angles[i])
+        if np.abs(previous - (tail_angles[i] + tau)) &lt; dist:
+            tail_angles[i] += tau
+        elif np.abs(previous - (tail_angles[i] - tau)) &lt; dist:
+            tail_angles[i] -= tau
+
+    return tail_angles</div>
+
+
+<div class="viewcode-block" id="smooth_tail_angles_series"><a class="viewcode-back" href="../../source/bouter.html#bouter.angles.smooth_tail_angles_series">[docs]</a>@jit(nopython=True)
+def smooth_tail_angles_series(tail_angles_series):
+    &quot;&quot;&quot;Smooths out the tau jumps in tail angles, so that the angle between
+    tail segments is smoothly changing, applied on series
+
+    Parameters
+    ----------
+    tail_angles :
+        return:
+    tail_angles_series :
+        
+
+    Returns
+    -------
+
+    &quot;&quot;&quot;
+    # TODO use guvecotorize to avoid having this function
+
+    for i_t in range(tail_angles_series.shape[0]):
+        smooth_tail_angles(tail_angles_series[i_t, :])
+
+    return tail_angles_series</div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Vilim Stih, Hagar Lavian, Luigi Petrucco, Ot Prat
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
