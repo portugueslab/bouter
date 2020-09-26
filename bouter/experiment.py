@@ -100,8 +100,7 @@ class Experiment(dict):
 
     @property
     def processing_params(self):
-        """As a property it automatically keeps the log in sync.
-        """
+        """As a property it automatically keeps the log in sync."""
         if self.params_filename.exists():
             with open(self.params_filename, "r") as f:
                 processing_params = json.load(f)
@@ -123,7 +122,7 @@ class Experiment(dict):
             )
 
     def invalidate_cache(self):
-        """ Invalidates the cached function results,
+        """Invalidates the cached function results,
         but does not delete any files on disk
 
         :return:
@@ -137,8 +136,7 @@ class Experiment(dict):
 
     @property
     def file_list(self):
-        """As a property it automatically updates the cached files.
-        """
+        """As a property it automatically updates the cached files."""
         return list(self.root.glob(f"{self.session_id}*"))
 
     @property
@@ -158,7 +156,7 @@ class Experiment(dict):
 
     @property
     def protocol_parameters(self):
-        """ Goes around annoying problem of knowing experiment number
+        """Goes around annoying problem of knowing experiment number
         and version as keywords for the stimulus parameters dictionary.
         """
         if self.protocol_version is None:
@@ -186,14 +184,14 @@ class Experiment(dict):
 
     @property
     def stim_start_times(self):
-        """ Get start and end time of all stimuli in the log.
+        """Get start and end time of all stimuli in the log.
         :return: arrays with start and end times for all stimuli
         """
         return np.array([stim["t_start"] for stim in self["stimulus"]["log"]])
 
     @property
     def stim_end_times(self):
-        """ Get start and end time of all stimuli in the log.
+        """Get start and end time of all stimuli in the log.
         :return: arrays with start and end times for all stimuli
         """
         return np.array([stim["t_stop"] for stim in self["stimulus"]["log"]])
@@ -223,13 +221,13 @@ class Experiment(dict):
                 + "_"
                 + log_name
                 + ".* in "
-                + self.root
+                + str(self.root)
             )
 
         return logname
 
     def _get_log(self, log_name):
-        """ Given name of the log get it from attributes or load it ex novo
+        """Given name of the log get it from attributes or load it ex novo
         :param log_name:  string with the type ot the log to load
         :return:  loaded log DataFrame
         """
@@ -276,7 +274,7 @@ class Experiment(dict):
             )
 
     def copy_to_dir(self, target_dir):
-        """ Copy all the files pertaining to this experiment in a target
+        """Copy all the files pertaining to this experiment in a target
         directory. If it does not exist, make it.
         """
         target_dir = Path(target_dir)
@@ -299,7 +297,7 @@ class Experiment(dict):
         "Use Experiment.stim_start_times and stim_end_times instead."
     )
     def stimulus_starts_ends(self):
-        """ Get start and end time of all stimuli in the log.
+        """Get start and end time of all stimuli in the log.
         :return: arrays with start and end times for all stimuli
         """
         return self.stim_start_times, self.stim_end_times
