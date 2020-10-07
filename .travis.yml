@@ -26,6 +26,7 @@ after_success:
 - pip install nbsphinx
 - pip install pandoc
 - pip install ipykernel
+- pip install matplotlib
 - cd docs
 - sphinx-apidoc ../bouter -o source/
 - make html

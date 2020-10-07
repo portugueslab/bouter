@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* Vilim Stih, Hagar Lavian, Luigi Petrucco, Ot Prat <vilim@neuro.mpg.de>
+* Vilim Stih, Ot Prat, Luigi Petrucco, Hagar Lavian
 
 Contributors
 ------------

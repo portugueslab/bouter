@@ -50,7 +50,7 @@ def test_class_properties(embedded_exp_path, prop_name, outcome):
     "logname, log_props",
     [
         (
-            "stimulus_param_log",
+            "stimulus_log",
             dict(
                 nrows=100,
                 columns=[

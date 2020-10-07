@@ -1,6 +1,7 @@
 import warnings
 import functools
 import inspect
+from logging import info
 
 import flammkuchen as fl
 from numpy import VisibleDeprecationWarning
@@ -9,9 +10,12 @@ from bouter import descriptors
 
 
 def get_method_default_kwargs(method):
-    argnames, _, _, defaults = inspect.getargspec(method)
+    argnames, _, _, defaults, _, _, _ = inspect.getfullargspec(method)
     argnames.pop(argnames.index("self"))
-    return {n: v for n, v in zip(argnames, defaults)}
+    if len(argnames) > 0:
+        return {n: v for n, v in zip(argnames, defaults)}
+    else:
+        return dict()
 
 
 def cache_results(cache_filename=None):
@@ -29,6 +33,8 @@ def cache_results(cache_filename=None):
         @functools.wraps(wrapped)
         def decorated_method(exp, force_recompute=False, **kwargs):
             # Combine default parameters and keyword specified arguments:
+            no_new_paramters = len(kwargs) == 0
+
             full_params_dict = get_method_default_kwargs(wrapped)
             full_params_dict.update(kwargs)
 
@@ -51,12 +57,13 @@ def cache_results(cache_filename=None):
                 # the same parameters, and we don't force recalculation:
                 if (
                     method_nm in exp.processing_params.keys()
-                    and full_params_dict == exp.processing_params[method_nm]
+                    and (
+                        full_params_dict == exp.processing_params[method_nm]
+                        or no_new_paramters
+                    )
                     and not force_recompute
                 ):
-                    print(
-                        f"Using cached {method_nm} in {targetfile} (this print will be removed)"
-                    )
+                    info(f"Using cached {method_nm} in {targetfile}")
                     return fl.load(targetfile, "/data")
 
             # Apply the function we are decorating:

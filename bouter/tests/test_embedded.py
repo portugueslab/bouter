@@ -7,10 +7,11 @@ from bouter import utilities
 
 from bouter.tests import ASSETS_PATH
 
+from pprint import pprint
+
 
 def corrupt_tail_matrix(tail_matrix, prop_missing=0.2, std=3):
-    """Add some nan values to tail segments.
-    """
+    """Add some nan values to tail segments."""
     np.random.seed(2341)
 
     corrupted_mat = tail_matrix.copy()
@@ -51,7 +52,10 @@ def test_tail_fix_function_real_data(embedded_exp_path):
     assert np.median(diff_mat[fixed]) < 0.1
     assert np.median(diff_mat[~fixed]) == 0
 
-    reverted_mat = utilities.revert_segment_filling(fixed_mat, revert_pts=pts,)
+    reverted_mat = utilities.revert_segment_filling(
+        fixed_mat,
+        revert_pts=pts,
+    )
 
     assert_array_almost_equal(reverted_mat, corrupted_mat)
 
@@ -106,7 +110,9 @@ def test_vigor_and_bouts(embedded_exp_path):
         "vigor"
     ]
 
-    expected_vigor = fl.load(ASSETS_PATH / "expected_vigor.h5", "/vigor")
+    expected_vigor = fl.load(
+        ASSETS_PATH / "embedded_dataset" / "expected_vigor.h5", "/vigor"
+    )
 
     assert_array_almost_equal(calculated_vigor, expected_vigor, 5)
 
@@ -124,8 +130,10 @@ def test_vigor_and_bouts(embedded_exp_path):
             "duration",
             "peak_vig",
             "med_vig",
-            "ang_turn",
-            "ang_turn_tot",
+            "bias",
+            "bias_total",
+            "n_pos_peaks",
+            "n_neg_peaks",
         ]
     )
 
@@ -133,10 +141,46 @@ def test_vigor_and_bouts(embedded_exp_path):
         bts_df.values,
         np.array(
             [
-                [0.1, 0.7, 1.9, 0.0, -1.8, -5.1],
-                [1.3, 0.7, 2.9, 0.0, 18.0, 35.0],
-                [2.4, 0.6, 3.0, 0.0, 18.0, 38.1],
-                [3.4, 0.5, 3.9, 0.0, 14.9, 20.7],
+                [
+                    0.133313,
+                    0.654065,
+                    1.93467463,
+                    0.01600392,
+                    -0.08797419,
+                    -0.0261515,
+                    15.0,
+                    15.0,
+                ],
+                [
+                    1.257425,
+                    0.689069,
+                    2.92924852,
+                    0.03350052,
+                    0.9017999,
+                    0.169295,
+                    15.0,
+                    14.0,
+                ],
+                [
+                    2.390538,
+                    0.567057,
+                    3.01407992,
+                    0.04531652,
+                    0.90041942,
+                    0.22395974,
+                    13.0,
+                    12.0,
+                ],
+                [
+                    3.384638,
+                    0.529053,
+                    3.91069,
+                    0.03927077,
+                    0.74527736,
+                    0.13003394,
+                    11.0,
+                    13.0,
+                ],
             ]
         ),
         1,
