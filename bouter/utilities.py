@@ -1,6 +1,7 @@
 import numpy as np
 from numba import jit
 from typing import Tuple
+import pandas as pd
 
 
 @jit(nopython=True)
@@ -148,3 +149,101 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
                         tail_angle_mat[i_t, i_seg - 1] + deviation
                     )
     return tail_angle_mat, n_segments_missing
+
+
+def crop(traces, events, **kwargs):
+    """Apply cropping functions defined below depending on the dimensionality
+    of the input (one cell or multiple cells). If input is pandas Series
+    or DataFrame, it strips out the values first.
+    :param traces: 1 (n_timepoints) or 2D (n_timepoints X n_cells) array,
+                   pd.Series or pd.DataFrame with cells as columns.
+    :param args: see _crop_trace and _crop_block args
+    :param kwargs: see _crop_trace and _crop_block args
+    :return:
+    """
+    if isinstance(traces, pd.DataFrame) or isinstance(traces, pd.Series):
+        traces = traces.values
+    if len(traces.shape) == 1:
+        return _crop_trace(traces, events, **kwargs)
+    elif len(traces.shape) == 2:
+        return _crop_block(traces, events, **kwargs)
+    else:
+        raise TypeError("traces matrix must be at most 2D!")
+
+
+@jit(nopython=True)
+def _crop_trace(trace, events, pre_int=20, post_int=30, dwn=1):
+    """ Crop the trace around specified events in a window given by parameters.
+    :param trace: trace to be cropped
+    :param events: events around which to crop
+    :param pre_int: interval to crop before the event, in points
+    :param post_int: interval to crop after the event, in points
+    :param dwn: downsampling (default=1 i.e. no downsampling)
+    :return: events x n_points numpy array
+    """
+
+    # Avoid problems with spikes at the borders:
+    valid_events = events[
+        (events > pre_int) & (events < len(trace) - post_int)
+    ]
+
+    mat = np.empty((int((pre_int + post_int) / dwn), valid_events.shape[0]))
+
+    for i, s in enumerate(valid_events):
+        cropped = trace[s - pre_int : s + post_int : dwn].copy()
+        mat[: len(cropped), i] = cropped
+
+    return mat
+
+
+@jit(nopython=True)
+def _crop_block(traces_block, events, pre_int=20, post_int=30, dwn=1):
+    """ Crop a block of traces
+    :param traces_block: trace to be cropped (n_timepoints X n_cells)
+    :param events: events around which to crop
+    :param pre_int: interval to crop before the event, in points
+    :param post_int: interval to crop after the event, in points
+    :param dwn: downsampling (default=1 i.e. no downsampling)
+    :return: events x n_points numpy array
+    """
+
+    n_timepts = traces_block.shape[0]
+    n_cells = traces_block.shape[1]
+    # Avoid problems with spikes at the borders:
+    valid_events = events[(events > pre_int) & (events < n_timepts - post_int)]
+
+    mat = np.empty(
+        (int((pre_int + post_int) / dwn), valid_events.shape[0], n_cells)
+    )
+
+    for i, s in enumerate(valid_events):
+        cropped = traces_block[s - pre_int : s + post_int : dwn, :].copy()
+        mat[: len(cropped), i, :] = cropped
+
+    return mat
+
+
+def resample(df_in, resample_sec=0.005, fromzero=True):
+    """
+
+    Parameters
+    ----------
+    df_in :
+    resample_sec :
+
+
+    Returns
+    -------
+
+    """
+    # TODO: probably everything should be interpolated nicely instead of resampled...
+    df = df_in.copy()
+    # Cut out negative times points if required:
+    if fromzero:
+        df = df[df["t"] > 0]
+    t_index = pd.to_timedelta(df["t"].values, unit="s")
+    df.set_index(t_index, inplace=True)
+
+    df = df.resample("{}ms".format(int(resample_sec * 1000))).mean()
+    df.index = df.index.total_seconds()
+    return df.interpolate().drop("t", axis=1)
