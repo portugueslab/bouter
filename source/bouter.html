@@ -605,6 +605,29 @@ times</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="bouter.utilities.crop">
+<code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">crop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">traces</span></em>, <em class="sig-param"><span class="n">events</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#crop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.crop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply cropping functions defined below depending on the dimensionality
+of the input (one cell or multiple cells). If input is pandas Series
+or DataFrame, it strips out the values first.
+:param traces: 1 (n_timepoints) or 2D (n_timepoints X n_cells) array,</p>
+<blockquote>
+<div><p>pd.Series or pd.DataFrame with cells as columns.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> – see _crop_trace and _crop_block args</p></li>
+<li><p><strong>kwargs</strong> – see _crop_trace and _crop_block args</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="bouter.utilities.extract_segments_above_threshold">
 <code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">extract_segments_above_threshold</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trace</span></em>, <em class="sig-param"><span class="n">threshold</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">min_length</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">min_between</span><span class="o">=</span><span class="default_value">25</span></em>, <em class="sig-param"><span class="n">break_segment_on_nan</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/bouter/utilities.html#extract_segments_above_threshold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.extract_segments_above_threshold" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract periods from a trace where it’s value is above threshold.
@@ -658,6 +681,19 @@ continue_curvature tracked segments.</p>
 <dt id="bouter.utilities.n_missing_segments">
 <code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">n_missing_segments</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tail_angle_mat</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#n_missing_segments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.n_missing_segments" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.utilities.resample">
+<code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">resample</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df_in</span></em>, <em class="sig-param"><span class="n">resample_sec</span><span class="o">=</span><span class="default_value">0.005</span></em>, <em class="sig-param"><span class="n">fromzero</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#resample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.resample" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_in</strong> – </p></li>
+<li><p><strong>resample_sec</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt id="bouter.utilities.revert_segment_filling">
