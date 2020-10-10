@@ -14,8 +14,6 @@ class MultiSessionExperiment(EmbeddedExperiment):
     def __init__(self, path, **kwargs):
         self.session_list = sorted(list(path.glob("*_metadata.json")))
 
-        super().__init__(self.session_list[0])
-
         session_id_list = []
         session_start = []
         for i_meta in range(len(self.session_list)):
@@ -34,6 +32,8 @@ class MultiSessionExperiment(EmbeddedExperiment):
         self.session_list = [
             x for _, x in sorted(zip(session_start, self.session_list))
         ]
+
+        super().__init__(self.session_list[0])
 
         self.experiments = [
             EmbeddedExperiment(pth, **kwargs) for pth in self.session_list
