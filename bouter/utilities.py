@@ -241,15 +241,14 @@ def _crop_trace(trace, events, pre_int=20, post_int=30, dwn=1):
     """
 
     # Avoid problems with spikes at the borders:
-    valid_events = events[
-        (events > pre_int) & (events < len(trace) - post_int)
-    ]
+    valid_events = (events > pre_int) & (events < len(trace) - post_int)
 
-    mat = np.empty((int((pre_int + post_int) / dwn), valid_events.shape[0]))
+    mat = np.zeros((int((pre_int + post_int) / dwn), events.shape[0]))
 
-    for i, s in enumerate(valid_events):
-        cropped = trace[s - pre_int : s + post_int : dwn].copy()
-        mat[: len(cropped), i] = cropped
+    for i, s in enumerate(events):
+        if valid_events[i]:
+            cropped = trace[s - pre_int : s + post_int : dwn].copy()
+            mat[: len(cropped), i] = cropped
 
     return mat
 
@@ -270,13 +269,12 @@ def _crop_block(traces_block, events, pre_int=20, post_int=30, dwn=1):
     # Avoid problems with spikes at the borders:
     valid_events = events[(events > pre_int) & (events < n_timepts - post_int)]
 
-    mat = np.empty(
-        (int((pre_int + post_int) / dwn), valid_events.shape[0], n_cells)
-    )
+    mat = np.empty((int((pre_int + post_int) / dwn), events.shape[0], n_cells))
 
-    for i, s in enumerate(valid_events):
-        cropped = traces_block[s - pre_int : s + post_int : dwn, :].copy()
-        mat[: len(cropped), i, :] = cropped
+    for i, s in enumerate(events):
+        if valid_events[i]:
+            cropped = traces_block[s - pre_int : s + post_int : dwn, :].copy()
+            mat[: len(cropped), i, :] = cropped
 
     return mat
 
