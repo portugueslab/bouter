@@ -1,7 +1,8 @@
 import numpy as np
 from numba import jit
 from typing import Tuple
-from scipy import signal
+from scipy import signal, linalg
+from itertools import product
 import pandas as pd
 
 
@@ -173,6 +174,69 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
     return tail_angle_mat, n_segments_missing
 
 
+@jit(nopython=True)
+def nan_isolated(thetas):
+    thetas_out = thetas.copy()
+    for j in range(thetas_out.shape[1]):
+        for i in range(1, thetas_out.shape[0] - 1):
+            if np.isnan(thetas_out[i - 1, j]) and np.isnan(thetas_out[i + 1, j]):
+                thetas_out[i, j] = np.nan
+
+    return thetas_out
+
+
+@jit(nopython=True)
+def mean_smooth(array, wnd):
+    output = array.copy()
+    for i in range(wnd, array.shape[0] - wnd):
+        output[i] = np.mean(output[i - wnd:i + wnd])
+    return output
+
+
+def predictive_tail_fill(thetas, smooth_wnd=1, max_taildiff=np.pi / 2,
+                             start_from=4, fit_timepts=5, fit_tailpts=4):
+    n_pts = thetas.shape[0]
+    n_seg = thetas.shape[1]
+
+    # Set to nan points with a suspect derivative:
+    diff = np.concatenate([np.zeros((1, n_seg)), np.diff(thetas, axis=0)])
+    too_deviating = np.abs(diff) > max_taildiff
+    thetas[too_deviating] = np.nan
+    thetas = nan_isolated(thetas)
+
+    # smooth initial tail segments:
+    for i in range(start_from):
+        thetas[:, i] = mean_smooth(thetas[:, i], smooth_wnd)
+
+    # Fitting loop:
+    for i in range(start_from, n_seg):
+        # First smooth previous thetas:
+        thetas[:, i - 1] = mean_smooth(thetas[:, i - 1], smooth_wnd)
+        # Find indexes to fix:
+        i_to_fix = np.argwhere(np.isnan(thetas[:, i]))[:, 0]
+        if len(i_to_fix) > 0:
+            i_to_fit = np.argwhere(~np.isnan(thetas[:, i]))[:, 0]
+
+            # Reorganize thetas, to use previous fit_timepts timepoints
+            # and previous fit_tailpts segments for the fit
+            # we need a (timepts, fit_timepts * fit_tailpts) matrix:
+            theta_predict = [thetas[np.arange(n_pts) - t, i - s]
+                             for t, s in
+                             product(range(fit_timepts), range(1, fit_tailpts))]
+
+            theta_predict_res = np.column_stack(theta_predict + [np.ones(n_pts)])
+            # Linear fit with least squares:
+            C, _, _, _ = linalg.lstsq(theta_predict_res[i_to_fit, :],
+                                      thetas[i_to_fit, i])
+            # Predict the nan values:
+            thetas[i_to_fix, i] = theta_predict_res[i_to_fix, :] @ C
+
+    # smooth last angle:
+    thetas[:, i] = mean_smooth(thetas[:, i], smooth_wnd)
+
+    return thetas
+
+
 def calc_vel(dx, t):
     """ Calculates velocities from deltas and times, skipping over duplicate
     times
@@ -303,3 +367,37 @@ def resample(df_in, resample_sec=0.005, fromzero=True):
     df = df.resample("{}ms".format(int(resample_sec * 1000))).mean()
     df.index = df.index.total_seconds()
     return df.interpolate().drop("t", axis=1)
+
+
+def polynomial_tail_coefficients(segments, n_max_missing=7, degree=3):
+    """ Fits a polynomial to the bout shape
+
+    :param n_max_missing:
+    :param degree: the polynomial degree
+    :return:
+    """
+    segments -= segments[:, :1]
+    n_max_missing = min(segments.shape[1] - degree, n_max_missing)
+
+    # the Stytra tail tracking introduces NaNs at breaking point
+    # a situation number - NaN - number never occurs in tracking
+    n_missing = n_missing_segments(segments)
+
+    poly_coefs = np.zeros((segments.shape[0], degree + 1))
+    line_points = np.linspace(0, 1, segments.shape[1])
+
+    for i_missing in range(n_max_missing + 1):
+        sel_time = n_missing == i_missing
+        poly_coefs[sel_time, :] = np.polynomial.polynomial.polyfit(
+            line_points[: segments.shape[1] - i_missing],
+            segments[sel_time, : segments.shape[1] - i_missing].T,
+            degree,
+        ).T
+    return poly_coefs
+
+
+def polynomial_tailsum(poly_coefs):
+    return np.polynomial.polynomial.polyval(
+        1, poly_coefs.T, False
+    )
+

@@ -59,29 +59,15 @@ class EmbeddedExperiment(Experiment):
         :return:
         """
         segments = self.behavior_log.loc[:, self.tail_columns].values
-        segments -= segments[:, 0:1]
-        n_max_missing = min(self.n_tail_segments - degree, n_max_missing)
-
-        # the Stytra tail tracking introduces NaNs at breaking point
-        # a situation number - NaN - number never occurs in tracking
-        n_missing = utilities.n_missing_segments(segments)
-
-        poly_coefs = np.zeros((segments.shape[0], degree + 1))
-        line_points = np.linspace(0, 1, self.n_tail_segments)
-
-        for i_missing in range(n_max_missing + 1):
-            sel_time = n_missing == i_missing
-            poly_coefs[sel_time, :] = np.polynomial.polynomial.polyfit(
-                line_points[0 : self.n_tail_segments - i_missing],
-                segments[sel_time, 0 : self.n_tail_segments - i_missing].T,
-                degree,
-            ).T
+        poly_coefs = utilities.polynomial_tail_coefficients(segments,
+                                                            n_max_missing=n_max_missing,
+                                                            degree=degree)
         return poly_coefs
 
     @decorators.cache_results()
     def polynomial_tailsum(self):
-        return np.polynomial.polynomial.polyval(
-            1, self.polynomial_tail_coefficients().T, False
+        return utilities.polynomial_tailsum(
+            self.polynomial_tail_coefficients()
         )
 
     @decorators.cache_results(cache_filename="behavior_log")
