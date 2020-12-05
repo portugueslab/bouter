@@ -59,9 +59,9 @@ class EmbeddedExperiment(Experiment):
         :return:
         """
         segments = self.behavior_log.loc[:, self.tail_columns].values
-        poly_coefs = utilities.polynomial_tail_coefficients(segments,
-                                                            n_max_missing=n_max_missing,
-                                                            degree=degree)
+        poly_coefs = utilities.polynomial_tail_coefficients(
+            segments, n_max_missing=n_max_missing, degree=degree
+        )
         return poly_coefs
 
     @decorators.cache_results()

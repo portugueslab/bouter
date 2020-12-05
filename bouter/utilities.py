@@ -179,7 +179,9 @@ def nan_isolated(thetas):
     thetas_out = thetas.copy()
     for j in range(thetas_out.shape[1]):
         for i in range(1, thetas_out.shape[0] - 1):
-            if np.isnan(thetas_out[i - 1, j]) and np.isnan(thetas_out[i + 1, j]):
+            if np.isnan(thetas_out[i - 1, j]) and np.isnan(
+                thetas_out[i + 1, j]
+            ):
                 thetas_out[i, j] = np.nan
 
     return thetas_out
@@ -189,12 +191,18 @@ def nan_isolated(thetas):
 def mean_smooth(array, wnd):
     output = array.copy()
     for i in range(wnd, array.shape[0] - wnd):
-        output[i] = np.mean(output[i - wnd:i + wnd])
+        output[i] = np.mean(output[i - wnd : i + wnd])
     return output
 
 
-def predictive_tail_fill(thetas, smooth_wnd=1, max_taildiff=np.pi / 2,
-                             start_from=4, fit_timepts=5, fit_tailpts=4):
+def predictive_tail_fill(
+    thetas,
+    smooth_wnd=1,
+    max_taildiff=np.pi / 2,
+    start_from=4,
+    fit_timepts=5,
+    fit_tailpts=4,
+):
     n_pts = thetas.shape[0]
     n_seg = thetas.shape[1]
 
@@ -220,14 +228,18 @@ def predictive_tail_fill(thetas, smooth_wnd=1, max_taildiff=np.pi / 2,
             # Reorganize thetas, to use previous fit_timepts timepoints
             # and previous fit_tailpts segments for the fit
             # we need a (timepts, fit_timepts * fit_tailpts) matrix:
-            theta_predict = [thetas[np.arange(n_pts) - t, i - s]
-                             for t, s in
-                             product(range(fit_timepts), range(1, fit_tailpts))]
+            theta_predict = [
+                thetas[np.arange(n_pts) - t, i - s]
+                for t, s in product(range(fit_timepts), range(1, fit_tailpts))
+            ]
 
-            theta_predict_res = np.column_stack(theta_predict + [np.ones(n_pts)])
+            theta_predict_res = np.column_stack(
+                theta_predict + [np.ones(n_pts)]
+            )
             # Linear fit with least squares:
-            C, _, _, _ = linalg.lstsq(theta_predict_res[i_to_fit, :],
-                                      thetas[i_to_fit, i])
+            C, _, _, _ = linalg.lstsq(
+                theta_predict_res[i_to_fit, :], thetas[i_to_fit, i]
+            )
             # Predict the nan values:
             thetas[i_to_fix, i] = theta_predict_res[i_to_fix, :] @ C
 
@@ -397,7 +409,4 @@ def polynomial_tail_coefficients(segments, n_max_missing=7, degree=3):
 
 
 def polynomial_tailsum(poly_coefs):
-    return np.polynomial.polynomial.polyval(
-        1, poly_coefs.T, False
-    )
-
+    return np.polynomial.polynomial.polyval(1, poly_coefs.T, False)
