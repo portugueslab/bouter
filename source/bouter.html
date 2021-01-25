@@ -552,6 +552,15 @@ and version as keywords for the stimulus parameters dictionary.</p>
 <p>Class to handle the scenario of multiple stytra sessions within the
 same experiment - typically, for plane-wise repetitions in 2p imaging.</p>
 <dl class="py method">
+<dt id="bouter.multisession_exp.MultiSessionExperiment.load_session_log">
+<code class="sig-name descname">load_session_log</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">log_name</span></em>, <em class="sig-param"><span class="n">session_idx</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/multisession_exp.html#MultiSessionExperiment.load_session_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.multisession_exp.MultiSessionExperiment.load_session_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to load a log for a single session, specified by index-
+:param log_name: string specifying the type of log (e.g., “behavior_log”
+:param session_idx: int, index of session to load
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="bouter.multisession_exp.MultiSessionExperiment.session_start_tstamps">
 <code class="sig-name descname">session_start_tstamps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/multisession_exp.html#MultiSessionExperiment.session_start_tstamps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.multisession_exp.MultiSessionExperiment.session_start_tstamps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return timestamps for all the sessions in this folder.</p>

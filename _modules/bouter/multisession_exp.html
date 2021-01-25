@@ -269,7 +269,16 @@ from bouter.embedded import EmbeddedExperiment
         for exp in self.experiments:
             s = exp[&quot;general&quot;][&quot;t_protocol_start&quot;]
             start_tstamps.append(datetime.strptime(s, &quot;%Y-%m-%dT%H:%M:%S.%f&quot;))
-        return start_tstamps</div></div>
+        return start_tstamps</div>
+
+<div class="viewcode-block" id="MultiSessionExperiment.load_session_log"><a class="viewcode-back" href="../../source/bouter.html#bouter.multisession_exp.MultiSessionExperiment.load_session_log">[docs]</a>    def load_session_log(self, log_name, session_idx):
+        &quot;&quot;&quot; Function to load a log for a single session, specified by index-
+        :param log_name: string specifying the type of log (e.g., &quot;behavior_log&quot;
+        :param session_idx: int, index of session to load
+        :return:
+        &quot;&quot;&quot;
+        session_log = self.root / str(self.session_id_list[session_idx] + &quot;_&quot; + log_name + &quot;.hdf5&quot;)
+        return self._load_log(session_log)</div></div>
 </pre></div>
 
            </div>
