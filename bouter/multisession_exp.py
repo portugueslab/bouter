@@ -104,3 +104,12 @@ class MultiSessionExperiment(EmbeddedExperiment):
             s = exp["general"]["t_protocol_start"]
             start_tstamps.append(datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.%f"))
         return start_tstamps
+
+    def load_session_log(self, log_name, session_idx):
+        """ Function to load a log for a single session, specified by index-
+        :param log_name: string specifying the type of log (e.g., "behavior_log"
+        :param session_idx: int, index of session to load
+        :return:
+        """
+        session_log = self.root / str(self.session_id_list[session_idx] + "_" + log_name + ".hdf5")
+        return self._load_log(session_log)
