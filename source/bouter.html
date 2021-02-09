@@ -595,7 +595,7 @@ out unphysical frequencies for the fish tail</p>
 <dl class="py function">
 <dt id="bouter.utilities.calc_vel">
 <code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">calc_vel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dx</span></em>, <em class="sig-param"><span class="n">t</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#calc_vel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.calc_vel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates velocities from deltas and times, skipping over duplicate
+<dd><p>Calculates velocities from deltas and times, skipping over duplicated
 times</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -662,6 +662,20 @@ in the trace.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="bouter.utilities.fast_corrcoef">
+<code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">fast_corrcoef</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mat</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#fast_corrcoef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.fast_corrcoef" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.utilities.fast_pearson">
+<code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">fast_pearson</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#fast_pearson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.fast_pearson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate correlation between two data series, excluding nan values.
+:param x: first array
+:param y: second array
+:return: pearson correlation</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="bouter.utilities.fill_out_segments">
 <code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">fill_out_segments</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tail_angle_mat</span></em>, <em class="sig-param"><span class="n">continue_curvature</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">revert_pts</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#fill_out_segments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.fill_out_segments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fills out NaN values in a tail-tracking data matrix.
@@ -687,9 +701,62 @@ continue_curvature tracked segments.</p>
 <dd></dd></dl>
 
 <dl class="py function">
+<dt id="bouter.utilities.mean_smooth">
+<code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">mean_smooth</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em>, <em class="sig-param"><span class="n">wnd</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#mean_smooth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.mean_smooth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.utilities.merge_bouts">
+<code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">merge_bouts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bouts</span></em>, <em class="sig-param"><span class="n">min_dist</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#merge_bouts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.merge_bouts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt id="bouter.utilities.n_missing_segments">
 <code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">n_missing_segments</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tail_angle_mat</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#n_missing_segments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.n_missing_segments" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.utilities.nan_isolated">
+<code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">nan_isolated</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thetas</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#nan_isolated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.nan_isolated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.utilities.polynomial_tail_coefficients">
+<code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">polynomial_tail_coefficients</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">segments</span></em>, <em class="sig-param"><span class="n">n_max_missing</span><span class="o">=</span><span class="default_value">7</span></em>, <em class="sig-param"><span class="n">degree</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#polynomial_tail_coefficients"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.polynomial_tail_coefficients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits a polynomial to the bout shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_max_missing</strong> – </p></li>
+<li><p><strong>degree</strong> – the polynomial degree</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bouter.utilities.polynomial_tailsum">
+<code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">polynomial_tailsum</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">poly_coefs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#polynomial_tailsum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.polynomial_tailsum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.utilities.predictive_tail_fill">
+<code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">predictive_tail_fill</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thetas</span></em>, <em class="sig-param"><span class="n">smooth_wnd</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">max_taildiff</span><span class="o">=</span><span class="default_value">1.5707963267948966</span></em>, <em class="sig-param"><span class="n">start_from</span><span class="o">=</span><span class="default_value">4</span></em>, <em class="sig-param"><span class="n">fit_timepts</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">fit_tailpts</span><span class="o">=</span><span class="default_value">4</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#predictive_tail_fill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.predictive_tail_fill" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="bouter.utilities.reliability">
+<code class="sig-prename descclassname">bouter.utilities.</code><code class="sig-name descname">reliability</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_block</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bouter/utilities.html#reliability"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bouter.utilities.reliability" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to calculate reliability of cell responses.
+Reliability is defined as the average of the across-trials correlation.
+This measure seems to generally converge after a number of 7-8 repetitions, so it
+is advisable to have such a repetition number to use it.
+:param data_block: block of cell responses (t x n_trials x n_cells)
+:return:</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="bouter.utilities.resample">

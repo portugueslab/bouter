@@ -167,8 +167,24 @@
 <span></span>import numpy as np
 from numba import jit
 from typing import Tuple
-from scipy import signal
+from scipy import signal, linalg
+from itertools import product
 import pandas as pd
+import math
+
+<div class="viewcode-block" id="merge_bouts"><a class="viewcode-back" href="../../source/bouter.html#bouter.utilities.merge_bouts">[docs]</a>def merge_bouts(bouts, min_dist):
+    bouts = list(bouts)
+    i = 1
+
+    while i &lt; len(bouts) - 1:
+        current_dist = bouts[i+1][0] - bouts[i][1]
+        if current_dist &lt; min_dist:
+            bout_after_to_merge = bouts.pop(i+1)
+            bouts[i][1] = bout_after_to_merge[1]
+        else:
+            i += 1
+
+    return np.array(bouts)</div>
 
 
 <div class="viewcode-block" id="extract_segments_above_threshold"><a class="viewcode-back" href="../../source/bouter.html#bouter.utilities.extract_segments_above_threshold">[docs]</a>@jit(nopython=True)
@@ -179,7 +195,6 @@ def extract_segments_above_threshold(
     min_between=25,
     break_segment_on_nan=True,
 ) -&gt; Tuple[np.ndarray, np.ndarray]:
-
     &quot;&quot;&quot;
     Extract periods from a trace where it&#39;s value is above threshold.
     The segments also can have a minimal length.
@@ -339,8 +354,85 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
     return tail_angle_mat, n_segments_missing</div>
 
 
+<div class="viewcode-block" id="nan_isolated"><a class="viewcode-back" href="../../source/bouter.html#bouter.utilities.nan_isolated">[docs]</a>@jit(nopython=True)
+def nan_isolated(thetas):
+    thetas_out = thetas.copy()
+    for j in range(thetas_out.shape[1]):
+        for i in range(1, thetas_out.shape[0] - 1):
+            if np.isnan(thetas_out[i - 1, j]) and np.isnan(
+                thetas_out[i + 1, j]
+            ):
+                thetas_out[i, j] = np.nan
+
+    return thetas_out</div>
+
+
+<div class="viewcode-block" id="mean_smooth"><a class="viewcode-back" href="../../source/bouter.html#bouter.utilities.mean_smooth">[docs]</a>@jit(nopython=True)
+def mean_smooth(array, wnd):
+    output = array.copy()
+    for i in range(wnd, array.shape[0] - wnd):
+        output[i] = np.nanmean(output[i - wnd : i + wnd])
+    return output</div>
+
+
+<div class="viewcode-block" id="predictive_tail_fill"><a class="viewcode-back" href="../../source/bouter.html#bouter.utilities.predictive_tail_fill">[docs]</a>def predictive_tail_fill(
+    thetas,
+    smooth_wnd=1,
+    max_taildiff=np.pi / 2,
+    start_from=4,
+    fit_timepts=5,
+    fit_tailpts=4,
+):
+    thetas -= np.median(thetas[:, 0])
+
+    n_pts = thetas.shape[0]
+    n_seg = thetas.shape[1]
+
+    # Set to nan points with a suspect derivative:
+    diff = np.concatenate([np.zeros((1, n_seg)), np.diff(thetas, axis=0)])
+    too_deviating = np.abs(diff) &gt; max_taildiff
+    thetas[too_deviating] = np.nan
+    thetas = nan_isolated(thetas)
+
+    # smooth initial tail segments:
+    for i in range(start_from):
+        thetas[:, i] = mean_smooth(thetas[:, i], smooth_wnd)
+
+    # Fitting loop:
+    for i in range(start_from, n_seg):
+        # First smooth previous thetas:
+        thetas[:, i - 1] = mean_smooth(thetas[:, i - 1], smooth_wnd)
+        # Find indexes to fix:
+        i_to_fix = np.argwhere(np.isnan(thetas[:, i]))[:, 0]
+        if len(i_to_fix) &gt; 0:
+            i_to_fit = np.argwhere(~np.isnan(thetas[:, i]))[:, 0]
+
+            # Reorganize thetas, to use previous fit_timepts timepoints
+            # and previous fit_tailpts segments for the fit
+            # we need a (timepts, fit_timepts * fit_tailpts) matrix:
+            theta_predict = [
+                thetas[np.arange(n_pts) - t, i - s]
+                for t, s in product(range(fit_timepts), range(1, fit_tailpts))
+            ]
+
+            theta_predict_res = np.column_stack(
+                theta_predict + [np.ones(n_pts)]
+            )
+            # Linear fit with least squares:
+            C, _, _, _ = linalg.lstsq(
+                theta_predict_res[i_to_fit, :], thetas[i_to_fit, i]
+            )
+            # Predict the nan values:
+            thetas[i_to_fix, i] = theta_predict_res[i_to_fix, :] @ C
+
+    # smooth last angle:
+    thetas[:, i] = mean_smooth(thetas[:, i], smooth_wnd)
+
+    return thetas</div>
+
+
 <div class="viewcode-block" id="calc_vel"><a class="viewcode-back" href="../../source/bouter.html#bouter.utilities.calc_vel">[docs]</a>def calc_vel(dx, t):
-    &quot;&quot;&quot; Calculates velocities from deltas and times, skipping over duplicate
+    &quot;&quot;&quot; Calculates velocities from deltas and times, skipping over duplicated
     times
 
     Parameters
@@ -387,6 +479,8 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
     &quot;&quot;&quot;
     if isinstance(traces, pd.DataFrame) or isinstance(traces, pd.Series):
         traces = traces.values
+    if isinstance(events, pd.DataFrame) or isinstance(events, pd.Series):
+        events = events.values.flatten().astype(np.int)
     if len(traces.shape) == 1:
         return _crop_trace(traces, events, **kwargs)
     elif len(traces.shape) == 2:
@@ -435,7 +529,7 @@ def _crop_block(traces_block, events, pre_int=20, post_int=30, dwn=1):
     # Avoid problems with spikes at the borders:
     valid_events = events[(events &gt; pre_int) &amp; (events &lt; n_timepts - post_int)]
 
-    mat = np.empty((int((pre_int + post_int) / dwn), events.shape[0], n_cells))
+    mat = np.full((int((pre_int + post_int) / dwn), events.shape[0], n_cells), np.nan)
 
     for i, s in enumerate(events):
         if valid_events[i]:
@@ -469,6 +563,99 @@ def _crop_block(traces_block, events, pre_int=20, post_int=30, dwn=1):
     df = df.resample(&quot;{}ms&quot;.format(int(resample_sec * 1000))).mean()
     df.index = df.index.total_seconds()
     return df.interpolate().drop(&quot;t&quot;, axis=1)</div>
+
+
+<div class="viewcode-block" id="polynomial_tail_coefficients"><a class="viewcode-back" href="../../source/bouter.html#bouter.utilities.polynomial_tail_coefficients">[docs]</a>def polynomial_tail_coefficients(segments, n_max_missing=7, degree=3):
+    &quot;&quot;&quot; Fits a polynomial to the bout shape
+
+    :param n_max_missing:
+    :param degree: the polynomial degree
+    :return:
+    &quot;&quot;&quot;
+    segments -= segments[:, :1]
+    n_max_missing = min(segments.shape[1] - degree, n_max_missing)
+
+    # the Stytra tail tracking introduces NaNs at breaking point
+    # a situation number - NaN - number never occurs in tracking
+    n_missing = n_missing_segments(segments)
+
+    poly_coefs = np.zeros((segments.shape[0], degree + 1))
+    line_points = np.linspace(0, 1, segments.shape[1])
+
+    for i_missing in range(n_max_missing + 1):
+        sel_time = n_missing == i_missing
+        poly_coefs[sel_time, :] = np.polynomial.polynomial.polyfit(
+            line_points[: segments.shape[1] - i_missing],
+            segments[sel_time, : segments.shape[1] - i_missing].T,
+            degree,
+        ).T
+    return poly_coefs</div>
+
+
+<div class="viewcode-block" id="polynomial_tailsum"><a class="viewcode-back" href="../../source/bouter.html#bouter.utilities.polynomial_tailsum">[docs]</a>def polynomial_tailsum(poly_coefs):
+    return np.polynomial.polynomial.polyval(1, poly_coefs.T, False)</div>
+
+
+<div class="viewcode-block" id="reliability"><a class="viewcode-back" href="../../source/bouter.html#bouter.utilities.reliability">[docs]</a>def reliability(data_block):
+    &quot;&quot;&quot; Function to calculate reliability of cell responses.
+    Reliability is defined as the average of the across-trials correlation.
+    This measure seems to generally converge after a number of 7-8 repetitions, so it
+    is advisable to have such a repetition number to use it.
+    :param data_block: block of cell responses (t x n_trials x n_cells)
+    :return:
+    &quot;&quot;&quot;
+    n_cells = data_block.shape[2]
+    reliability = np.zeros(n_cells)
+    for i in range(n_cells):
+        cell_data = data_block[:, :, i]
+        corr = fast_corrcoef(cell_data.T)
+        np.fill_diagonal(corr, np.nan)
+        reliability[i] = np.nanmean(corr)
+
+    return reliability</div>
+
+
+<div class="viewcode-block" id="fast_pearson"><a class="viewcode-back" href="../../source/bouter.html#bouter.utilities.fast_pearson">[docs]</a>@jit(nopython=True)
+def fast_pearson(x, y):
+    &quot;&quot;&quot; Calculate correlation between two data series, excluding nan values.
+    :param x: first array
+    :param y: second array
+    :return: pearson correlation
+    &quot;&quot;&quot;
+    selection = ~np.isnan(x) &amp; ~np.isnan(y)
+    if not selection.any():
+        return np.nan
+    x = x[selection]
+    y = y[selection]
+    n = len(x)
+    s_xy = 0.0
+    s_x = 0.0
+    s_y = 0.0
+    s_x2 = 0.0
+    s_y2 = 0.0
+    for i in range(n):
+        s_xy += x[i] * y[i]
+        s_x += x[i]
+        s_y += y[i]
+        s_x2 += x[i] ** 2
+        s_y2 += y[i] ** 2
+    denominator = math.sqrt((s_x2 - (s_x ** 2) / n) * (s_y2 - (s_y ** 2) / n))
+    if denominator == 0:
+        return 0
+    return (s_xy - s_x * s_y / n) / denominator</div>
+
+
+<div class="viewcode-block" id="fast_corrcoef"><a class="viewcode-back" href="../../source/bouter.html#bouter.utilities.fast_corrcoef">[docs]</a>@jit(nopython=True)
+def fast_corrcoef(mat):
+    n = mat.shape[0]
+    corrmat = np.zeros((n, n))
+
+    for i in range(n):
+        for j in range(i, n):
+            corrmat[i, j] = fast_pearson(mat[i, :], mat[j, :])
+            corrmat[j, i] = corrmat[i, j]
+
+    return corrmat</div>
 </pre></div>
 
            </div>
