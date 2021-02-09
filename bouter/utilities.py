@@ -4,6 +4,21 @@ from typing import Tuple
 from scipy import signal, linalg
 from itertools import product
 import pandas as pd
+import math
+
+def merge_bouts(bouts, min_dist):
+    bouts = list(bouts)
+    i = 1
+
+    while i < len(bouts) - 1:
+        current_dist = bouts[i+1][0] - bouts[i][1]
+        if current_dist < min_dist:
+            bout_after_to_merge = bouts.pop(i+1)
+            bouts[i][1] = bout_after_to_merge[1]
+        else:
+            i += 1
+
+    return np.array(bouts)
 
 
 @jit(nopython=True)
@@ -14,7 +29,6 @@ def extract_segments_above_threshold(
     min_between=25,
     break_segment_on_nan=True,
 ) -> Tuple[np.ndarray, np.ndarray]:
-
     """
     Extract periods from a trace where it's value is above threshold.
     The segments also can have a minimal length.
@@ -191,7 +205,7 @@ def nan_isolated(thetas):
 def mean_smooth(array, wnd):
     output = array.copy()
     for i in range(wnd, array.shape[0] - wnd):
-        output[i] = np.mean(output[i - wnd : i + wnd])
+        output[i] = np.nanmean(output[i - wnd : i + wnd])
     return output
 
 
@@ -203,6 +217,8 @@ def predictive_tail_fill(
     fit_timepts=5,
     fit_tailpts=4,
 ):
+    thetas -= np.median(thetas[:, 0])
+
     n_pts = thetas.shape[0]
     n_seg = thetas.shape[1]
 
@@ -250,7 +266,7 @@ def predictive_tail_fill(
 
 
 def calc_vel(dx, t):
-    """ Calculates velocities from deltas and times, skipping over duplicate
+    """ Calculates velocities from deltas and times, skipping over duplicated
     times
 
     Parameters
@@ -297,6 +313,8 @@ def crop(traces, events, **kwargs):
     """
     if isinstance(traces, pd.DataFrame) or isinstance(traces, pd.Series):
         traces = traces.values
+    if isinstance(events, pd.DataFrame) or isinstance(events, pd.Series):
+        events = events.values.flatten().astype(np.int)
     if len(traces.shape) == 1:
         return _crop_trace(traces, events, **kwargs)
     elif len(traces.shape) == 2:
@@ -345,7 +363,7 @@ def _crop_block(traces_block, events, pre_int=20, post_int=30, dwn=1):
     # Avoid problems with spikes at the borders:
     valid_events = events[(events > pre_int) & (events < n_timepts - post_int)]
 
-    mat = np.empty((int((pre_int + post_int) / dwn), events.shape[0], n_cells))
+    mat = np.full((int((pre_int + post_int) / dwn), events.shape[0], n_cells), np.nan)
 
     for i, s in enumerate(events):
         if valid_events[i]:
@@ -410,3 +428,65 @@ def polynomial_tail_coefficients(segments, n_max_missing=7, degree=3):
 
 def polynomial_tailsum(poly_coefs):
     return np.polynomial.polynomial.polyval(1, poly_coefs.T, False)
+
+
+def reliability(data_block):
+    """ Function to calculate reliability of cell responses.
+    Reliability is defined as the average of the across-trials correlation.
+    This measure seems to generally converge after a number of 7-8 repetitions, so it
+    is advisable to have such a repetition number to use it.
+    :param data_block: block of cell responses (t x n_trials x n_cells)
+    :return:
+    """
+    n_cells = data_block.shape[2]
+    reliability = np.zeros(n_cells)
+    for i in range(n_cells):
+        cell_data = data_block[:, :, i]
+        corr = fast_corrcoef(cell_data.T)
+        np.fill_diagonal(corr, np.nan)
+        reliability[i] = np.nanmean(corr)
+
+    return reliability
+
+
+@jit(nopython=True)
+def fast_pearson(x, y):
+    """ Calculate correlation between two data series, excluding nan values.
+    :param x: first array
+    :param y: second array
+    :return: pearson correlation
+    """
+    selection = ~np.isnan(x) & ~np.isnan(y)
+    if not selection.any():
+        return np.nan
+    x = x[selection]
+    y = y[selection]
+    n = len(x)
+    s_xy = 0.0
+    s_x = 0.0
+    s_y = 0.0
+    s_x2 = 0.0
+    s_y2 = 0.0
+    for i in range(n):
+        s_xy += x[i] * y[i]
+        s_x += x[i]
+        s_y += y[i]
+        s_x2 += x[i] ** 2
+        s_y2 += y[i] ** 2
+    denominator = math.sqrt((s_x2 - (s_x ** 2) / n) * (s_y2 - (s_y ** 2) / n))
+    if denominator == 0:
+        return 0
+    return (s_xy - s_x * s_y / n) / denominator
+
+
+@jit(nopython=True)
+def fast_corrcoef(mat):
+    n = mat.shape[0]
+    corrmat = np.zeros((n, n))
+
+    for i in range(n):
+        for j in range(i, n):
+            corrmat[i, j] = fast_pearson(mat[i, :], mat[j, :])
+            corrmat[j, i] = corrmat[i, j]
+
+    return corrmat
