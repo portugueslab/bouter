@@ -10,13 +10,11 @@ with open("README.rst") as readme_file:
 with open("HISTORY.rst") as history_file:
     history = history_file.read()
 
-requirements = []
+with open("requirements_dev.txt") as f:
+    requirements_dev = f.read().splitlines()
+
 with open("requirements.txt") as f:
-    for line in f:
-        splitted = line.split("#")
-        stripped = splitted[0].strip()
-        if len(stripped) > 0:
-            requirements.append(stripped)
+    requirements = f.read().splitlines()
 
 setup_requirements = ["pytest-runner", "setuptools_scm"]
 
@@ -27,7 +25,7 @@ test_requirements = [
 setup(
     author="Vilim Stih, Hagar Lavian, Luigi Petrucco, Ot Prat @portugueslab",
     author_email="luigi.petrucco@gmail.com",
-    python_requires=">=3.5",
+    python_requires=">=3.7",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",
@@ -41,6 +39,7 @@ setup(
     ],
     description="A package for behavioral analysis in python with Stytra data",
     install_requires=requirements,
+    extras_require=dict(dev=requirements_dev),
     license="GNU General Public License v3",
     long_description=readme + "\n\n" + history,
     include_package_data=True,
