@@ -25,8 +25,8 @@ test_requirements = [
 ]
 
 setup(
-    author="Vilim Stih, Hagar Lavian, Luigi Petrucco, Ot Prat",
-    author_email="vilim@neuro.mpg.de",
+    author="Vilim Stih, Hagar Lavian, Luigi Petrucco, Ot Prat @portugueslab",
+    author_email="luigi.petrucco@gmail.com",
     python_requires=">=3.5",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
