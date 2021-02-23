@@ -33,7 +33,8 @@ class EmbeddedExperiment(Experiment):
         if continue_curvature is None:
             if revert_pts is not None:
                 fixed_segments = utilities.revert_segment_filling(
-                    segments, revert_pts=revert_pts,
+                    segments,
+                    revert_pts=revert_pts,
                 )
                 self.behavior_log.loc[:, self.tail_columns] = fixed_segments
 
@@ -107,7 +108,9 @@ class EmbeddedExperiment(Experiment):
 
     @decorators.cache_results()
     def get_bout_properties(
-        self, directionality_duration=0.07, use_polynomial_tailsum=False,
+        self,
+        directionality_duration=0.07,
+        use_polynomial_tailsum=False,
     ):
         """Create dataframe with summary of bouts properties.
         :param directionality_duration: Window defining initial part of

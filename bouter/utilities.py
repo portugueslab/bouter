@@ -173,7 +173,8 @@ def fill_out_segments(tail_angle_mat, continue_curvature=0, revert_pts=None):
                         # samples:
                         previous_tail_curvature = np.diff(
                             tail_angle_mat[
-                                i_t, i_seg - continue_curvature : i_seg,
+                                i_t,
+                                i_seg - continue_curvature : i_seg,
                             ]
                         )
                         deviation = np.mean(previous_tail_curvature)

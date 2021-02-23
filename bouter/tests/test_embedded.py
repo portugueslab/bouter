@@ -50,7 +50,10 @@ def test_tail_fix_function_real_data(embedded_exp_path):
     assert np.median(diff_mat[fixed]) < 0.1
     assert np.median(diff_mat[~fixed]) == 0
 
-    reverted_mat = utilities.revert_segment_filling(fixed_mat, revert_pts=pts,)
+    reverted_mat = utilities.revert_segment_filling(
+        fixed_mat,
+        revert_pts=pts,
+    )
 
     assert_array_almost_equal(reverted_mat, corrupted_mat)
 

@@ -247,7 +247,8 @@ class FreelySwimmingExperiment(Experiment):
             if continue_curvature is None:
                 if revert_pts is not None:
                     fixed_segments = utilities.revert_segment_filling(
-                        segments, revert_pts=revert_pts,
+                        segments,
+                        revert_pts=revert_pts,
                     )
                     self.behavior_log.loc[
                         :, self.tail_columns[i_fish]
