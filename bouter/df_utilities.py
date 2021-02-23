@@ -3,7 +3,9 @@ import numpy as np
 
 def tail_column_names(n_segments, i_fish=None):
     if i_fish is not None:
-        return ["f{:d}_theta_{:02d}".format(i_fish, i) for i in range(n_segments)]
+        return [
+            "f{:d}_theta_{:02d}".format(i_fish, i) for i in range(n_segments)
+        ]
     else:
         return ["theta_{:02d}".format(i) for i in range(n_segments)]
 

@@ -14,6 +14,7 @@ def embedded_exp_path():
 
     return Path(tempdir)
 
+
 @pytest.fixture()
 def freely_swimming_exp_path():
     tempdir = tempfile.mkdtemp()

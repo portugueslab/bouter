@@ -6,14 +6,15 @@ from itertools import product
 import pandas as pd
 import math
 
+
 def merge_bouts(bouts, min_dist):
     bouts = list(bouts)
     i = 1
 
     while i < len(bouts) - 1:
-        current_dist = bouts[i+1][0] - bouts[i][1]
+        current_dist = bouts[i + 1][0] - bouts[i][1]
         if current_dist < min_dist:
-            bout_after_to_merge = bouts.pop(i+1)
+            bout_after_to_merge = bouts.pop(i + 1)
             bouts[i][1] = bout_after_to_merge[1]
         else:
             i += 1
@@ -266,7 +267,7 @@ def predictive_tail_fill(
 
 
 def calc_vel(dx, t):
-    """ Calculates velocities from deltas and times, skipping over duplicated
+    """Calculates velocities from deltas and times, skipping over duplicated
     times
 
     Parameters
@@ -287,7 +288,7 @@ def calc_vel(dx, t):
 
 
 def bandpass(timeseries, dt, f_min=12, f_max=62, n_taps=9, axis=0):
-    """ Bandpass filtering used for tail motion, filters
+    """Bandpass filtering used for tail motion, filters
     out unphysical frequencies for the fish tail
 
     :param timeseries:
@@ -325,7 +326,7 @@ def crop(traces, events, **kwargs):
 
 @jit(nopython=True)
 def _crop_trace(trace, events, pre_int=20, post_int=30, dwn=1):
-    """ Crop the trace around specified events in a window given by parameters.
+    """Crop the trace around specified events in a window given by parameters.
     :param trace: trace to be cropped
     :param events: events around which to crop
     :param pre_int: interval to crop before the event, in points
@@ -349,7 +350,7 @@ def _crop_trace(trace, events, pre_int=20, post_int=30, dwn=1):
 
 @jit(nopython=True)
 def _crop_block(traces_block, events, pre_int=20, post_int=30, dwn=1):
-    """ Crop a block of traces
+    """Crop a block of traces
     :param traces_block: trace to be cropped (n_timepoints X n_cells)
     :param events: events around which to crop
     :param pre_int: interval to crop before the event, in points
@@ -363,7 +364,9 @@ def _crop_block(traces_block, events, pre_int=20, post_int=30, dwn=1):
     # Avoid problems with spikes at the borders:
     valid_events = events[(events > pre_int) & (events < n_timepts - post_int)]
 
-    mat = np.full((int((pre_int + post_int) / dwn), events.shape[0], n_cells), np.nan)
+    mat = np.full(
+        (int((pre_int + post_int) / dwn), events.shape[0], n_cells), np.nan
+    )
 
     for i, s in enumerate(events):
         if valid_events[i]:
@@ -400,7 +403,7 @@ def resample(df_in, resample_sec=0.005, fromzero=True):
 
 
 def polynomial_tail_coefficients(segments, n_max_missing=7, degree=3):
-    """ Fits a polynomial to the bout shape
+    """Fits a polynomial to the bout shape
 
     :param n_max_missing:
     :param degree: the polynomial degree
@@ -431,7 +434,7 @@ def polynomial_tailsum(poly_coefs):
 
 
 def reliability(data_block):
-    """ Function to calculate reliability of cell responses.
+    """Function to calculate reliability of cell responses.
     Reliability is defined as the average of the across-trials correlation.
     This measure seems to generally converge after a number of 7-8 repetitions, so it
     is advisable to have such a repetition number to use it.
@@ -451,7 +454,7 @@ def reliability(data_block):
 
 @jit(nopython=True)
 def fast_pearson(x, y):
-    """ Calculate correlation between two data series, excluding nan values.
+    """Calculate correlation between two data series, excluding nan values.
     :param x: first array
     :param y: second array
     :return: pearson correlation

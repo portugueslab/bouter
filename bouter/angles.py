@@ -3,7 +3,7 @@ from numba import jit
 
 
 def quantize_directions(angles, n_dirs=8):
-    """ Bin angles into wedge bins
+    """Bin angles into wedge bins
 
     Parameters
     ----------
@@ -36,7 +36,7 @@ def angle_mean(angles, axis=1):
     Parameters
     ----------
     angles :
-        
+
     axis :
          (Default value = 1)
 
@@ -55,14 +55,14 @@ def angle_dif(a, b):
     Parameters
     ----------
     a :
-        
+
     b :
-        
+
 
     Returns
     -------
     type
-        
+
 
     """
     return np.minimum(
@@ -88,9 +88,9 @@ def transform_affine(points, tm):
     Parameters
     ----------
     points :
-        
+
     tm :
-        
+
 
     Returns
     -------
@@ -147,7 +147,7 @@ def smooth_tail_angles_series(tail_angles_series):
     tail_angles :
         return:
     tail_angles_series :
-        
+
 
     Returns
     -------

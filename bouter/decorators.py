@@ -19,7 +19,7 @@ def get_method_default_kwargs(method):
 
 
 def cache_results(cache_filename=None):
-    """ Method decorator that caches an .h5 file with the results of the
+    """Method decorator that caches an .h5 file with the results of the
     decorated function. This behavior can be disabled with the exp.cache_active
     flag.
     Function results are loaded if the new call arguments match the old call,

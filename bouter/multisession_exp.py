@@ -7,7 +7,7 @@ from bouter.embedded import EmbeddedExperiment
 
 
 class MultiSessionExperiment(EmbeddedExperiment):
-    """ Class to handle the scenario of multiple stytra sessions within the
+    """Class to handle the scenario of multiple stytra sessions within the
     same experiment - typically, for plane-wise repetitions in 2p imaging.
     """
 
@@ -40,7 +40,7 @@ class MultiSessionExperiment(EmbeddedExperiment):
         ]
 
     def _get_log(self, log_name):
-        """ Given name of the log get it from attributes or load it ex novo
+        """Given name of the log get it from attributes or load it ex novo
         :param log_name:  string with the type ot the log to load
         :return:  loaded log DataFrame
         """
@@ -97,8 +97,7 @@ class MultiSessionExperiment(EmbeddedExperiment):
         return getattr(self, uname)
 
     def session_start_tstamps(self):
-        """ Return timestamps for all the sessions in this folder.
-        """
+        """Return timestamps for all the sessions in this folder."""
         start_tstamps = []
         for exp in self.experiments:
             s = exp["general"]["t_protocol_start"]
@@ -106,10 +105,12 @@ class MultiSessionExperiment(EmbeddedExperiment):
         return start_tstamps
 
     def load_session_log(self, log_name, session_idx):
-        """ Function to load a log for a single session, specified by index-
+        """Function to load a log for a single session, specified by index-
         :param log_name: string specifying the type of log (e.g., "behavior_log"
         :param session_idx: int, index of session to load
         :return:
         """
-        session_log = self.root / str(self.session_id_list[session_idx] + "_" + log_name + ".hdf5")
+        session_log = self.root / str(
+            self.session_id_list[session_idx] + "_" + log_name + ".hdf5"
+        )
         return self._load_log(session_log)

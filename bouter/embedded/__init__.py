@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 
 from bouter import utilities, decorators, bout_stats
@@ -52,7 +51,7 @@ class EmbeddedExperiment(Experiment):
 
     @decorators.cache_results()
     def polynomial_tail_coefficients(self, n_max_missing=7, degree=3):
-        """ Fits a polynomial to the bout shape
+        """Fits a polynomial to the bout shape
 
         :param n_max_missing:
         :param degree: the polynomial degree

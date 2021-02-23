@@ -5,7 +5,6 @@ import pandas as pd
 
 
 class FreelySwimmingExperiment(Experiment):
-
     @property
     def n_tail_segments(self):
         return self["tracking+fish_tracking"]["n_segments"] - 1
@@ -16,7 +15,7 @@ class FreelySwimmingExperiment(Experiment):
 
     @property
     def camera_px_in_mm(self):
-        """ Return camera pixel size in millimeters
+        """Return camera pixel size in millimeters
 
         :param exp:
         :return:
@@ -24,7 +23,8 @@ class FreelySwimmingExperiment(Experiment):
         cal_params = self["stimulus"]["calibration_params"]
         proj_mat = np.array(cal_params["cam_to_proj"])
         return (
-            np.linalg.norm(np.array([1.0, 0.0]) @ proj_mat[:, :2]) * cal_params["mm_px"]
+            np.linalg.norm(np.array([1.0, 0.0]) @ proj_mat[:, :2])
+            * cal_params["mm_px"]
         )
 
     @property
@@ -32,11 +32,15 @@ class FreelySwimmingExperiment(Experiment):
         """Return a nested list of names of columns with tracking data from all tracked segments.
         One list for each fish tracked during the experiment.
         """
-        return [[f"f{i}_theta_{j:02}" for j in range(self.n_tail_segments)] for i in range(self.n_fish)]
-
+        return [
+            [f"f{i}_theta_{j:02}" for j in range(self.n_tail_segments)]
+            for i in range(self.n_fish)
+        ]
 
     def _extract_bout(self, s, e, n_segments, i_fish=0, scale=1.0, dt=None):
-        bout = self._rename_fish(self.behavior_log.iloc[s:e], i_fish, n_segments)
+        bout = self._rename_fish(
+            self.behavior_log.iloc[s:e], i_fish, n_segments
+        )
         # scale to physical coordinates
         if dt is None:
             dt = (bout.t.values[-1] - bout.t.values[0]) / bout.shape[0]
@@ -47,17 +51,15 @@ class FreelySwimmingExperiment(Experiment):
         bout.iloc[:, 2:7:2] /= dt
         return bout
 
-
     def _fish_column_names(self, i_fish, n_segments):
         return [
-                   "f{:d}_x".format(i_fish),
-                   "f{:d}_vx".format(i_fish),
-                   "f{:d}_y".format(i_fish),
-                   "f{:d}_vy".format(i_fish),
-                   "f{:d}_theta".format(i_fish),
-                   "f{:d}_vtheta".format(i_fish),
-               ] + ["f{:d}_theta_{:02d}".format(i_fish, i) for i in range(n_segments)]
-
+            "f{:d}_x".format(i_fish),
+            "f{:d}_vx".format(i_fish),
+            "f{:d}_y".format(i_fish),
+            "f{:d}_vy".format(i_fish),
+            "f{:d}_theta".format(i_fish),
+            "f{:d}_vtheta".format(i_fish),
+        ] + ["f{:d}_theta_{:02d}".format(i_fish, i) for i in range(n_segments)]
 
     def _fish_renames(self, i_fish, n_segments):
         return dict(
@@ -70,17 +72,17 @@ class FreelySwimmingExperiment(Experiment):
                 "f{:d}_vtheta".format(i_fish): "vtheta",
             },
             **{
-                "f{:d}_theta_{:02d}".format(i_fish, i): "theta_{:02d}".format(i)
+                "f{:d}_theta_{:02d}".format(i_fish, i): "theta_{:02d}".format(
+                    i
+                )
                 for i in range(n_segments)
-            }
+            },
         )
-
 
     def _rename_fish(self, df, i_fish, n_segments):
-        return df.filter(["t"] + self._fish_column_names(i_fish, n_segments)).rename(
-            columns=self._fish_renames(i_fish, n_segments)
-        )
-
+        return df.filter(
+            ["t"] + self._fish_column_names(i_fish, n_segments)
+        ).rename(columns=self._fish_renames(i_fish, n_segments))
 
     def compute_velocity(
         self,
@@ -102,11 +104,17 @@ class FreelySwimmingExperiment(Experiment):
         scale = scale or self.camera_px_in_mm
         dt = np.mean(np.diff(df.t[100:200]))
 
-        dfint = df.interpolate("linear", limit=max_interpolate, limit_area="inside")
+        dfint = df.interpolate(
+            "linear", limit=max_interpolate, limit_area="inside"
+        )
 
-        fish_velocities = pd.DataFrame(np.nan,
-                                       index=self.behavior_log.index,
-                                       columns=["vel2_f{}".format(i_fish) for i_fish in range(self.n_fish)])
+        fish_velocities = pd.DataFrame(
+            np.nan,
+            index=self.behavior_log.index,
+            columns=[
+                "vel2_f{}".format(i_fish) for i_fish in range(self.n_fish)
+            ],
+        )
 
         for i_fish in range(self.n_fish):
             if recalculate_vel:
@@ -116,7 +124,8 @@ class FreelySwimmingExperiment(Experiment):
                     ]
 
             vel2 = (
-                dfint["f{}_vx".format(i_fish)] ** 2 + dfint["f{}_vy".format(i_fish)] ** 2
+                dfint["f{}_vx".format(i_fish)] ** 2
+                + dfint["f{}_vy".format(i_fish)] ** 2
             ) * ((scale / dt) ** 2)
 
             if median_vel:
@@ -126,15 +135,9 @@ class FreelySwimmingExperiment(Experiment):
 
         return fish_velocities
 
-
     @decorators.cache_results()
-    def get_bouts(
-        self,
-        scale=None,
-        threshold=1,
-        **kwargs
-    ):
-        """ Extracts all bouts from a freely-swimming tracking experiment
+    def get_bouts(self, scale=None, threshold=1, **kwargs):
+        """Extracts all bouts from a freely-swimming tracking experiment
 
         :param exp: the experiment object
         :param scale: mm per pixel, recalculated by default
@@ -153,7 +156,10 @@ class FreelySwimmingExperiment(Experiment):
 
         for i_fish in range(n_fish):
             vel2 = fish_velocities["vel2_f{}".format(i_fish)]
-            bout_locations, continuity = utilities.extract_segments_above_threshold(
+            (
+                bout_locations,
+                continuity,
+            ) = utilities.extract_segments_above_threshold(
                 vel2.values, threshold=threshold ** 2, **kwargs
             )
             all_bouts_fish = [
@@ -165,10 +171,9 @@ class FreelySwimmingExperiment(Experiment):
 
         return bouts, continuous
 
-
     @decorators.cache_results()
     def get_bout_properties(self, continuity=None):
-        """ Makes a summary of all extracted bouts with basic kinematic parameters and timing.
+        """Makes a summary of all extracted bouts with basic kinematic parameters and timing.
 
         :param continuity:
         :return: a dataframe containing all bouts
@@ -184,7 +189,7 @@ class FreelySwimmingExperiment(Experiment):
             "theta_end",
         ]
 
-        #Extract experiment bouts
+        # Extract experiment bouts
         bouts, _ = self.get_bouts()
 
         # an array is preallocated loop through the bouts
@@ -213,22 +218,28 @@ class FreelySwimmingExperiment(Experiment):
         # fish cross or go outside of the visible region)
         if len(bouts) > 1:
             origin_fish = np.concatenate(
-                [np.full(len(bouts[i]), i, dtype=np.uint8) for i in range(len(bouts))]
+                [
+                    np.full(len(bouts[i]), i, dtype=np.uint8)
+                    for i in range(len(bouts))
+                ]
             )
             bout_data_df.insert(0, "i_fish", origin_fish)
 
         return bout_data_df
-
 
     @decorators.cache_results(cache_filename="behavior_log")
     def reconstruct_missing_segments(self, continue_curvature=None):
 
         for i_fish in range(self.n_fish):
 
-            segments = self.behavior_log.loc[:, self.tail_columns[i_fish]].values.copy()
+            segments = self.behavior_log.loc[
+                :, self.tail_columns[i_fish]
+            ].values.copy()
 
             if "f{}_missing_n".format(i_fish) in self.behavior_log.columns:
-                revert_pts = self.behavior_log["f{}_missing_n".format(i_fish)].values
+                revert_pts = self.behavior_log[
+                    "f{}_missing_n".format(i_fish)
+                ].values
             else:
                 revert_pts = None
 
@@ -238,7 +249,9 @@ class FreelySwimmingExperiment(Experiment):
                     fixed_segments = utilities.revert_segment_filling(
                         segments, revert_pts=revert_pts,
                     )
-                    self.behavior_log.loc[:, self.tail_columns[i_fish]] = fixed_segments
+                    self.behavior_log.loc[
+                        :, self.tail_columns[i_fish]
+                    ] = fixed_segments
 
             # Otherwise, use the parameter to do the filling:
             else:
@@ -247,8 +260,9 @@ class FreelySwimmingExperiment(Experiment):
                     continue_curvature=continue_curvature,
                     revert_pts=revert_pts,
                 )
-                self.behavior_log.loc[:, self.tail_columns[i_fish]] = fixed_segments
+                self.behavior_log.loc[
+                    :, self.tail_columns[i_fish]
+                ] = fixed_segments
                 self.behavior_log["f{}_missing_n".format(i_fish)] = missing_n
 
         return self.behavior_log
-
