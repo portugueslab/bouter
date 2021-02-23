@@ -1,6 +1,16 @@
 import pandas as pd
 
-from bouter import Experiment, bout_stats, decorators, utilities
+from bouter.bout_stats import bout_stats, count_peaks_between
+from bouter.decorators import cache_results
+from bouter.experiment import Experiment
+from bouter.utilities import (
+    bandpass,
+    extract_segments_above_threshold,
+    fill_out_segments,
+    polynomial_tail_coefficients,
+    polynomial_tailsum,
+    revert_segment_filling,
+)
 
 
 class EmbeddedExperiment(Experiment):
@@ -18,7 +28,7 @@ class EmbeddedExperiment(Experiment):
         """
         return [f"theta_{i:02}" for i in range(self.n_tail_segments)]
 
-    @decorators.cache_results(cache_filename="behavior_log")
+    @cache_results(cache_filename="behavior_log")
     def reconstruct_missing_segments(self, continue_curvature=None):
 
         segments = self.behavior_log.loc[:, self.tail_columns].values.copy()
@@ -31,7 +41,7 @@ class EmbeddedExperiment(Experiment):
         # Revert if possible if continue_curvature is None:
         if continue_curvature is None:
             if revert_pts is not None:
-                fixed_segments = utilities.revert_segment_filling(
+                fixed_segments = revert_segment_filling(
                     segments,
                     revert_pts=revert_pts,
                 )
@@ -39,7 +49,7 @@ class EmbeddedExperiment(Experiment):
 
         # Otherwise, use the parameter to do the filling:
         else:
-            fixed_segments, missing_n = utilities.fill_out_segments(
+            fixed_segments, missing_n = fill_out_segments(
                 segments,
                 continue_curvature=continue_curvature,
                 revert_pts=revert_pts,
@@ -49,7 +59,7 @@ class EmbeddedExperiment(Experiment):
 
         return self.behavior_log
 
-    @decorators.cache_results()
+    @cache_results()
     def polynomial_tail_coefficients(self, n_max_missing=7, degree=3):
         """Fits a polynomial to the bout shape
 
@@ -58,18 +68,16 @@ class EmbeddedExperiment(Experiment):
         :return:
         """
         segments = self.behavior_log.loc[:, self.tail_columns].values
-        poly_coefs = utilities.polynomial_tail_coefficients(
+        poly_coefs = polynomial_tail_coefficients(
             segments, n_max_missing=n_max_missing, degree=degree
         )
         return poly_coefs
 
-    @decorators.cache_results()
+    @cache_results()
     def polynomial_tailsum(self):
-        return utilities.polynomial_tailsum(
-            self.polynomial_tail_coefficients()
-        )
+        return polynomial_tailsum(self.polynomial_tail_coefficients())
 
-    @decorators.cache_results(cache_filename="behavior_log")
+    @cache_results(cache_filename="behavior_log")
     def compute_vigor(
         self, vigor_duration_s=0.05, use_polynomial_tailsum=False
     ):
@@ -91,7 +99,7 @@ class EmbeddedExperiment(Experiment):
         )
         return self.behavior_log
 
-    @decorators.cache_results()
+    @cache_results()
     def get_bouts(self, vigor_threshold=0.1):
         """Extract bouts above threshold.
         :param vigor_threshold:
@@ -99,13 +107,13 @@ class EmbeddedExperiment(Experiment):
         """
         # Make sure there's a vigor column:
         self.compute_vigor()
-        bouts, _ = utilities.extract_segments_above_threshold(
+        bouts, _ = extract_segments_above_threshold(
             self.behavior_log["vigor"].values, vigor_threshold
         )
 
         return bouts
 
-    @decorators.cache_results()
+    @cache_results()
     def get_bout_properties(
         self,
         directionality_duration=0.07,
@@ -143,11 +151,11 @@ class EmbeddedExperiment(Experiment):
                 )
             )
 
-        peak_vig, med_vig, bias, bias_tot = bout_stats.bout_stats(
+        peak_vig, med_vig, bias, bias_tot = bout_stats(
             vigor, tail_sum, bouts, bout_init_window_pts
         )
-        n_pos_peaks, n_neg_peaks = bout_stats.count_peaks_between(
-            utilities.bandpass(tail_sum, self.behavior_dt),
+        n_pos_peaks, n_neg_peaks = count_peaks_between(
+            bandpass(tail_sum, self.behavior_dt),
             bouts[:, 0],
             bouts[:, 1],
         )

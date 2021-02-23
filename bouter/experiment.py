@@ -5,7 +5,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from bouter import decorators, descriptors, utilities
+from bouter.decorators import deprecated
+from bouter.descriptors import (
+    CACHE_FILE_TEMPLATE,
+    METADATA_SFX,
+    PARAMS_LOG_SFX,
+)
+from bouter.utilities import log_dt
 
 
 def root_sid_from_path(path, session_id=None):
@@ -28,7 +34,7 @@ def root_sid_from_path(path, session_id=None):
         root = inpath
 
         if session_id is None:
-            pattern = "*" + descriptors.METADATA_SFX
+            pattern = "*" + METADATA_SFX
             meta_files = sorted(list(root.glob(pattern)))
 
             # Load metadata:
@@ -66,9 +72,7 @@ class Experiment(dict):
             path, session_id=session_id
         )
 
-        metadata_file = self.root / (
-            self.session_id + descriptors.METADATA_SFX
-        )
+        metadata_file = self.root / (self.session_id + METADATA_SFX)
 
         with open(str(metadata_file), "r") as f:
             source_metadata = json.load(f)
@@ -93,7 +97,7 @@ class Experiment(dict):
     @property
     def params_filename(self):
         if self.cache_active:
-            return self.root / (self.session_id + descriptors.PARAMS_LOG_SFX)
+            return self.root / (self.session_id + PARAMS_LOG_SFX)
         else:
             raise ValueError("cache_active must be True to log parameters!")
 
@@ -149,7 +153,7 @@ class Experiment(dict):
     @property
     def behavior_dt(self):
         if self._behavior_dt is None:
-            self._behavior_dt = utilities.log_dt(self.behavior_log)
+            self._behavior_dt = log_dt(self.behavior_log)
 
         return self._behavior_dt
 
@@ -286,15 +290,13 @@ class Experiment(dict):
                 shutil.copyfile(f, target_dir / f.name)
 
     def clear_cache(self):
-        for file in self.root.glob(decorators.CACHE_FILE_TEMPLATE.format("*")):
+        for file in self.root.glob(CACHE_FILE_TEMPLATE.format("*")):
             shutil.rmtree(file)
 
     def get_bouts(self):
         raise
 
-    @decorators.deprecated(
-        "Use Experiment.stim_start_times and stim_end_times instead."
-    )
+    @deprecated("Use Experiment.stim_start_times and stim_end_times instead.")
     def stimulus_starts_ends(self):
         """Get start and end time of all stimuli in the log.
         :return: arrays with start and end times for all stimuli
