@@ -1,6 +1,6 @@
-import warnings
 import functools
 import inspect
+import warnings
 from logging import info
 
 import flammkuchen as fl

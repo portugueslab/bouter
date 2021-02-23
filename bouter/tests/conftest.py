@@ -1,7 +1,8 @@
 import tempfile
-import pytest
 from distutils.dir_util import copy_tree
 from pathlib import Path
+
+import pytest
 
 from bouter.tests import ASSETS_PATH
 

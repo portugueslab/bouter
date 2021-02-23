@@ -8,3 +8,4 @@ pytest
 pytest-runner
 pytest-cov
 black
+isort

@@ -1,4 +1,5 @@
 import numpy as np
+
 from bouter.angles import quantize_directions
 
 

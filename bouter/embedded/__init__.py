@@ -1,7 +1,6 @@
 import pandas as pd
 
-from bouter import utilities, decorators, bout_stats
-from bouter import Experiment
+from bouter import Experiment, bout_stats, decorators, utilities
 
 
 class EmbeddedExperiment(Experiment):

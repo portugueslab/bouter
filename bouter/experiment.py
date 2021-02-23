@@ -1,12 +1,11 @@
+import json
+import shutil
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
-import shutil
-import json
 
-from bouter import decorators
-from bouter import utilities
-from bouter import descriptors
+from bouter import decorators, descriptors, utilities
 
 
 def root_sid_from_path(path, session_id=None):

@@ -1,7 +1,7 @@
-from bouter import Experiment
-from bouter import utilities, decorators
 import numpy as np
 import pandas as pd
+
+from bouter import Experiment, decorators, utilities
 
 
 class FreelySwimmingExperiment(Experiment):

@@ -1,10 +1,8 @@
+import flammkuchen as fl
 import numpy as np
 from numpy.testing import assert_array_almost_equal
-import flammkuchen as fl
 
-from bouter import embedded
-from bouter import utilities
-
+from bouter import embedded, utilities
 from bouter.tests import ASSETS_PATH
 
 

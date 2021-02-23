@@ -1,4 +1,5 @@
 import numpy as np
+
 from bouter.utilities import (
     extract_segments_above_threshold,
     fill_out_segments,

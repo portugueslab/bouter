@@ -1,9 +1,10 @@
+import flammkuchen as fl
+import numpy as np
 from numpy.testing import assert_array_equal
 from pandas.testing import assert_frame_equal
-import flammkuchen as fl
-from bouter.tests import ASSETS_PATH
-import numpy as np
+
 from bouter import free
+from bouter.tests import ASSETS_PATH
 
 
 def corrupt_tail_matrix(tail_matrix, prop_missing=0.2, std=3):

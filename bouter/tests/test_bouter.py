@@ -1,7 +1,5 @@
-import pytest
-
-
 import numpy as np
+import pytest
 
 import bouter as bt
 

@@ -1,10 +1,11 @@
-import numpy as np
-from numba import jit
-from typing import Tuple
-from scipy import signal, linalg
-from itertools import product
-import pandas as pd
 import math
+from itertools import product
+from typing import Tuple
+
+import numpy as np
+import pandas as pd
+from numba import jit
+from scipy import linalg, signal
 
 
 def merge_bouts(bouts, min_dist):
