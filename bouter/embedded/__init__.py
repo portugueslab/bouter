@@ -118,7 +118,7 @@ class EmbeddedExperiment(Experiment):
         self,
         directionality_duration=0.07,
         use_polynomial_tailsum=False,
-        **kwargs
+        **kwargs,
     ):
         """Create dataframe with summary of bouts properties.
         :param directionality_duration: Window defining initial part of
