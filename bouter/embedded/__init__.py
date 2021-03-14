@@ -79,7 +79,7 @@ class EmbeddedExperiment(Experiment):
 
     @cache_results(cache_filename="behavior_log")
     def compute_vigor(
-        self, vigor_duration_s=0.05, use_polynomial_tailsum=False
+        self, vigor_duration_s=0.05, use_polynomial_tailsum=False, **kwargs
     ):
         """Compute vigor, the proxy of embedded fish forward velocity,
         a standard deviation calculated on a rolling window of tail curvature.
@@ -100,7 +100,7 @@ class EmbeddedExperiment(Experiment):
         return self.behavior_log
 
     @cache_results()
-    def get_bouts(self, vigor_threshold=0.1):
+    def get_bouts(self, vigor_threshold=0.1, **kwargs):
         """Extract bouts above threshold.
         :param vigor_threshold:
         :return:
@@ -118,6 +118,7 @@ class EmbeddedExperiment(Experiment):
         self,
         directionality_duration=0.07,
         use_polynomial_tailsum=False,
+        **kwargs
     ):
         """Create dataframe with summary of bouts properties.
         :param directionality_duration: Window defining initial part of
@@ -133,9 +134,9 @@ class EmbeddedExperiment(Experiment):
             else self.behavior_log["tail_sum"].values
         )
         vigor = self.compute_vigor(
-            use_polynomial_tailsum=use_polynomial_tailsum
-        ).values
-        bouts = self.get_bouts()
+            use_polynomial_tailsum=use_polynomial_tailsum, **kwargs
+        )["vigor"].values
+        bouts = self.get_bouts(**kwargs)
 
         if bouts.shape[0] == 0:
             return pd.DataFrame(
