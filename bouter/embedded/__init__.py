@@ -56,6 +56,9 @@ class EmbeddedExperiment(Experiment):
             )
             self.behavior_log.loc[:, self.tail_columns] = fixed_segments
             self.behavior_log["missing_n"] = missing_n
+            recalculated_tail_sum = self.behavior_log.loc[:, self.tail_columns[-2:]].sum(1) - \
+                                    self.behavior_log.loc[:, self.tail_columns[:2]].sum(1)
+            self.behavior_log.loc[:, "tail_sum"] = recalculated_tail_sum
 
         return self.behavior_log
 
