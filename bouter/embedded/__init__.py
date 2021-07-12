@@ -117,17 +117,21 @@ class EmbeddedExperiment(Experiment):
     def get_bout_properties(
         self,
         directionality_duration=0.07,
+        theta_offset_duration=0.1,
         use_polynomial_tailsum=False,
         **kwargs,
     ):
         """Create dataframe with summary of bouts properties.
         :param directionality_duration: Window defining initial part of
             the bout for the turning angle calculation, in seconds.
+        :param theta_offset_duration: Window before bout start to compute baseline
+            theta sum to subtract in the turning angle calculation, in seconds.
         :param use_polynomial_tailsum: If the polynomial tail sum is to be used
             instead of the raw one created by Stytra
         :return: a dataframe giving properties for each bout
         """
         bout_init_window_pts = int(directionality_duration / self.behavior_dt)
+        th_offset_window_pts = int(theta_offset_duration / self.behavior_dt)
         tail_sum = (
             self.polynomial_tailsum()
             if use_polynomial_tailsum
@@ -153,7 +157,8 @@ class EmbeddedExperiment(Experiment):
             )
 
         peak_vig, med_vig, bias, bias_tot = bout_stats(
-            vigor, tail_sum, bouts, bout_init_window_pts
+            vigor, tail_sum, bouts, bout_init_window_pts,
+            th_offset_window_pts
         )
         n_pos_peaks, n_neg_peaks = count_peaks_between(
             bandpass(tail_sum, self.behavior_dt),

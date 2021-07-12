@@ -3,7 +3,7 @@ from numba import jit
 
 
 @jit(nopython=True)
-def bout_stats(vigor, tail_sum, bouts, wnd_turn_pts):
+def bout_stats(vigor, tail_sum, bouts, wnd_turn_pts, th_offset_window_pts):
     """
     Compute statistics of bouts from vigor trace, tail sum,
     and bouts indexes.
@@ -19,8 +19,10 @@ def bout_stats(vigor, tail_sum, bouts, wnd_turn_pts):
 
         peak_vig[i] = np.nanmax(vigor[s:e])
         med_vig[i] = np.nanmedian(vigor[s:e])
-        bias[i] = np.nanmean(tail_sum[s : s + wnd_turn_pts])
-        bias_tot[i] = np.nanmean(tail_sum[s:e])
+
+        theta_offset = np.nanmean(tail_sum[s - th_offset_window_pts: s])
+        bias[i] = np.nanmean(tail_sum[s: s + wnd_turn_pts]) - theta_offset
+        bias_tot[i] = np.nanmean(tail_sum[s:e]) - theta_offset
 
     return peak_vig, med_vig, bias, bias_tot
 
