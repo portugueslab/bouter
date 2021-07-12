@@ -92,7 +92,7 @@ class FreelySwimmingExperiment(Experiment):
         median_vel=False,
         window_size=7,
     ):
-        """Compute the squared total swimming velocity for each fish.
+        """Compute the total swimming velocity for each fish.
         Add them as new columns to the dataframe log and return the complete dataframe.
 
         :param max_interpolate: number of points to interpolate if surrounded by NaNs in tracking
@@ -112,7 +112,7 @@ class FreelySwimmingExperiment(Experiment):
             np.nan,
             index=self.behavior_log.index,
             columns=[
-                "vel2_f{}".format(i_fish) for i_fish in range(self.n_fish)
+                "vel_f{}".format(i_fish) for i_fish in range(self.n_fish)
             ],
         )
 
@@ -131,7 +131,7 @@ class FreelySwimmingExperiment(Experiment):
             if median_vel:
                 vel2 = vel2.rolling(window=window_size, min_periods=1).median()
 
-            fish_velocities["vel2_f{}".format(i_fish)] = vel2
+            fish_velocities["vel_f{}".format(i_fish)] = np.sqrt(vel2)
 
         return fish_velocities
 
