@@ -149,7 +149,7 @@ class FreelySwimmingExperiment(Experiment):
         n_segments = self.n_tail_segments
         scale = scale or self.camera_px_in_mm
 
-        fish_velocities = self.compute_velocity()
+        fish_velocities = self.compute_velocity(scale=scale)
 
         bouts = []
         continuous = []
