@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-from bouter.bout_stats import bout_stats, count_peaks_between
+from bouter.bout_stats import bout_stats, count_peaks_between, compute_tbf
 from bouter.decorators import cache_results
 from bouter.experiment import Experiment
 from bouter.utilities import (
@@ -205,3 +205,31 @@ class EmbeddedExperiment(Experiment):
                 n_neg_peaks=n_neg_peaks,
             )
         )
+
+    @cache_results()
+    def get_bout_tbf(
+        self,
+        use_polynomial_tailsum=False,
+        **kwargs,
+    ):
+        """Estimate the instantaneous tail-beat frequency for each detected bout
+        from the half-period of the tail oscillation.
+
+        :param use_polynomial_tailsum: If the polynomial tail sum is to be used
+            instead of the raw one created by Stytra.
+        :return: a list of arrays, one for each bout detected.
+        """
+
+        tail_sum = self.reconstruct_missing_segments()["tail_sum"].values
+        bouts = self.get_bouts(**kwargs)
+
+        if bouts.shape[0] == 0:
+            return []
+
+        tbf = compute_tbf(tail_sum,
+                          bouts[:, 0],
+                          bouts[:, 1],
+                          self.behavior_dt
+                          )
+
+        return tbf
