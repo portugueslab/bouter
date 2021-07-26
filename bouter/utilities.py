@@ -495,3 +495,37 @@ def fast_corrcoef(mat):
             corrmat[j, i] = corrmat[i, j]
 
     return corrmat
+
+@jit(nopython=True)
+def compute_tbf(tail_sum, dt):
+    """Estimate the instantaneous tail-beat frequency from the half-period of the tail oscillation.
+
+    :return: array with the tail-beat frequency.
+    """
+
+    min_idxs = []
+    max_idxs = []
+
+    for i in range(1, tail_sum.shape[0] - 1):
+        if tail_sum[i - 1] < tail_sum[i] > tail_sum[i + 1]:
+            max_idxs.append(i)
+        elif tail_sum[i - 1] > tail_sum[i] < tail_sum[i + 1]:
+            min_idxs.append(i)
+
+    extrema = np.sort(np.concatenate((np.array(min_idxs), np.array(max_idxs))))
+
+    idxs = np.arange(tail_sum.shape[0])
+    valid_idxs = idxs[np.logical_and(idxs >= min(extrema), idxs < max(extrema))]
+
+    time_diffs = np.array([x - extrema[i - 1] for i, x in enumerate(extrema)][1:]) * dt
+
+    binned_tps = np.digitize(valid_idxs, extrema) - 1
+
+    instant_time_diff = np.array([time_diffs[i] for i in binned_tps])
+
+    tbf = (1 / instant_time_diff) / 2
+
+    tbf_output = np.full(idxs.shape[0], np.nan)
+    tbf_output[valid_idxs[0]:valid_idxs[-1] + 1] = tbf
+
+    return tbf_output
