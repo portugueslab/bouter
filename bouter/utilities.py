@@ -220,7 +220,7 @@ def predictive_tail_fill(
     fit_timepts=5,
     fit_tailpts=4,
 ):
-    thetas -= np.median(thetas[:, 0])
+    thetas -= np.nanmedian(thetas[:, 0])
 
     n_pts = thetas.shape[0]
     n_seg = thetas.shape[1]
@@ -497,11 +497,17 @@ def fast_corrcoef(mat):
     return corrmat
 
 @jit(nopython=True)
-def compute_tbf(tail_sum, dt):
+def compute_tbf(tail_sum, dt, min_valid_tps=5):
     """Estimate the instantaneous tail-beat frequency from the half-period of the tail oscillation.
 
+    :param tail_sum: array of tracked tail angles
+    :param dt: dt of the behavior array
+    :param min_valid_tps: minimum array of valid timepoints within a bout to use in the TBF calculation
     :return: array with the tail-beat frequency.
     """
+
+    idxs = np.arange(tail_sum.shape[0])
+    tbf_output = np.full(idxs.shape[0], np.nan)
 
     min_idxs = []
     max_idxs = []
@@ -512,20 +518,21 @@ def compute_tbf(tail_sum, dt):
         elif tail_sum[i - 1] > tail_sum[i] < tail_sum[i + 1]:
             min_idxs.append(i)
 
-    extrema = np.sort(np.concatenate((np.array(min_idxs), np.array(max_idxs))))
+    if len(min_idxs) == 0 or len(max_idxs) == 0:
+        pass
 
-    idxs = np.arange(tail_sum.shape[0])
-    valid_idxs = idxs[np.logical_and(idxs >= min(extrema), idxs < max(extrema))]
+    else:
+        extrema = np.sort(np.concatenate((np.array(min_idxs), np.array(max_idxs))))
+        valid_idxs = idxs[np.logical_and(idxs >= min(extrema), idxs < max(extrema))]
 
-    time_diffs = np.array([x - extrema[i - 1] for i, x in enumerate(extrema)][1:]) * dt
+        if len(valid_idxs) > min_valid_tps:
+            time_diffs = np.array([x - extrema[i - 1] for i, x in enumerate(extrema)][1:]) * dt
+            binned_tps = np.digitize(valid_idxs, extrema) - 1
+            instant_time_diff = np.array([time_diffs[i] for i in binned_tps])
+            tbf = (1 / instant_time_diff) / 2
+            tbf_output[valid_idxs[0]:valid_idxs[-1] + 1] = tbf
 
-    binned_tps = np.digitize(valid_idxs, extrema) - 1
-
-    instant_time_diff = np.array([time_diffs[i] for i in binned_tps])
-
-    tbf = (1 / instant_time_diff) / 2
-
-    tbf_output = np.full(idxs.shape[0], np.nan)
-    tbf_output[valid_idxs[0]:valid_idxs[-1] + 1] = tbf
+        else:
+            pass
 
     return tbf_output
