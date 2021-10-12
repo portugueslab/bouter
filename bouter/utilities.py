@@ -507,7 +507,7 @@ def compute_tbf(tail_sum, dt, min_valid_tps=5):
     """
 
     idxs = np.arange(tail_sum.shape[0])
-    tbf_output = np.full(idxs.shape[0], np.nan)
+    tbf_output = np.full(idxs.shape[0], 0)
 
     min_idxs = []
     max_idxs = []

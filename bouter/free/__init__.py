@@ -131,7 +131,7 @@ class FreelySwimmingExperiment(Experiment):
             if median_vel:
                 vel2 = vel2.rolling(window=window_size, min_periods=1).median()
 
-            fish_velocities["vel2_f{}".format(i_fish)] = np.sqrt(vel2)
+            fish_velocities["vel_f{}".format(i_fish)] = np.sqrt(vel2)
 
         return fish_velocities
 
@@ -155,7 +155,7 @@ class FreelySwimmingExperiment(Experiment):
         continuous = []
 
         for i_fish in range(n_fish):
-            vel2 = fish_velocities["vel2_f{}".format(i_fish)]
+            vel2 = fish_velocities["vel_f{}".format(i_fish)]
             (
                 bout_locations,
                 continuity,
