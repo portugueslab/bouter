@@ -1,5 +1,5 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 from bouter.bout_stats import bout_stats, count_peaks_between
 from bouter.decorators import cache_results
@@ -10,8 +10,8 @@ from bouter.utilities import (
     fill_out_segments,
     polynomial_tail_coefficients,
     polynomial_tailsum,
-    revert_segment_filling,
     predictive_tail_fill,
+    revert_segment_filling,
 )
 
 
