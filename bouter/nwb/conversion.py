@@ -1,14 +1,14 @@
-import numpy as np
-
-from functools import singledispatch
 from datetime import datetime
+from functools import singledispatch
 from pathlib import Path
 
-from bouter import Experiment
-from bouter.free import FreelySwimmingExperiment
-from bouter.embedded import EmbeddedExperiment
-from pynwb import NWBFile, NWBHDF5IO
+import numpy as np
+from pynwb import NWBFile, NWBHDF5IO, TimeSeries
 from pynwb.misc import AbstractFeatureSeries
+
+from bouter import Experiment
+from bouter.embedded import EmbeddedExperiment
+from bouter.free import FreelySwimmingExperiment
 
 
 def _save_stimulus(exp: Experiment, nwbfile: NWBFile):
@@ -58,7 +58,9 @@ def _(exp: FreelySwimmingExperiment, nwbfile: NWBFile):
 
 @_save_behavior.register
 def _(exp: EmbeddedExperiment, nwbfile: NWBFile):
-    raise NotImplementedError("Freely-swimming experiment serialization not yet implemented")
+    tail_shapes = TimeSeries("tail_shape", timestamps=exp.behavior_log.t.values,
+                             data=exp.behavior_log.loc[:, exp.tail_columns].values, unit="radians")
+    nwbfile.add_acquisition(tail_shapes)
 
 
 def experiment_to_nwb(exp: Experiment, nwb_path: Path):
