@@ -15,7 +15,9 @@ def create_assets():
     bouts, continuity = experiment.get_bouts()
     velocities_df = experiment.compute_velocity()
 
-    velocities = velocities_df[["vel_f{}".format(i_fish) for i_fish in range(experiment.n_fish)]]
+    velocities = velocities_df[
+        ["vel_f{}".format(i_fish) for i_fish in range(experiment.n_fish)]
+    ]
 
     bouts_summary = experiment.get_bout_properties()
 

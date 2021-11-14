@@ -42,13 +42,19 @@ def test_tail_fixing_experiment(freely_swimming_exp_path):
     for i_fish in range(experiment.n_fish):
 
         # Load original dataframe:
-        original_fish_mat = experiment.behavior_log.loc[:, experiment.tail_columns[i_fish]].values.copy()
+        original_fish_mat = experiment.behavior_log.loc[
+            :, experiment.tail_columns[i_fish]
+        ].values.copy()
         original_mats.append(original_fish_mat)
 
         # Nan random points and substitute experiment data, in place:
-        corrupted_fish_mat = corrupt_tail_matrix(original_fish_mat, prop_missing=0.3, std=1)
+        corrupted_fish_mat = corrupt_tail_matrix(
+            original_fish_mat, prop_missing=0.3, std=1
+        )
         corrupted_mats.append(corrupted_fish_mat)
-        experiment.behavior_log.loc[:, experiment.tail_columns[i_fish]] = corrupted_fish_mat
+        experiment.behavior_log.loc[
+            :, experiment.tail_columns[i_fish]
+        ] = corrupted_fish_mat
 
     # Fix the experiment behavior_log, in place
     experiment.reconstruct_missing_segments(continue_curvature=4)
@@ -58,7 +64,10 @@ def test_tail_fixing_experiment(freely_swimming_exp_path):
 
         fixed_pts = np.isnan(corrupted_mats[i_fish])
         diff_mat = np.abs(
-            original_mats[i_fish] - experiment.behavior_log.loc[:, experiment.tail_columns[i_fish]].values
+            original_mats[i_fish]
+            - experiment.behavior_log.loc[
+                :, experiment.tail_columns[i_fish]
+            ].values
         )
 
         assert np.median(diff_mat[fixed_pts]) < 0.1
@@ -71,11 +80,17 @@ def test_tail_fixing_revert(freely_swimming_exp_path):
     for i_fish in range(experiment.n_fish):
 
         # Load original dataframe:
-        original_fish_mat = experiment.behavior_log.loc[:, experiment.tail_columns[i_fish]].values.copy()
+        original_fish_mat = experiment.behavior_log.loc[
+            :, experiment.tail_columns[i_fish]
+        ].values.copy()
 
         # Nan random points and substitute experiment data, in place:
-        corrupted_fish_mat = corrupt_tail_matrix(original_fish_mat, prop_missing=0.3, std=1)
-        experiment.behavior_log.loc[:, experiment.tail_columns[i_fish]] = corrupted_fish_mat
+        corrupted_fish_mat = corrupt_tail_matrix(
+            original_fish_mat, prop_missing=0.3, std=1
+        )
+        experiment.behavior_log.loc[
+            :, experiment.tail_columns[i_fish]
+        ] = corrupted_fish_mat
 
     corrupted_behavior_log = experiment.behavior_log
 
@@ -91,7 +106,9 @@ def test_tail_fixing_revert(freely_swimming_exp_path):
 def test_compute_velocity(freely_swimming_exp_path):
     experiment = free.FreelySwimmingExperiment(freely_swimming_exp_path)
     velocities_df = experiment.compute_velocity()
-    fish_vels = velocities_df[["vel_f{}".format(i_fish) for i_fish in range(experiment.n_fish)]]
+    fish_vels = velocities_df[
+        ["vel_f{}".format(i_fish) for i_fish in range(experiment.n_fish)]
+    ]
 
     # Load computed velocities
     loaded_vel = fl.load(
