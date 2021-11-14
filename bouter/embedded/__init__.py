@@ -11,7 +11,7 @@ from bouter.utilities import (
     polynomial_tail_coefficients,
     polynomial_tailsum,
     revert_segment_filling,
-    predictive_tail_fill
+    predictive_tail_fill,
 )
 
 
@@ -58,28 +58,38 @@ class EmbeddedExperiment(Experiment):
             )
             self.behavior_log.loc[:, self.tail_columns] = fixed_segments
             self.behavior_log["missing_n"] = missing_n
-            recalculated_tail_sum = self.behavior_log.loc[:, self.tail_columns[-2:]].sum(1) - \
-                                    self.behavior_log.loc[:, self.tail_columns[:2]].sum(1)
+            recalculated_tail_sum = self.behavior_log.loc[
+                :, self.tail_columns[-2:]
+            ].sum(1) - self.behavior_log.loc[:, self.tail_columns[:2]].sum(1)
             self.behavior_log.loc[:, "tail_sum"] = recalculated_tail_sum
 
         return self.behavior_log
 
     @cache_results(cache_filename="behavior_log")
-    def predict_missing_segments(self,
-                                 smooth_wnd=1,
-                                 max_taildiff=np.pi / 2,
-                                 start_from=4,
-                                 fit_timepts=5,
-                                 fit_tailpts=4,
-):
+    def predict_missing_segments(
+        self,
+        smooth_wnd=1,
+        max_taildiff=np.pi / 2,
+        start_from=4,
+        fit_timepts=5,
+        fit_tailpts=4,
+    ):
 
         segments = self.behavior_log.loc[:, self.tail_columns].values.copy()
 
-        fixed_segments = predictive_tail_fill(segments, smooth_wnd, max_taildiff, start_from, fit_timepts, fit_tailpts)
+        fixed_segments = predictive_tail_fill(
+            segments,
+            smooth_wnd,
+            max_taildiff,
+            start_from,
+            fit_timepts,
+            fit_tailpts,
+        )
 
         self.behavior_log.loc[:, self.tail_columns] = fixed_segments
-        recalculated_tail_sum = self.behavior_log.loc[:, self.tail_columns[-2:]].sum(1) - \
-                                self.behavior_log.loc[:, self.tail_columns[:2]].sum(1)
+        recalculated_tail_sum = self.behavior_log.loc[
+            :, self.tail_columns[-2:]
+        ].sum(1) - self.behavior_log.loc[:, self.tail_columns[:2]].sum(1)
         self.behavior_log.loc[:, "tail_sum"] = recalculated_tail_sum
 
         return self.behavior_log
@@ -182,8 +192,7 @@ class EmbeddedExperiment(Experiment):
             )
 
         peak_vig, med_vig, bias, bias_tot = bout_stats(
-            vigor, tail_sum, bouts, bout_init_window_pts,
-            th_offset_window_pts
+            vigor, tail_sum, bouts, bout_init_window_pts, th_offset_window_pts
         )
         n_pos_peaks, n_neg_peaks = count_peaks_between(
             bandpass(tail_sum, self.behavior_dt),

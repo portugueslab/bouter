@@ -20,8 +20,8 @@ def bout_stats(vigor, tail_sum, bouts, wnd_turn_pts, th_offset_window_pts):
         peak_vig[i] = np.nanmax(vigor[s:e])
         med_vig[i] = np.nanmedian(vigor[s:e])
 
-        theta_offset = np.nanmean(tail_sum[s - th_offset_window_pts: s])
-        bias[i] = np.nanmean(tail_sum[s: s + wnd_turn_pts]) - theta_offset
+        theta_offset = np.nanmean(tail_sum[s - th_offset_window_pts : s])
+        bias[i] = np.nanmean(tail_sum[s : s + wnd_turn_pts]) - theta_offset
         bias_tot[i] = np.nanmean(tail_sum[s:e]) - theta_offset
 
     return peak_vig, med_vig, bias, bias_tot
