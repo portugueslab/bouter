@@ -9,8 +9,8 @@ import pynwb.file
 from pynwb import NWBFile, NWBHDF5IO
 from pynwb.misc import AbstractFeatureSeries
 
-from bouter import Experiment
 from bouter import df_utilities
+from bouter import Experiment
 from bouter.embedded import EmbeddedExperiment
 from bouter.free import FreelySwimmingExperiment
 
