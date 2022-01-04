@@ -172,7 +172,7 @@ class FreelySwimmingExperiment(Experiment):
         return bouts, continuous
 
     @decorators.cache_results()
-    def get_bout_properties(self, continuity=None):
+    def get_bout_properties(self, continuity=None, **kwargs):
         """Makes a summary of all extracted bouts with basic kinematic parameters and timing.
 
         :param continuity:
@@ -190,7 +190,7 @@ class FreelySwimmingExperiment(Experiment):
         ]
 
         # Extract experiment bouts
-        bouts, _ = self.get_bouts()
+        bouts, _ = self.get_bouts(**kwargs)
 
         # an array is preallocated loop through the bouts
         bout_data = np.empty(
