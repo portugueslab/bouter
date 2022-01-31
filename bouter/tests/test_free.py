@@ -107,39 +107,41 @@ def test_compute_velocity(freely_swimming_exp_path):
     experiment = free.FreelySwimmingExperiment(freely_swimming_exp_path)
     velocities_df = experiment.compute_velocity()
     fish_vels = velocities_df[
-        ["vel2_f{}".format(i_fish) for i_fish in range(experiment.n_fish)]
+        ["vel_f{}".format(i_fish) for i_fish in range(experiment.n_fish)]
     ]
 
     # Load computed velocities
-    loaded_vel2 = fl.load(
+    loaded_vel = fl.load(
         ASSETS_PATH / "freely_swimming_dataset" / "test_extracted_bouts.h5",
         "/velocities",
     )
 
     # Compare DataFrame with velocities from the 3 experiment fish
-    assert_frame_equal(fish_vels, loaded_vel2)
+    assert_frame_equal(fish_vels, loaded_vel)
 
 
 def test_bout_extraction(freely_swimming_exp_path):
     experiment = free.FreelySwimmingExperiment(freely_swimming_exp_path)
-    bouts, cont = experiment.get_bouts()
+    bouts, continuities = experiment.get_bouts()
 
     # Load expected bouts to be extracted. Only first fish is used for the assertion
     loaded_bouts = fl.load(
         ASSETS_PATH / "freely_swimming_dataset" / "test_extracted_bouts.h5",
         "/bouts",
     )
-    loaded_cont = fl.load(
+    loaded_continuities = fl.load(
         ASSETS_PATH / "freely_swimming_dataset" / "test_extracted_bouts.h5",
         "/continuity",
     )
 
     # Compare dataframes for each of the detected bouts in the first fish
-    for bout in range(len(bouts[0])):
-        assert_frame_equal(bouts[0][bout], loaded_bouts[bout])
+    for fish_bouts, fish_bouts_loaded in zip(bouts, loaded_bouts):
+        for bouts, loaded_bouts in zip(fish_bouts, fish_bouts_loaded):
+            assert_frame_equal(bouts, loaded_bouts)
 
     # Compare also continuity array
-    assert_array_equal(cont[0], loaded_cont)
+    for cont, loaded_cont in zip(continuities, loaded_continuities):
+        assert_array_equal(cont, loaded_cont)
 
 
 def test_bout_summary(freely_swimming_exp_path):

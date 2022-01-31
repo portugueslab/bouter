@@ -103,7 +103,7 @@ def transform_affine(points, tm):
 
 
 def rot_mat(theta):
-    """The rotation matrix for an angle theta """
+    """The rotation matrix for an angle theta"""
     return np.array(
         [[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]]
     )
