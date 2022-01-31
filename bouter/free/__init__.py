@@ -160,7 +160,7 @@ class FreelySwimmingExperiment(Experiment):
                 bout_locations,
                 continuity,
             ) = utilities.extract_segments_above_threshold(
-                vel2.values, threshold=threshold ** 2, **kwargs
+                vel2.values, threshold=threshold**2, **kwargs
             )
             all_bouts_fish = [
                 self._extract_bout(s, e, n_segments, i_fish, scale)
