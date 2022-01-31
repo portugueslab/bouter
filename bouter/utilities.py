@@ -304,16 +304,21 @@ def bandpass(timeseries, dt, f_min=12, f_max=62, n_taps=9, axis=0):
     return signal.filtfilt(cfilt, 1, timeseries, axis=axis)
 
 
-def crop(traces, events, **kwargs):
+def crop(traces, events, pre_int=20, post_int=30, **kwargs):
     """Apply cropping functions defined below depending on the dimensionality
     of the input (one cell or multiple cells). If input is pandas Series
     or DataFrame, it strips out the values first.
     :param traces: 1 (n_timepoints) or 2D (n_timepoints X n_cells) array,
                    pd.Series or pd.DataFrame with cells as columns.
-    :param args: see _crop_trace and _crop_block args
-    :param kwargs: see _crop_trace and _crop_block args
+    :param events: events around which to crop
+    :param pre_int: interval to crop before the event, in points
+    :param post_int: interval to crop after the event, in points
+    :param dwn: downsampling (default=1 i.e. no downsampling)
+    :return: events x n_points numpy array
     :return:
     """
+    pre_int, post_int = int(pre_int), int(post_int)
+    kwargs.update(dict(pre_int=pre_int, post_int=post_int))
     if isinstance(traces, pd.DataFrame) or isinstance(traces, pd.Series):
         traces = traces.values
     if isinstance(events, pd.DataFrame) or isinstance(events, pd.Series):
