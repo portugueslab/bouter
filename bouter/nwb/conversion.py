@@ -9,6 +9,8 @@ import pynwb.file
 from pynwb import NWBHDF5IO, NWBFile
 from pynwb.misc import AbstractFeatureSeries
 
+from ndx_zebrafish import ZebrafishBehavior
+
 from bouter import Experiment, df_utilities
 from bouter.embedded import EmbeddedExperiment
 from bouter.free import FreelySwimmingExperiment
@@ -109,6 +111,7 @@ def _(exp: FreelySwimmingExperiment, nwbfile: NWBFile):
         fish_data = exp._rename_fish(
             exp.behavior_log, i_fish, exp.n_tail_segments
         )
+
         tail_direction = pynwb.behavior.SpatialSeries(
             "fish_direction",
             fish_data.loc[:, "theta"].values,
@@ -131,21 +134,32 @@ def _(exp: FreelySwimmingExperiment, nwbfile: NWBFile):
             unit="mm",
             reference_frame=REFERENCE_FRAME_DESCRIPTION,
         )
-        per_fish_data = pynwb.behavior.Position(
-            [position, tail_direction, tail_shape], name=f"fish_{i_fish}"
+
+        behavior_storage = ZebrafishBehavior(
+            name=f"fish_{i_fish}_behavior",
+            fish_id=i_fish,
+            position=position,
+            orientation=tail_direction,
+            tail_shape=tail_shape,
         )
-        nwbfile.add_acquisition(per_fish_data)
+
+        nwbfile.add_acquisition(behavior_storage)
 
 
 @_save_behavior.register
 def _(exp: EmbeddedExperiment, nwbfile: NWBFile):
-    tail_shapes = pynwb.behavior.SpatialSeries(
-        "tail_shape",
-        timestamps=exp.behavior_log.t.values,
-        data=exp.behavior_log.loc[:, exp.tail_columns].values,
-        unit="radians",
-        reference_frame=TAIL_SHAPE_REFERENCE_FRAME_DESCRIPTION,
+    tail_shapes = ZebrafishBehavior(
+        name=f"embedded_behavior",
+        fish_id=0,
+        tail_shape=pynwb.behavior.SpatialSeries(
+            "tail_shape",
+            timestamps=exp.behavior_log.t.values,
+            data=exp.behavior_log.loc[:, exp.tail_columns].values,
+            unit="radians",
+            reference_frame=TAIL_SHAPE_REFERENCE_FRAME_DESCRIPTION,
+        ),
     )
+
     nwbfile.add_acquisition(tail_shapes)
 
 
