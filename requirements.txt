@@ -3,3 +3,4 @@ pandas
 numba
 flammkuchen
 pynwb
+ndx-zebrafish
