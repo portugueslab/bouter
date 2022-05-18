@@ -6,10 +6,9 @@ from pathlib import Path
 
 import numpy as np
 import pynwb.file
+from ndx_zebrafish import ZebrafishBehavior
 from pynwb import NWBHDF5IO, NWBFile
 from pynwb.misc import AbstractFeatureSeries
-
-from ndx_zebrafish import ZebrafishBehavior
 
 from bouter import Experiment, df_utilities
 from bouter.embedded import EmbeddedExperiment
@@ -149,7 +148,7 @@ def _(exp: FreelySwimmingExperiment, nwbfile: NWBFile):
 @_save_behavior.register
 def _(exp: EmbeddedExperiment, nwbfile: NWBFile):
     tail_shapes = ZebrafishBehavior(
-        name=f"embedded_behavior",
+        name="embedded_behavior",
         fish_id=0,
         tail_shape=pynwb.behavior.SpatialSeries(
             "tail_shape",
