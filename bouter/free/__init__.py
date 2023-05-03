@@ -136,12 +136,13 @@ class FreelySwimmingExperiment(Experiment):
         return fish_velocities
 
     @decorators.cache_results()
-    def get_bouts(self, scale=None, threshold=1, **kwargs):
+    def get_bouts(self, scale=None, threshold=1, conv_detection=False, **kwargs):
         """Extracts all bouts from a freely-swimming tracking experiment
 
         :param exp: the experiment object
         :param scale: mm per pixel, recalculated by default
-        :param threshold: velocity threshold in mm/s
+        :param threshold: velocity threshold in mm/s or score threshold if conv_detection=True
+        :param conv_detection: whether to use an alternative detection algorithm using convolution.
         :return: tuple: (list of single bout dataframes, list of boolean arrays marking if the
          bout i follows bout i-1)
         """
@@ -156,12 +157,23 @@ class FreelySwimmingExperiment(Experiment):
 
         for i_fish in range(n_fish):
             vel2 = fish_velocities["vel_f{}".format(i_fish)]
-            (
-                bout_locations,
-                continuity,
-            ) = utilities.extract_segments_above_threshold(
-                vel2.values, threshold=threshold**2, **kwargs
-            )
+            if not conv_detection:
+                (
+                    bout_locations,
+                    continuity,
+                ) = utilities.extract_segments_above_threshold(
+                    vel2.values, threshold=threshold**2, **kwargs
+                )
+            else:
+                score = utilities.calc_bout_score(vel2.values)
+                bout_times = utilities.get_bout_times(
+                    score, min_peak_value=threshold, **kwargs
+                )
+
+                # For compatability.
+                bout_locations = np.array(bout_times)
+                bout_locations = bout_locations[:, [0, 2]]
+                continuity = [False] * bout_locations.shape[0]
             all_bouts_fish = [
                 self._extract_bout(s, e, n_segments, i_fish, scale)
                 for s, e in bout_locations
